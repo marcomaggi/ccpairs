@@ -19,6 +19,7 @@
 
 void
 test_1_1 (void)
+/* Single pair allocation and release. */
 {
   ccpair_t	P;
 
@@ -32,10 +33,41 @@ test_1_1 (void)
   ccpair_free(P);
 }
 
+void
+test_2_1 (void)
+/* Chain  of  pairs.   The list:  1,  2,  3,  4,  5, NULL  allocated  in
+   reverse. */
+{
+  ccpair_t	P[5];
+
+  P[4] = ccpair_cons(5, NULL);
+  P[3] = ccpair_cons(4, P[4]);
+  P[2] = ccpair_cons(3, P[3]);
+  P[1] = ccpair_cons(2, P[2]);
+  P[0] = ccpair_cons(1, P[1]);
+
+  {
+    uintptr_t	i;
+    ccpair_t	Q;
+
+    for (Q=P[0], i=1; NULL != Q; Q = ccpair_cdr(Q), ++i) {
+      if (0) {
+	fprintf(stderr, "%s: i=%lu, car(Q)=%lu\n", __func__, i, ccpair_car(Q));
+      }
+      assert(i == ccpair_car(Q));
+    }
+  }
+
+  for (int i=0; i<5; ++i) {
+    ccpair_free(P[i]);
+  }
+}
+
 int
 main (void)
 {
   test_1_1();
+  test_2_1();
   exit(EXIT_SUCCESS);
 }
 
