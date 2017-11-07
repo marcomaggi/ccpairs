@@ -120,6 +120,8 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 @menu
 * overview::                    Overview of the package.
 * version::                     Version functions.
+* pairs::                       Pair data structures.
+* memory::                      Memory allocation.
 
 Appendices
 
@@ -145,8 +147,11 @@ This document describes version @value{VERSION} of @value{PACKAGE}, a C11 langua
 implementing simply linked lists data structures, in the style of the Scheme language.
 
 @value{PACKAGE} installs the single header file @file{ccpairs.h}.  All the function names in the
-@api{} are prefixed with @code{ccpairs_}; all the preprocessor symbol names are prefixed with
-@code{CCPAIRS_}; all the type names are prefixed with @code{ccpairs_} and suffixed with @code{_t}.
+@api{} are prefixed with @code{ccpair_}; all the preprocessor symbol names are prefixed with
+@code{CCPAIR_}; all the type names are prefixed with @code{ccpair_} and suffixed with @code{_t}.
+
+The library's @api{} uses both @code{inline} functions and preprocessor macros to integrate some
+common operations at the call site.
 
 @menu
 * overview linking::            Linking code with the library.
@@ -165,7 +170,7 @@ PKG_CHECK_MODULES([CCPAIRS],[ccpairs >= 0.1])
 @end example
 
 @noindent
-which will set the variables @code{CCPAIRS_LIBS} and @code{CCPAIRS_CFLAGS}.
+which will set the variables @code{CCPAIR_LIBS} and @code{CCPAIR_CFLAGS}.
 
 Alternatively we can use the raw @gnu{} Autoconf macros:
 
@@ -186,24 +191,135 @@ explanation of interface numbers as managed by @gnu{} Libtool @xref{Libtool vers
 Libtool's versioning system, libtool, Shared library support for @gnu{}}.
 
 
-@deftypefun {const char *} cct_version_string (void)
+@deftypefun {const char *} ccpair_version_string (void)
 Return a pointer to a statically allocated @asciiz{} string representing the interface version
 number.
 @end deftypefun
 
 
-@deftypefun int cct_version_interface_current (void)
+@deftypefun int ccpair_version_interface_current (void)
 Return an integer representing the library interface current number.
 @end deftypefun
 
 
-@deftypefun int cct_version_interface_revision (void)
+@deftypefun int ccpair_version_interface_revision (void)
 Return an integer representing the library interface current revision number.
 @end deftypefun
 
 
-@deftypefun int cct_version_interface_age (void)
+@deftypefun int ccpair_version_interface_age (void)
 Return an integer representing the library interface current age.
+@end deftypefun
+
+@c page
+@node pairs
+@chapter Pair data structures
+
+
+Pairs are meant to compose simply linked lists as follows:
+
+@example
+ -------
+| A | D |
+ -------
+  |   |     -------
+  v    --> | A | D |
+value       -------
+             |   |     -------
+             v    --> | A | D |
+           value       -------
+                        |   |
+                        v    --> NULL
+                      value
+@end example
+
+@noindent
+where both @var{A} and @var{D} are pointers; this picture represents the layout of a list of three
+items.  Pairs are meant to be allocated on the heap, using a custom memory allocator.
+
+
+@deftp {Struct Typedef} ccpair_stru_t
+Structure type representing a pair.  It is composed of two machine words.  From the point of view of
+client code: @strong{pairs are immutable}.
+@end deftp
+
+
+@deftp {Pointer Typedef} ccpair_t
+Pointer type representing a pointer to @objtype{ccpair_stru_t}.
+@end deftp
+
+
+@deftypefun uintptr_t ccpair_car (ccpair_t @var{P})
+Return the first value in the pair as unsigned integer.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_cdr (ccpair_t @var{P})
+Return the second value in the pair as pointer to pair.
+@end deftypefun
+
+
+@deftypefun uintptr_t ccpair_cdr_value (ccpair_t @var{P})
+Return the second value in the pair as unsigned integer.
+@end deftypefun
+
+
+@deftypefun void ccpair_cons (uintptr_t @var{A}, ccpair_t @var{D})
+Allocate a new pair using the currently selected memory allocator.  Initialise the first value with
+@var{A} and the second value with @var{D}.
+@end deftypefun
+
+
+@deftypefun void ccpair_free (ccpair_t @var{P})
+Release the memory allocated for @var{P} using the currently selected memory allocator.
+@end deftypefun
+
+@c page
+@node memory
+@chapter Memory allocation
+
+
+@deftp {Function Type} ccpair_malloc_fun_t
+Type of functions internally used to allocate instances of @objtype{ccpair_stru_t}.  It is defined
+as:
+
+@example
+ccpair_t ccpair_malloc_fun_t (void)
+@end example
+@end deftp
+
+
+@deftp {Function Type} ccpair_free_fun_t
+Type of functions internally used to release instances of @objtype{ccpair_stru_t}.  It is defined
+as:
+
+@example
+void ccpair_free_fun_t (ccpair_t @var{P})
+@end example
+@end deftp
+
+
+@deftypefun void ccpair_memory_set_malloc_fun (ccpair_malloc_fun_t * @var{F})
+Register a memory allocation function which will be used to allocate instances of
+@objtype{ccpair_stru_t}.
+@end deftypefun
+
+
+@deftypefun void ccpair_memory_set_free_fun (ccpair_free_fun_t * @var{F})
+Register a memory release function which will be used to release instances of
+@objtype{ccpair_stru_t}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_malloc (void)
+Allocate a new pair structure and return a pointer to it.  The function preselected by
+@value{PACKAGE} makes use of the standard @cfunc{malloc}.
+@end deftypefun
+
+
+@deftypefun void ccpair_free (ccpair_t @var{P})
+Release the memory previously allocated for a pair with @cfunc{ccpair_malloc}.  The function
+preselected by @value{PACKAGE} makes use of the standard @cfunc{free}.
 @end deftypefun
 
 @c page

@@ -17,13 +17,13 @@
 #include <ccpairs.h>
 
 int
-main (int argc CCPAIRS_UNUSED, const char *const argv[] CCPAIRS_UNUSED)
+main (int argc CCPAIR_UNUSED, const char *const argv[] CCPAIR_UNUSED)
 {
-  printf("version number string: %s\n", ccpairs_version_string());
+  printf("version number string: %s\n", ccpair_version_string());
   printf("libtool version number: %d:%d:%d\n",
-	 ccpairs_version_interface_current(),
-	 ccpairs_version_interface_revision(),
-	 ccpairs_version_interface_age());
+	 ccpair_version_interface_current(),
+	 ccpair_version_interface_revision(),
+	 ccpair_version_interface_age());
   exit(EXIT_SUCCESS);
 }
 

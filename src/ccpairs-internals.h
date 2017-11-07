@@ -37,6 +37,10 @@
 #endif
 #include "ccpairs.h"
 
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 /** --------------------------------------------------------------------
  ** Preprocessor macros.

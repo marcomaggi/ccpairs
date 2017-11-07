@@ -27,9 +27,9 @@ doc_ccpairs_TEXINFOS	= \
 #page
 #### libraries
 
-ccpairs_CURRENT		= @ccpairs_VERSION_INTERFACE_CURRENT@
-ccpairs_REVISION	= @ccpairs_VERSION_INTERFACE_REVISION@
-ccpairs_AGE		= @ccpairs_VERSION_INTERFACE_AGE@
+ccpairs_CURRENT		= @ccpair_VERSION_INTERFACE_CURRENT@
+ccpairs_REVISION	= @ccpair_VERSION_INTERFACE_REVISION@
+ccpairs_AGE		= @ccpair_VERSION_INTERFACE_AGE@
 
 include_HEADERS		= src/ccpairs.h
 
@@ -38,13 +38,15 @@ libccpairs_la_LDFLAGS	= -version-info $(ccpairs_CURRENT):$(ccpairs_REVISION):$(c
 libccpairs_la_SOURCES	= \
 	src/ccpairs.h		\
 	src/ccpairs-internals.h	\
-	src/ccpairs-version.c
+	src/ccpairs-version.c	\
+	src/ccpairs-memory.c
 
 #page
 #### tests
 
 check_PROGRAMS	= \
-	tests/version
+	tests/version		\
+	tests/cons
 
 TESTS				= $(check_PROGRAMS)
 
@@ -53,6 +55,9 @@ ccpairs_tests_ldadd		= libccpairs.la
 
 tests_version_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_version_LDADD		= $(ccpairs_tests_ldadd)
+
+tests_cons_CPPFLAGS		= $(ccpairs_tests_cppflags)
+tests_cons_LDADD		= $(ccpairs_tests_ldadd)
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done

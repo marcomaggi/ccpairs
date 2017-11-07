@@ -23,8 +23,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CCPAIRS_H
-#define CCPAIRS_H 1
+#ifndef CCPAIR_H
+#define CCPAIR_H 1
 
 
 /** --------------------------------------------------------------------
@@ -35,17 +35,17 @@
 extern "C" {
 #endif
 
-/* The  macro  CCPAIRS_UNUSED  indicates  that a  function,  function
+/* The  macro  CCPAIR_UNUSED  indicates  that a  function,  function
    argument or variable may potentially be unused. Usage examples:
 
-   static int unused_function (char arg) CCPAIRS_UNUSED;
-   int foo (char unused_argument CCPAIRS_UNUSED);
-   int unused_variable CCPAIRS_UNUSED;
+   static int unused_function (char arg) CCPAIR_UNUSED;
+   int foo (char unused_argument CCPAIR_UNUSED);
+   int unused_variable CCPAIR_UNUSED;
 */
 #ifdef __GNUC__
-#  define CCPAIRS_UNUSED		__attribute__((unused))
+#  define CCPAIR_UNUSED		__attribute__((unused))
 #else
-#  define CCPAIRS_UNUSED		/* empty */
+#  define CCPAIR_UNUSED		/* empty */
 #endif
 
 #ifndef __GNUC__
@@ -57,25 +57,25 @@ extern "C" {
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef BUILDING_DLL
 #    ifdef __GNUC__
-#      define ccpairs_decl		__attribute__((dllexport)) extern
+#      define ccpair_decl		__attribute__((dllexport)) extern
 #    else
-#      define ccpairs_decl		__declspec(dllexport) extern
+#      define ccpair_decl		__declspec(dllexport) extern
 #    endif
 #  else
 #    ifdef __GNUC__
-#      define ccpairs_decl		__attribute__((dllimport)) extern
+#      define ccpair_decl		__attribute__((dllimport)) extern
 #    else
-#      define ccpairs_decl		__declspec(dllimport) extern
+#      define ccpair_decl		__declspec(dllimport) extern
 #    endif
 #  endif
-#  define ccpairs_private_decl	extern
+#  define ccpair_private_decl	extern
 #else
 #  if __GNUC__ >= 4
-#    define ccpairs_decl		__attribute__((visibility ("default"))) extern
-#    define ccpairs_private_decl	__attribute__((visibility ("hidden")))  extern
+#    define ccpair_decl		__attribute__((visibility ("default"))) extern
+#    define ccpair_private_decl	__attribute__((visibility ("hidden")))  extern
 #  else
-#    define ccpairs_decl		extern
-#    define ccpairs_private_decl	extern
+#    define ccpair_decl		extern
+#    define ccpair_private_decl	extern
 #  endif
 #endif
 
@@ -84,24 +84,8 @@ extern "C" {
  ** Headers.
  ** ----------------------------------------------------------------- */
 
-#if 0
-
-/* Enable everything GNU. */
-#define _GNU_SOURCE		1
-
-/* Enable latest POSIX features. */
-#define _POSIX_C_SOURCE		200809L
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include <stdint.h>
-#include <stddef.h> /* for offsetof() */
-#include <setjmp.h>
-#include <errno.h>
-#include <unistd.h>
-
-#endif
+#include <stdbool.h>
 
 
 /** --------------------------------------------------------------------
@@ -115,10 +99,68 @@ extern "C" {
  ** Version functions.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl const char *	ccpairs_version_string		(void);
-ccpairs_decl int		ccpairs_version_interface_current	(void);
-ccpairs_decl int		ccpairs_version_interface_revision	(void);
-ccpairs_decl int		ccpairs_version_interface_age	(void);
+ccpair_decl char const *ccpair_version_string			(void);
+ccpair_decl int		ccpair_version_interface_current	(void);
+ccpair_decl int		ccpair_version_interface_revision	(void);
+ccpair_decl int		ccpair_version_interface_age		(void);
+
+
+/** --------------------------------------------------------------------
+ ** Pair structure.
+ ** ----------------------------------------------------------------- */
+
+typedef struct ccpair_stru_t	ccpair_stru_t;
+typedef ccpair_stru_t *		ccpair_t;
+
+struct ccpair_stru_t {
+  uintptr_t	A;
+  uintptr_t 	D;
+};
+
+__attribute__((always_inline,const))
+static inline uintptr_t
+ccpair_car (ccpair_t P)
+{
+  return P->A;
+}
+
+__attribute__((always_inline,const))
+static inline ccpair_t
+ccpair_cdr (ccpair_t P)
+{
+  return (ccpair_t)(P->D);
+}
+
+__attribute__((always_inline,const))
+static inline uintptr_t
+ccpair_cdr_value (ccpair_t P)
+{
+  return P->D;
+}
+
+
+/** --------------------------------------------------------------------
+ ** Memory allocation.
+ ** ----------------------------------------------------------------- */
+
+typedef ccpair_t ccpair_malloc_fun_t (void);
+typedef void     ccpair_free_fun_t   (ccpair_t P);
+
+ccpair_decl void ccpair_memory_set_malloc_fun	(ccpair_malloc_fun_t * f);
+ccpair_decl void ccpair_memory_set_free_fun	(ccpair_free_fun_t * f);
+
+ccpair_decl ccpair_t ccpair_malloc (void);
+ccpair_decl void     ccpair_free   (ccpair_t P);
+
+__attribute__((always_inline,const))
+static inline ccpair_t
+ccpair_cons (uintptr_t A, ccpair_t D)
+{
+  ccpair_t	P = ccpair_malloc();
+  P->A = A;
+  P->D = (uintptr_t)D;
+  return P;
+}
 
 
 /** --------------------------------------------------------------------
@@ -129,6 +171,6 @@ ccpairs_decl int		ccpairs_version_interface_age	(void);
 } // extern "C"
 #endif
 
-#endif /* CCPAIRS_H */
+#endif /* CCPAIR_H */
 
 /* end of file */

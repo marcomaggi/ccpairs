@@ -32,24 +32,24 @@
 
 
 const char *
-ccpairs_version_string (void)
+ccpair_version_string (void)
 {
-  return ccpairs_VERSION_INTERFACE_STRING;
+  return ccpair_VERSION_INTERFACE_STRING;
 }
 int
-ccpairs_version_interface_current (void)
+ccpair_version_interface_current (void)
 {
-  return ccpairs_VERSION_INTERFACE_CURRENT;
+  return ccpair_VERSION_INTERFACE_CURRENT;
 }
 int
-ccpairs_version_interface_revision (void)
+ccpair_version_interface_revision (void)
 {
-  return ccpairs_VERSION_INTERFACE_REVISION;
+  return ccpair_VERSION_INTERFACE_REVISION;
 }
 int
-ccpairs_version_interface_age (void)
+ccpair_version_interface_age (void)
 {
-  return ccpairs_VERSION_INTERFACE_AGE;
+  return ccpair_VERSION_INTERFACE_AGE;
 }
 
 /* end of file */

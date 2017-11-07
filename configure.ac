@@ -49,7 +49,7 @@ AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
 dnl This is the version stored in the pkg-config data file.
 AC_SUBST([CCPAIRS_PKG_CONFIG_VERSION],[0.1])
 
-MM_LIBTOOL_LIBRARY_VERSIONS([ccpairs],1,0,0)
+MM_LIBTOOL_LIBRARY_VERSIONS([ccpair],1,0,0)
 
 dnl page
 #### basic system inspection
