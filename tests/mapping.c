@@ -18,9 +18,18 @@
 #include <stdlib.h>
 
 ccpair_t
-make_list_5 (void)
+make_list_5 (cce_location_t * L)
 {
-  return ccpair_cons(1, ccpair_cons(2, ccpair_cons(3, ccpair_cons(4, ccpair_cons(5, NULL)))));
+  ccpair_t		P[5];
+  cce_handler_t		P_H[5];
+
+  P[4] = ccpair_cons(L, 5, NULL); ccpair_error_handler_pair_init(L, &(P_H[4]), P[4]);
+  P[3] = ccpair_cons(L, 4, P[4]); ccpair_error_handler_pair_init(L, &(P_H[3]), P[3]);
+  P[2] = ccpair_cons(L, 3, P[3]); ccpair_error_handler_pair_init(L, &(P_H[2]), P[2]);
+  P[1] = ccpair_cons(L, 2, P[2]); ccpair_error_handler_pair_init(L, &(P_H[1]), P[1]);
+  P[0] = ccpair_cons(L, 1, P[1]);
+
+  return P[0];
 }
 
 uintptr_t
@@ -44,10 +53,10 @@ test_1_1 (void)
     // handle the exceptional condition
     cce_run_error_handlers_final(L);
   } else {
-    P = make_list_5();
+    P = make_list_5(L);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     {
-      Q = ccpair_map_forward(map_fun_1, P);
+      Q = ccpair_map_forward(L, map_fun_1, P);
       ccpair_cleanup_handler_list_init(L, Q_H, Q);
       if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_ref(L, Q, 0)); }
 

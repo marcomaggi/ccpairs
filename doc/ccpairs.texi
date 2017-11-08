@@ -315,52 +315,99 @@ Release the memory allocated for @var{P} using the currently selected memory all
 @chapter Memory allocation
 
 
-@deftp {Function Type} ccpair_malloc_fun_t
-Type of functions internally used to allocate instances of @objtype{ccpair_stru_t}.  It is defined
-as:
+@menu
+* memory allocator::            Selecting a custom memory allocator.
+* memory functions::            Allocating and releasing pairs.
+@end menu
 
-@example
-ccpair_t ccpair_malloc_fun_t (void)
-@end example
+@c page
+@node memory allocator
+@section Selecting a custom memory allocator
+
+
+@deftp {Struct Type} ccpair_allocator_t
+Represent a memory allocator to be used to allocate and release memory for pair structures.  It has
+the following fields:
+
+@table @code
+@item ccpair_alloc_fun_t * alloc
+Pointer to a function that allocates pair structures.
+
+@item ccpair_free_fun_t * free
+Pointer to a function that releases pair structures.
+@end table
+
+The predefined memory allocator uses the standard functions @cfunc{malloc} and @cfunc{free}.
 @end deftp
 
 
-@deftp {Function Type} ccpair_free_fun_t
-Type of functions internally used to release instances of @objtype{ccpair_stru_t}.  It is defined
-as:
+@deftypefn {Function Type} ccpair_t ccpair_alloc_fun_t (cce_location_t * @var{L}, ccpair_allocator_t const * @var{allocator})
+Type of function that allocates a new pair structure using the @var{allocator}.  If successful:
+return a pointer to the new structure; otherwise raise an exception performing a non--local exit to
+@var{L}.
+@end deftypefn
+
+
+@deftypefn {Function Type} void ccpair_free_fun_t (ccpair_allocator_t const * @var{allocator}, ccpair_t @var{P})
+Type of function that releases the pair structure @var{P}, using the @var{allocator}.  This function
+cannot fail.
+@end deftypefn
+
+
+@deftypefun {ccpair_allocator_t const *} ccpair_register_allocator (ccpair_allocator_t const * @var{allocator})
+Register a new custom allocator and return a pointer to the previous one.
+@end deftypefun
+
+
+As example, the following code implements an allocator using the standard functions @cfunc{malloc}
+and @cfunc{free}:
 
 @example
-void ccpair_free_fun_t (ccpair_t @var{P})
+static ccpair_t
+standard_alloc (cce_location_t * L,
+   ccpair_allocator_t const * allocator CCPAIR_UNUSED)
+@{
+  ccpair_t      P = malloc(sizeof(ccpair_stru_t));
+  if (NULL != P) @{
+    return P;
+  @} else @{
+    cce_raise(L, cce_condition_new_errno_clear());
+  @}
+@}
+
+static void
+standard_free (ccpair_allocator_t const * allocator
+   CCPAIR_UNUSED, ccpair_t P)
+@{
+  free(P);
+@}
+
+static ccpair_allocator_t const standard_allocator = @{
+  .alloc        = standard_alloc,
+  .free         = standard_free
+@};
 @end example
-@end deftp
+
+@c page
+@node memory functions
+@section Allocating and releasing pairs
 
 
-@deftypefun void ccpair_memory_set_malloc_fun (ccpair_malloc_fun_t * @var{F})
-Register a memory allocation function which will be used to allocate instances of
-@objtype{ccpair_stru_t}.
-@end deftypefun
+All the following functions use the currently selected pair allocator.
 
 
-@deftypefun void ccpair_memory_set_free_fun (ccpair_free_fun_t * @var{F})
-Register a memory release function which will be used to release instances of
-@objtype{ccpair_stru_t}.
-@end deftypefun
-
-
-@deftypefun ccpair_t ccpair_malloc (void)
-Allocate a new pair structure and return a pointer to it.  The function preselected by
-@value{PACKAGE} makes use of the standard @cfunc{malloc}.
+@deftypefun ccpair_t ccpair_alloc (void)
+Allocate a new pair structure and return a pointer to it.
 @end deftypefun
 
 
 @deftypefun void ccpair_free (ccpair_t @var{P})
-Release the memory previously allocated for a pair with @cfunc{ccpair_malloc}.  The function
-preselected by @value{PACKAGE} makes use of the standard @cfunc{free}.
+Release the memory previously allocated for a pair with @cfunc{ccpair_alloc}.
 @end deftypefun
 
 
 @deftypefun void ccpair_free_list (ccpair_t @var{P})
-Release the memory previously allocated for a list of pairs with @cfunc{ccpair_malloc}.
+Release the memory previously allocated for a list of pairs with @cfunc{ccpair_alloc}.
 @end deftypefun
 
 @c page

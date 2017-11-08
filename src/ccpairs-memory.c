@@ -34,48 +34,58 @@
 #include "ccpairs-internals.h"
 
 
-ccpair_t
-ccpair_memory_default_malloc (void)
+/** --------------------------------------------------------------------
+ ** Predefined memory allocator.
+ ** ----------------------------------------------------------------- */
+
+static ccpair_t
+default_alloc (cce_location_t * L, ccpair_allocator_t const * allocator CCPAIR_UNUSED)
 {
   ccpair_t	P = malloc(sizeof(ccpair_stru_t));
   if (NULL != P) {
     return P;
   } else {
-    exit(EXIT_FAILURE);
+    cce_raise(L, cce_condition_new_errno_clear());
   }
 }
 
-void
-ccpair_memory_default_free (ccpair_t P)
+static void
+default_free (ccpair_allocator_t const * allocator CCPAIR_UNUSED, ccpair_t P)
 {
   free(P);
 }
 
-static ccpair_malloc_fun_t *	malloc_fun = ccpair_memory_default_malloc;
-static ccpair_free_fun_t *	free_fun   = ccpair_memory_default_free;
+static ccpair_allocator_t const default_allocator = {
+  .alloc	= default_alloc,
+  .free		= default_free
+};
 
-void
-ccpair_memory_set_malloc_fun (ccpair_malloc_fun_t * f)
+static ccpair_allocator_t const * current_allocator = &default_allocator;
+
+ccpair_allocator_t const *
+ccpair_register_allocator (ccpair_allocator_t const * new_allocator)
 {
-  malloc_fun = f;
+  ccpair_allocator_t const *	old_allocator = current_allocator;
+  assert(new_allocator);
+  current_allocator = new_allocator;
+  return old_allocator;
 }
 
-void
-ccpair_memory_set_free_fun (ccpair_free_fun_t * f)
-{
-  free_fun = f;
-}
+
+/** --------------------------------------------------------------------
+ ** Memory functions.
+ ** ----------------------------------------------------------------- */
 
 ccpair_t
-ccpair_malloc (void)
+ccpair_alloc (cce_location_t * L)
 {
-  return malloc_fun();
+  return current_allocator->alloc(L, current_allocator);
 }
 
 void
 ccpair_free (ccpair_t P)
 {
-  free_fun(P);
+  current_allocator->free(current_allocator, P);
 }
 
 void
@@ -83,7 +93,7 @@ ccpair_free_list (ccpair_t P)
 {
   while (P) {
     ccpair_t Q = ccpair_cdr(P);
-    ccpair_free(P);
+    current_allocator->free(current_allocator, P);
     P = Q;
   }
 }

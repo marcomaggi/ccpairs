@@ -103,6 +103,11 @@ extern "C" {
 typedef struct ccpair_stru_t		ccpair_stru_t;
 typedef ccpair_stru_t *			ccpair_t;
 
+typedef struct ccpair_allocator_t	ccpair_allocator_t;
+
+typedef ccpair_t ccpair_alloc_fun_t	(cce_location_t *L, ccpair_allocator_t const * allocator);
+typedef void     ccpair_free_fun_t	(ccpair_allocator_t const * allocator, ccpair_t P);
+
 /* ------------------------------------------------------------------ */
 
 typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
@@ -209,23 +214,23 @@ ccpair_cdr_value (ccpair_t P)
  ** Memory allocation.
  ** ----------------------------------------------------------------- */
 
-typedef ccpair_t ccpair_malloc_fun_t (void);
-typedef void     ccpair_free_fun_t   (ccpair_t P);
+struct ccpair_allocator_t {
+  ccpair_alloc_fun_t *		alloc;
+  ccpair_free_fun_t *		free;
+};
 
-ccpair_decl void ccpair_memory_set_malloc_fun	(ccpair_malloc_fun_t * f)
-  __attribute__((nonnull(1)));
-ccpair_decl void ccpair_memory_set_free_fun	(ccpair_free_fun_t * f)
-  __attribute__((nonnull(1)));
+ccpair_decl ccpair_allocator_t const * ccpair_register_allocator (ccpair_allocator_t const * allocator)
+  __attribute__((nonnull(1),returns_nonnull));
 
-ccpair_decl ccpair_t	ccpair_malloc (void);
+ccpair_decl ccpair_t	ccpair_alloc (cce_location_t * L);
 ccpair_decl void	ccpair_free   (ccpair_t P);
 ccpair_decl void	ccpair_free_list (ccpair_t P);
 
 __attribute__((always_inline))
 static inline ccpair_t
-ccpair_cons (uintptr_t A, ccpair_t D)
+ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
 {
-  ccpair_t	P = ccpair_malloc();
+  ccpair_t	P = ccpair_alloc(L);
   P->A = A;
   P->D = (uintptr_t)D;
   return P;
@@ -322,35 +327,35 @@ typedef uintptr_t ccpair_map_5_fun_t (uintptr_t item1, uintptr_t item2, uintptr_
 
 /* ------------------------------------------------------------------ */
 
-ccpair_decl ccpair_t ccpair_map_1_forward (ccpair_map_1_fun_t * fun, ccpair_t P1)
+ccpair_decl ccpair_t ccpair_map_1_forward (cce_location_t * L, ccpair_map_1_fun_t * fun, ccpair_t P1)
   __attribute__((nonnull(1)));
 
-ccpair_decl ccpair_t ccpair_map_2_forward (ccpair_map_2_fun_t * fun, ccpair_t P1, ccpair_t P2)
+ccpair_decl ccpair_t ccpair_map_2_forward (cce_location_t * L, ccpair_map_2_fun_t * fun, ccpair_t P1, ccpair_t P2)
   __attribute__((nonnull(1)));
 
-ccpair_decl ccpair_t ccpair_map_3_forward (ccpair_map_3_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3)
+ccpair_decl ccpair_t ccpair_map_3_forward (cce_location_t * L, ccpair_map_3_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3)
   __attribute__((nonnull(1)));
 
-ccpair_decl ccpair_t ccpair_map_4_forward (ccpair_map_4_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4)
+ccpair_decl ccpair_t ccpair_map_4_forward (cce_location_t * L, ccpair_map_4_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4)
   __attribute__((nonnull(1)));
 
-ccpair_decl ccpair_t ccpair_map_5_forward (ccpair_map_5_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4, ccpair_t P5)
+ccpair_decl ccpair_t ccpair_map_5_forward (cce_location_t * L, ccpair_map_5_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4, ccpair_t P5)
   __attribute__((nonnull(1)));
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((always_inline,nonnull(1)))
 static inline ccpair_t
-ccpair_map (ccpair_map_fun_t * fun, ccpair_t P)
+ccpair_map (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
 {
-  return ccpair_map_1_forward(fun, P);
+  return ccpair_map_1_forward(L, fun, P);
 }
 
 __attribute__((always_inline,nonnull(1)))
 static inline ccpair_t
-ccpair_map_forward (ccpair_map_fun_t * fun, ccpair_t P)
+ccpair_map_forward (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
 {
-  return ccpair_map_1_forward(fun, P);
+  return ccpair_map_1_forward(L, fun, P);
 }
 
 

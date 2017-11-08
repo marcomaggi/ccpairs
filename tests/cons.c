@@ -21,16 +21,22 @@ void
 test_1_1 (void)
 /* Single pair allocation and release. */
 {
+  cce_location_t	L[1];
   ccpair_t	P;
 
-  P = ccpair_cons(1, NULL);
-  {
-    assert(NULL != P);
-    assert(1    == ccpair_car(P));
-    assert(NULL == ccpair_cdr(P));
-    assert(0    == ccpair_cdr_value(P));
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = ccpair_cons(L, 1, NULL);
+    {
+      assert(NULL != P);
+      assert(1    == ccpair_car(P));
+      assert(NULL == ccpair_cdr(P));
+      assert(0    == ccpair_cdr_value(P));
+    }
+    ccpair_free(P);
+    cce_run_cleanup_handlers(L);
   }
-  ccpair_free(P);
 }
 
 void
@@ -44,7 +50,7 @@ test_1_2 (void)
   if (cce_location(L)) {
     cce_run_error_handlers_final(L);
   } else {
-    P = ccpair_cons(1, NULL);
+    P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
     {
       assert(NULL != P);
@@ -63,28 +69,31 @@ test_2_1 (void)
 /* Chain  of  pairs.   The list:  1,  2,  3,  4,  5, NULL  allocated  in
    reverse. */
 {
-  ccpair_t	P[5];
+  cce_location_t	L[1];
+  ccpair_t		P[5];
+  cce_handler_t		P_H[5];
 
-  P[4] = ccpair_cons(5, NULL);
-  P[3] = ccpair_cons(4, P[4]);
-  P[2] = ccpair_cons(3, P[3]);
-  P[1] = ccpair_cons(2, P[2]);
-  P[0] = ccpair_cons(1, P[1]);
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P[4] = ccpair_cons(L, 5, NULL); ccpair_cleanup_handler_pair_init(L, &(P_H[4]), P[4]);
+    P[3] = ccpair_cons(L, 4, P[4]); ccpair_cleanup_handler_pair_init(L, &(P_H[3]), P[3]);
+    P[2] = ccpair_cons(L, 3, P[3]); ccpair_cleanup_handler_pair_init(L, &(P_H[2]), P[2]);
+    P[1] = ccpair_cons(L, 2, P[2]); ccpair_cleanup_handler_pair_init(L, &(P_H[1]), P[1]);
+    P[0] = ccpair_cons(L, 1, P[1]); ccpair_cleanup_handler_pair_init(L, &(P_H[0]), P[0]);
 
-  {
-    uintptr_t	i;
-    ccpair_t	Q;
+    {
+      uintptr_t	i;
+      ccpair_t	Q;
 
-    for (Q=P[0], i=1; NULL != Q; Q = ccpair_cdr(Q), ++i) {
-      if (0) {
-	fprintf(stderr, "%s: i=%lu, car(Q)=%lu\n", __func__, i, ccpair_car(Q));
+      for (Q=P[0], i=1; NULL != Q; Q = ccpair_cdr(Q), ++i) {
+	if (0) {
+	  fprintf(stderr, "%s: i=%lu, car(Q)=%lu\n", __func__, i, ccpair_car(Q));
+	}
+	assert(i == ccpair_car(Q));
       }
-      assert(i == ccpair_car(Q));
     }
-  }
-
-  for (int i=0; i<5; ++i) {
-    ccpair_free(P[i]);
+    cce_run_cleanup_handlers(L);
   }
 }
 
