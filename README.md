@@ -11,7 +11,11 @@
 This package installs a C11  language library implementing simply linked
 lists data structures, in the style of the Scheme language.
 
-  The package  makes use of  the GNU Autotools  and it is  tested, using
+The  package depends  upon the  external package  CCExceptions at  least
+version 0.6,  and relies  on `pkg-config`  to find  it installed  on the
+system.
+
+The  package makes  use of  the GNU  Autotools and  it is  tested, using
 Travis CI, on both Ubuntu GNU+Linux systems and OS X systems.
 
 

@@ -1,6 +1,6 @@
 /*
   Part of: CCPairs
-  Contents: memory functions
+  Contents: accessor functions
   Date: Tue Nov  7, 2017
 
   Abstract
@@ -34,58 +34,17 @@
 #include "ccpairs-internals.h"
 
 
-ccpair_t
-ccpair_memory_default_malloc (void)
+uintptr_t
+ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx)
 {
-  ccpair_t	P = malloc(sizeof(ccpair_stru_t));
-  if (NULL != P) {
-    return P;
-  } else {
-    exit(EXIT_FAILURE);
+  for (unsigned i=0; i<idx; ++i) {
+    if (P) {
+      P = ccpair_cdr(P);
+    } else {
+      cce_raise(L, ccpair_condition_new_not_enough_items());
+    }
   }
-}
-
-void
-ccpair_memory_default_free (ccpair_t P)
-{
-  free(P);
-}
-
-static ccpair_malloc_fun_t *	malloc_fun = ccpair_memory_default_malloc;
-static ccpair_free_fun_t *	free_fun   = ccpair_memory_default_free;
-
-void
-ccpair_memory_set_malloc_fun (ccpair_malloc_fun_t * f)
-{
-  malloc_fun = f;
-}
-
-void
-ccpair_memory_set_free_fun (ccpair_free_fun_t * f)
-{
-  free_fun = f;
-}
-
-ccpair_t
-ccpair_malloc (void)
-{
-  return malloc_fun();
-}
-
-void
-ccpair_free (ccpair_t P)
-{
-  free_fun(P);
-}
-
-void
-ccpair_free_list (ccpair_t P)
-{
-  while (P) {
-    ccpair_t Q = ccpair_cdr(P);
-    ccpair_free(P);
-    P = Q;
-  }
+  return ccpair_car(P);
 }
 
 /* end of file */

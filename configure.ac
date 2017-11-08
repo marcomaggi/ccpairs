@@ -82,6 +82,13 @@ dnl AC_FUNC_MALLOC
 dnl AC_CACHE_SAVE
 
 dnl page
+#### external libraries
+
+PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.6])
+
+AC_CACHE_SAVE
+
+dnl page
 #### operating system specific configuration
 
 dnl AS_CASE("$target_os",

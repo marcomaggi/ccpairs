@@ -84,6 +84,7 @@ extern "C" {
  ** Headers.
  ** ----------------------------------------------------------------- */
 
+#include <ccexceptions.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -93,6 +94,22 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 
+
+
+/** --------------------------------------------------------------------
+ ** Forward declarations.
+ ** ----------------------------------------------------------------- */
+
+typedef struct ccpair_stru_t		ccpair_stru_t;
+typedef ccpair_stru_t *			ccpair_t;
+
+/* ------------------------------------------------------------------ */
+
+typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
+typedef struct ccpair_descriptor_not_enough_items_t	ccpair_descriptor_not_enough_items_t;
+
+typedef struct ccpair_condition_base_t			ccpair_condition_base_t;
+typedef struct ccpair_condition_not_enough_items_t	ccpair_condition_not_enough_items_t;
 
 
 /** --------------------------------------------------------------------
@@ -106,32 +123,81 @@ ccpair_decl int		ccpair_version_interface_age		(void);
 
 
 /** --------------------------------------------------------------------
- ** Pair structure.
+ ** Initialisation functions.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpair_stru_t	ccpair_stru_t;
-typedef ccpair_stru_t *		ccpair_t;
+ccpair_decl void	ccpair_init (void)
+  __attribute__((constructor));
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional conditions.
+ ** ----------------------------------------------------------------- */
+
+struct ccpair_descriptor_base_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct ccpair_condition_base_t {
+  cce_condition_t	condition;
+};
+
+ccpair_decl const ccpair_descriptor_base_t * const ccpair_descriptor_base;
+
+__attribute__((pure,nonnull(1),always_inline))
+static inline bool
+ccpair_condition_is_base (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(ccpair_descriptor_base->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+struct ccpair_descriptor_not_enough_items_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct ccpair_condition_not_enough_items_t {
+  ccpair_condition_base_t	base;
+};
+
+ccpair_decl const ccpair_descriptor_not_enough_items_t * const ccpair_descriptor_not_enough_items;
+
+ccpair_decl cce_condition_t const * ccpair_condition_new_not_enough_items (void)
+  __attribute__((leaf,pure));
+
+__attribute__((pure,nonnull(1),always_inline))
+static inline bool
+ccpair_condition_is_not_enough_items (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(ccpair_descriptor_not_enough_items->descriptor));
+}
+
+
+/** --------------------------------------------------------------------
+ ** Pair structure.
+ ** ----------------------------------------------------------------- */
 
 struct ccpair_stru_t {
   uintptr_t	A;
   uintptr_t 	D;
 };
 
-__attribute__((always_inline,const))
+__attribute__((always_inline,const,nonnull(1)))
 static inline uintptr_t
 ccpair_car (ccpair_t P)
 {
   return P->A;
 }
 
-__attribute__((always_inline,const))
+__attribute__((always_inline,const,nonnull(1)))
 static inline ccpair_t
 ccpair_cdr (ccpair_t P)
 {
   return (ccpair_t)(P->D);
 }
 
-__attribute__((always_inline,const))
+__attribute__((always_inline,const,nonnull(1)))
 static inline uintptr_t
 ccpair_cdr_value (ccpair_t P)
 {
@@ -146,13 +212,16 @@ ccpair_cdr_value (ccpair_t P)
 typedef ccpair_t ccpair_malloc_fun_t (void);
 typedef void     ccpair_free_fun_t   (ccpair_t P);
 
-ccpair_decl void ccpair_memory_set_malloc_fun	(ccpair_malloc_fun_t * f);
-ccpair_decl void ccpair_memory_set_free_fun	(ccpair_free_fun_t * f);
+ccpair_decl void ccpair_memory_set_malloc_fun	(ccpair_malloc_fun_t * f)
+  __attribute__((nonnull(1)));
+ccpair_decl void ccpair_memory_set_free_fun	(ccpair_free_fun_t * f)
+  __attribute__((nonnull(1)));
 
-ccpair_decl ccpair_t ccpair_malloc (void);
-ccpair_decl void     ccpair_free   (ccpair_t P);
+ccpair_decl ccpair_t	ccpair_malloc (void);
+ccpair_decl void	ccpair_free   (ccpair_t P);
+ccpair_decl void	ccpair_free_list (ccpair_t P);
 
-__attribute__((always_inline,const))
+__attribute__((always_inline))
 static inline ccpair_t
 ccpair_cons (uintptr_t A, ccpair_t D)
 {
@@ -161,6 +230,150 @@ ccpair_cons (uintptr_t A, ccpair_t D)
   P->D = (uintptr_t)D;
   return P;
 }
+
+
+/** --------------------------------------------------------------------
+ ** Accessors.
+ ** ----------------------------------------------------------------- */
+
+ccpair_decl uintptr_t ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx);
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_first (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 0);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_second (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 1);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_third (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 2);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_fourth (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 3);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_fifth (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 4);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_sixth (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 5);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_seventh (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 6);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_eighth (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 7);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_nineth (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 8);
+}
+
+__attribute__((always_inline))
+static inline uintptr_t
+ccpair_tenth (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref(L, P, 9);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Mapping and folding functions.
+ ** ----------------------------------------------------------------- */
+
+typedef uintptr_t ccpair_map_fun_t   (uintptr_t item);
+typedef uintptr_t ccpair_map_1_fun_t (uintptr_t item);
+typedef uintptr_t ccpair_map_2_fun_t (uintptr_t item1, uintptr_t item2);
+typedef uintptr_t ccpair_map_3_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3);
+typedef uintptr_t ccpair_map_4_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3, uintptr_t item4);
+typedef uintptr_t ccpair_map_5_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3, uintptr_t item4, uintptr_t item5);
+
+/* ------------------------------------------------------------------ */
+
+ccpair_decl ccpair_t ccpair_map_1_forward (ccpair_map_1_fun_t * fun, ccpair_t P1)
+  __attribute__((nonnull(1)));
+
+ccpair_decl ccpair_t ccpair_map_2_forward (ccpair_map_2_fun_t * fun, ccpair_t P1, ccpair_t P2)
+  __attribute__((nonnull(1)));
+
+ccpair_decl ccpair_t ccpair_map_3_forward (ccpair_map_3_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3)
+  __attribute__((nonnull(1)));
+
+ccpair_decl ccpair_t ccpair_map_4_forward (ccpair_map_4_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4)
+  __attribute__((nonnull(1)));
+
+ccpair_decl ccpair_t ccpair_map_5_forward (ccpair_map_5_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4, ccpair_t P5)
+  __attribute__((nonnull(1)));
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((always_inline,nonnull(1)))
+static inline ccpair_t
+ccpair_map (ccpair_map_fun_t * fun, ccpair_t P)
+{
+  return ccpair_map_1_forward(fun, P);
+}
+
+__attribute__((always_inline,nonnull(1)))
+static inline ccpair_t
+ccpair_map_forward (ccpair_map_fun_t * fun, ccpair_t P)
+{
+  return ccpair_map_1_forward(fun, P);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Predefined exception handler: pair memory release.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void ccpair_cleanup_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void ccpair_error_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+  __attribute__((nonnull(1,2,3)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined exception handler: list memory release.
+ ** ----------------------------------------------------------------- */
+
+cce_decl void ccpair_cleanup_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+  __attribute__((nonnull(1,2,3)));
+
+cce_decl void ccpair_error_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+  __attribute__((nonnull(1,2,3)));
 
 
 /** --------------------------------------------------------------------

@@ -12,13 +12,15 @@
   See the COPYING file.
 */
 
+#include <ccpairs.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ccpairs.h>
 
 int
 main (int argc CCPAIR_UNUSED, const char *const argv[] CCPAIR_UNUSED)
 {
+  ccpair_init();
+
   printf("version number string: %s\n", ccpair_version_string());
   printf("libtool version number: %d:%d:%d\n",
 	 ccpair_version_interface_current(),

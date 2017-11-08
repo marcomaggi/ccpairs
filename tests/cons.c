@@ -12,10 +12,10 @@
   See the COPYING file.
 */
 
+#include <ccpairs.h>
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <ccpairs.h>
 
 void
 test_1_1 (void)
@@ -32,6 +32,31 @@ test_1_1 (void)
   }
   ccpair_free(P);
 }
+
+void
+test_1_2 (void)
+/* Single pair allocation and release using the exception handler. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		P_H[1];
+  ccpair_t		P;
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = ccpair_cons(1, NULL);
+    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    {
+      assert(NULL != P);
+      assert(1    == ccpair_car(P));
+      assert(NULL == ccpair_cdr(P));
+      assert(0    == ccpair_cdr_value(P));
+    }
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+/* ------------------------------------------------------------------ */
 
 void
 test_2_1 (void)
@@ -66,8 +91,12 @@ test_2_1 (void)
 int
 main (void)
 {
-  test_1_1();
-  test_2_1();
+  ccpair_init();
+
+  if (1) { test_1_1(); }
+  if (1) { test_1_2(); }
+  if (1) { test_2_1(); }
+
   exit(EXIT_SUCCESS);
 }
 

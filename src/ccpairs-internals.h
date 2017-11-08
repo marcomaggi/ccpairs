@@ -40,6 +40,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 
 /** --------------------------------------------------------------------
@@ -59,6 +60,7 @@
  ** Function prototypes.
  ** ----------------------------------------------------------------- */
 
+ccpair_private_decl void ccpair_conditions_module_initialisation (void);
 
 
 /** --------------------------------------------------------------------

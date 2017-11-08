@@ -34,30 +34,41 @@ ccpairs_AGE		= @ccpair_VERSION_INTERFACE_AGE@
 include_HEADERS		= src/ccpairs.h
 
 lib_LTLIBRARIES		= libccpairs.la
-libccpairs_la_LDFLAGS	= -version-info $(ccpairs_CURRENT):$(ccpairs_REVISION):$(ccpairs_AGE)
+libccpairs_la_CPPFLAGS	= $(CCEXCEPTIONS_CFLAGS)
+libccpairs_la_LDFLAGS	= -version-info $(ccpairs_CURRENT):$(ccpairs_REVISION):$(ccpairs_AGE) \
+			  $(CCEXCEPTIONS_LIBS)
 libccpairs_la_SOURCES	= \
-	src/ccpairs.h		\
-	src/ccpairs-internals.h	\
-	src/ccpairs-version.c	\
-	src/ccpairs-memory.c
+	src/ccpairs.h				\
+	src/ccpairs-internals.h			\
+	src/ccpairs-version.c			\
+	src/ccpairs-init.c			\
+	src/ccpairs-conditions.c		\
+	src/ccpairs-exception-handlers.c	\
+	src/ccpairs-memory.c			\
+	src/ccpairs-accessors.c			\
+	src/ccpairs-mapping.c
 
 #page
 #### tests
 
 check_PROGRAMS	= \
 	tests/version		\
-	tests/cons
+	tests/cons		\
+	tests/mapping
 
 TESTS				= $(check_PROGRAMS)
 
-ccpairs_tests_cppflags		= -I$(srcdir)/src
-ccpairs_tests_ldadd		= libccpairs.la
+ccpairs_tests_cppflags		= -I$(srcdir)/src $(CCEXCEPTIONS_FLAGS)
+ccpairs_tests_ldadd		= libccpairs.la $(CCEXCEPTIONS_LIBS)
 
 tests_version_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_version_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_cons_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_cons_LDADD		= $(ccpairs_tests_ldadd)
+
+tests_mapping_CPPFLAGS		= $(ccpairs_tests_cppflags)
+tests_mapping_LDADD		= $(ccpairs_tests_ldadd)
 
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
