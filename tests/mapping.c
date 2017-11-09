@@ -18,17 +18,22 @@
 #include <stdlib.h>
 
 ccpair_t
-make_list_5 (cce_location_t * L)
+make_list_5 (cce_location_t * upper_L)
 {
+  cce_location_t	L[1];
   ccpair_t		P[5];
   cce_handler_t		P_H[5];
 
-  P[4] = ccpair_cons(L, 5, NULL); ccpair_error_handler_pair_init(L, &(P_H[4]), P[4]);
-  P[3] = ccpair_cons(L, 4, P[4]); ccpair_error_handler_pair_init(L, &(P_H[3]), P[3]);
-  P[2] = ccpair_cons(L, 3, P[3]); ccpair_error_handler_pair_init(L, &(P_H[2]), P[2]);
-  P[1] = ccpair_cons(L, 2, P[2]); ccpair_error_handler_pair_init(L, &(P_H[1]), P[1]);
-  P[0] = ccpair_cons(L, 1, P[1]);
-
+  if (cce_location(L)) {
+    cce_run_error_handlers_raise(L, upper_L);
+  } else {
+    P[4] = ccpair_cons(L, 5, NULL); ccpair_error_handler_pair_init(L, &(P_H[4]), P[4]);
+    P[3] = ccpair_cons(L, 4, P[4]); ccpair_error_handler_pair_init(L, &(P_H[3]), P[3]);
+    P[2] = ccpair_cons(L, 3, P[3]); ccpair_error_handler_pair_init(L, &(P_H[2]), P[2]);
+    P[1] = ccpair_cons(L, 2, P[2]); ccpair_error_handler_pair_init(L, &(P_H[1]), P[1]);
+    P[0] = ccpair_cons(L, 1, P[1]);
+    cce_run_cleanup_handlers(L);
+  }
   return P[0];
 }
 

@@ -39,19 +39,36 @@
  ** ----------------------------------------------------------------- */
 
 ccpair_t
-ccpair_map_1_forward (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
+ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t volatile P)
 {
   ccpair_t	R = NULL, Q = NULL;
 
-  for (; P; P = ccpair_cdr(P)) {
-    ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P)), NULL);
-    if (Q) {
-      Q->D = (uintptr_t) T;
-      Q    = T;
+  if (P) {
+    cce_location_t	L[1];
+    cce_handler_t	R_H[1];
+
+    if (cce_location(L)) {
+      cce_run_error_handlers_raise(L, upper_L);
     } else {
-      R = Q = T;
+      /* We perform the  first application outside of the  loop, so that
+	 we can initialise the handler for R. */
+      R = Q = ccpair_cons(L, fun(ccpair_car(P)), NULL);
+      P = ccpair_cdr(P);
+      ccpair_error_handler_list_init(L, R_H, R);
+
+      for (; P; P = ccpair_cdr(P)) {
+	ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P)), NULL);
+	/* Append  the  new  pair  to  the  tail  of  the  list  we  are
+	   building. */
+	Q->D = (uintptr_t) T;
+	/* The new pair is the new tail. */
+	Q    = T;
+      }
+
+      cce_run_cleanup_handlers(L);
     }
   }
+  /* Return the head of the new list. */
   return R;
 }
 

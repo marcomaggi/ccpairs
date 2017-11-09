@@ -85,7 +85,9 @@ ccpair_alloc (cce_location_t * L)
 void
 ccpair_free (ccpair_t P)
 {
-  current_allocator->free(current_allocator, P);
+  if (P) {
+    current_allocator->free(current_allocator, P);
+  }
 }
 
 void

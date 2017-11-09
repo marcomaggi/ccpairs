@@ -54,7 +54,7 @@ implementing a simply linked lists data structures, in the style of the Scheme l
 The package depends upon the external package CCExceptions at least version 0.6, and relies on
 @command{pkg-config} to find it installed on the system.
 
-The package is distributed under the terms of the @gnu{} Lesser General Public License (@gpl{}).
+The package is distributed under the terms of the @gnu{} Lesser General Public License (@lgpl{}).
 
 The latest release can be downloaded from:
 
@@ -126,6 +126,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * version::                     Version functions.
 * pairs::                       Pair data structures.
 * memory::                      Memory allocation.
+* inspection::                  Inspecting lists.
 * accessors::                   Accessing items in lists.
 * conditions::                  Exceptional condition objects.
 * handlers::                    Exceptional condition handlers.
@@ -402,12 +403,37 @@ Allocate a new pair structure and return a pointer to it.
 
 
 @deftypefun void ccpair_free (ccpair_t @var{P})
-Release the memory previously allocated for a pair with @cfunc{ccpair_alloc}.
+Release the memory previously allocated for a pair with @cfunc{ccpair_alloc}.  If @var{P} is
+@cnull{}: nothing happens.
 @end deftypefun
 
 
 @deftypefun void ccpair_free_list (ccpair_t @var{P})
-Release the memory previously allocated for a list of pairs with @cfunc{ccpair_alloc}.
+Release the memory previously allocated for a list of pairs with @cfunc{ccpair_alloc}.  If @var{P}
+is @cnull{}: nothing happens.
+@end deftypefun
+
+@c page
+@node inspection
+@chapter Inspecting lists
+
+
+@deftypefun size_t ccpair_length (cce_location_t @var{P}, ccpair_t @var{P})
+Return the number of pairs in the list beginning with @var{P}.  If @var{P} is @cnull{}: return zero.
+If the operand is a circular list: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun bool ccpair_is_empty (ccpair_t @var{P})
+@deftypefunx bool ccpair_is_null (ccpair_t @var{P})
+Return @ctrue{} if @var{P} represents the empty list, that is: if @var{P} is @cnull{}.  Otherwise
+return @cfalse{}.
+@end deftypefun
+
+
+@deftypefun bool ccpair_is_last (ccpair_t @var{P})
+Return @ctrue{} if @var{P} is the last pair in its list, that is: if the second item in @var{P} is
+@cnull{}.  Otherwise return @cfalse{}.
 @end deftypefun
 
 @c page
@@ -508,6 +534,7 @@ if (cce_location(L)) @{
 @menu
 * conditions base::             Base exceptional conditions.
 * conditions not-enough::       Not enough items in list.
+* conditions circular::         Invalid circular list as operand.
 @end menu
 
 @c page
@@ -552,9 +579,8 @@ Return @true{} if @var{C} is of type @objtype{ccpair_descriptor_base_t}; otherwi
 
 
 @deftp {Struct Typedef} ccpair_descriptor_not_enough_items_t
-Type of data structure representing a generic exceptional condition descriptor for all the
-not_enough_items--related errors; it is the base for all the not_enough_items--related condition
-object types.  It has the following public fields:
+Type of data structure representing the exceptional--condition descriptor for the error: not enough
+items in list.  It has the following public fields:
 
 @table @code
 @item cce_descriptor_t descriptor
@@ -566,8 +592,8 @@ The parent of this type descriptor is the one referenced by @code{ccpair_descrip
 
 
 @deftp {Struct Typedef} ccpair_condition_not_enough_items_t
-Type of data structure representing an exceptional condition object for a generic not_enough_items--related
-error.  It has the following public fields:
+Type of data structure representing the exceptional--condition object for the error: not enough
+items in list.  It has the following public fields:
 
 @table @code
 @item cce_condition_t base
@@ -594,13 +620,80 @@ Return @ctrue{} if @var{C} if of type @code{ccpair_descriptor_not_enough_items};
 
 To catch this exceptional condition we can do:
 
-@smallexample
+@example
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
   if (ccpair_condition_is_not_enough_items(cce_condition(L))) @{
     ccpair_condition_not_enough_items_t * C = \
       (ccpair_condition_not_enough_items_t *) cce_condition(L);
+    do_something_with(C);
+  @}
+  cce_run_error_handlers_final(L);
+@} else @{
+  do_something(L);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+@c page
+@node conditions circular
+@section Invalid circular list as operand
+
+
+@cindex Invalid circular list as operand, exceptional condition
+@cindex Exceptional conditions, Invalid circular list as operand
+
+
+@deftp {Struct Typedef} ccpair_descriptor_circular_list_t
+Type of data structure representing the exceptional--condition descriptor for the error: invalid
+circular list as operand.  It has the following public fields:
+
+@table @code
+@item cce_descriptor_t descriptor
+The condition descriptor's base values.
+@end table
+
+The parent of this type descriptor is the one referenced by @code{ccpair_descriptor_base}.
+@end deftp
+
+
+@deftp {Struct Typedef} ccpair_condition_circular_list_t
+Type of data structure representing the exceptional--condition object for the error: invalid
+circular list as operand.  It has the following public fields:
+
+@table @code
+@item cce_condition_t base
+The condition object's base values.
+@end table
+@end deftp
+
+
+@deftypevr {Dynamic Constant} {const ccpair_descriptor_circular_list_t * const} ccpair_descriptor_circular_list
+Pointer to a statically allocated exceptional condition descriptor.
+@end deftypevr
+
+
+@deftypefun {cce_condition_t const *} ccpair_condition_new_circular_list (void)
+Return a pointer to exceptional condition object.
+@end deftypefun
+
+
+@deftypefun bool ccpair_condition_is_circular_list (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} if of type @code{ccpair_descriptor_circular_list}; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+To catch this exceptional condition we can do:
+
+@smallexample
+cce_location_t        L[1];
+
+if (cce_location(L)) @{
+  if (ccpair_condition_is_circular_list(cce_condition(L))) @{
+    ccpair_condition_circular_list_t * C = \
+      (ccpair_condition_circular_list_t *) cce_condition(L);
     do_something_with(C);
   @}
   cce_run_error_handlers_final(L);

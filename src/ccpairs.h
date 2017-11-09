@@ -112,9 +112,11 @@ typedef void     ccpair_free_fun_t	(ccpair_allocator_t const * allocator, ccpair
 
 typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
 typedef struct ccpair_descriptor_not_enough_items_t	ccpair_descriptor_not_enough_items_t;
+typedef struct ccpair_descriptor_circular_list_t	ccpair_descriptor_circular_list_t;
 
 typedef struct ccpair_condition_base_t			ccpair_condition_base_t;
 typedef struct ccpair_condition_not_enough_items_t	ccpair_condition_not_enough_items_t;
+typedef struct ccpair_condition_circular_list_t		ccpair_condition_circular_list_t;
 
 
 /** --------------------------------------------------------------------
@@ -178,6 +180,28 @@ ccpair_condition_is_not_enough_items (cce_condition_t const * C)
   return cce_is_condition(C, &(ccpair_descriptor_not_enough_items->descriptor));
 }
 
+/* ------------------------------------------------------------------ */
+
+struct ccpair_descriptor_circular_list_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct ccpair_condition_circular_list_t {
+  ccpair_condition_base_t	base;
+};
+
+ccpair_decl const ccpair_descriptor_circular_list_t * const ccpair_descriptor_circular_list;
+
+ccpair_decl cce_condition_t const * ccpair_condition_new_circular_list (void)
+  __attribute__((leaf,pure));
+
+__attribute__((pure,nonnull(1),always_inline))
+static inline bool
+ccpair_condition_is_circular_list (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(ccpair_descriptor_circular_list->descriptor));
+}
+
 
 /** --------------------------------------------------------------------
  ** Pair structure.
@@ -222,11 +246,12 @@ struct ccpair_allocator_t {
 ccpair_decl ccpair_allocator_t const * ccpair_register_allocator (ccpair_allocator_t const * allocator)
   __attribute__((nonnull(1),returns_nonnull));
 
-ccpair_decl ccpair_t	ccpair_alloc (cce_location_t * L);
+ccpair_decl ccpair_t	ccpair_alloc (cce_location_t * L)
+  __attribute__((nonnull(1)));
 ccpair_decl void	ccpair_free   (ccpair_t P);
 ccpair_decl void	ccpair_free_list (ccpair_t P);
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline ccpair_t
 ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
 {
@@ -238,75 +263,103 @@ ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
 
 
 /** --------------------------------------------------------------------
+ ** Inspection.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((always_inline))
+static inline bool
+ccpair_is_empty (ccpair_t P)
+{
+  return (NULL == P)? true : false;
+}
+
+__attribute__((always_inline))
+static inline bool
+ccpair_is_null (ccpair_t P)
+{
+  return (NULL == P)? true : false;
+}
+
+ccpair_decl size_t ccpair_length (cce_location_t * L, ccpair_t P)
+  __attribute__((nonnull(1)));
+
+__attribute__((always_inline))
+static inline bool ccpair_is_last (ccpair_t P)
+{
+  return (P && (NULL == ccpair_cdr(P)))? true : false;
+}
+
+
+/** --------------------------------------------------------------------
  ** Accessors.
  ** ----------------------------------------------------------------- */
 
 ccpair_decl uintptr_t ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx);
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_first (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 0);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_second (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 1);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_third (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 2);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_fourth (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 3);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_fifth (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 4);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_sixth (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 5);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_seventh (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 6);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_eighth (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 7);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_nineth (cce_location_t * L, ccpair_t P)
 {
   return ccpair_ref(L, P, 8);
 }
 
-__attribute__((always_inline))
+__attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
 ccpair_tenth (cce_location_t * L, ccpair_t P)
 {
