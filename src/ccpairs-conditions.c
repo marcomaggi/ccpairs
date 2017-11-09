@@ -92,6 +92,40 @@ condition_not_enough_items_static_message (cce_condition_t const * C CCPAIR_UNUS
 
 
 /** --------------------------------------------------------------------
+ ** Exceptional condition descriptor: invalid empty list as operand.
+ ** ----------------------------------------------------------------- */
+
+static cce_condition_static_message_fun_t	condition_empty_list_static_message;
+
+static ccpair_descriptor_empty_list_t const descriptor_empty_list = {
+  .descriptor.parent		= &descriptor_base.descriptor,
+  .descriptor.delete		= NULL,
+  .descriptor.final		= NULL,
+  .descriptor.static_message	= condition_empty_list_static_message
+};
+
+ccpair_descriptor_empty_list_t const * const ccpair_descriptor_empty_list = &descriptor_empty_list;
+
+/* This struct type has no dynamic fields, so there is only one instance
+   of this struct type.  We allocate it statically. */
+static ccpair_condition_empty_list_t const condition_empty_list = {
+  .base.condition.descriptor	= &descriptor_empty_list.descriptor
+};
+
+cce_condition_t const *
+ccpair_condition_new_empty_list (void)
+{
+  return (cce_condition_t *)&condition_empty_list;
+}
+
+char const *
+condition_empty_list_static_message (cce_condition_t const * C CCPAIR_UNUSED)
+{
+  return "invalid empty list as operand";
+}
+
+
+/** --------------------------------------------------------------------
  ** Exceptional condition descriptor: invalid circular list as operand.
  ** ----------------------------------------------------------------- */
 

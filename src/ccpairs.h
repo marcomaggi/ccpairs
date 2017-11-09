@@ -112,10 +112,12 @@ typedef void     ccpair_free_fun_t	(ccpair_allocator_t const * allocator, ccpair
 
 typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
 typedef struct ccpair_descriptor_not_enough_items_t	ccpair_descriptor_not_enough_items_t;
+typedef struct ccpair_descriptor_empty_list_t		ccpair_descriptor_empty_list_t;
 typedef struct ccpair_descriptor_circular_list_t	ccpair_descriptor_circular_list_t;
 
 typedef struct ccpair_condition_base_t			ccpair_condition_base_t;
 typedef struct ccpair_condition_not_enough_items_t	ccpair_condition_not_enough_items_t;
+typedef struct ccpair_condition_empty_list_t		ccpair_condition_empty_list_t;
 typedef struct ccpair_condition_circular_list_t		ccpair_condition_circular_list_t;
 
 
@@ -178,6 +180,28 @@ static inline bool
 ccpair_condition_is_not_enough_items (cce_condition_t const * C)
 {
   return cce_is_condition(C, &(ccpair_descriptor_not_enough_items->descriptor));
+}
+
+/* ------------------------------------------------------------------ */
+
+struct ccpair_descriptor_empty_list_t {
+  cce_descriptor_t	descriptor;
+};
+
+struct ccpair_condition_empty_list_t {
+  ccpair_condition_base_t	base;
+};
+
+ccpair_decl const ccpair_descriptor_empty_list_t * const ccpair_descriptor_empty_list;
+
+ccpair_decl cce_condition_t const * ccpair_condition_new_empty_list (void)
+  __attribute__((leaf,pure));
+
+__attribute__((pure,nonnull(1),always_inline))
+static inline bool
+ccpair_condition_is_empty_list (cce_condition_t const * C)
+{
+  return cce_is_condition(C, &(ccpair_descriptor_empty_list->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -291,7 +315,26 @@ static inline bool ccpair_is_last (ccpair_t P)
 
 
 /** --------------------------------------------------------------------
- ** Accessors.
+ ** Pair accessors.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((always_inline,nonnull(1),returns_nonnull))
+static inline ccpair_t
+ccpair_last (cce_location_t * L, ccpair_t P)
+{
+  for (; P; P = ccpair_cdr(P)) {
+    if (ccpair_is_last(P)) {
+      return P;
+    }
+  }
+  cce_raise(L, ccpair_condition_new_empty_list());
+}
+
+ccpair_decl ccpair_t ccpair_pair_ref (cce_location_t * L, ccpair_t P, unsigned idx);
+
+
+/** --------------------------------------------------------------------
+ ** Item accessors.
  ** ----------------------------------------------------------------- */
 
 ccpair_decl uintptr_t ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx);

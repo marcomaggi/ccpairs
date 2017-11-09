@@ -42,14 +42,16 @@ ccpair_length (cce_location_t * L, ccpair_t hare)
   if (hare) {
     /* Hare only step. */
     {
+      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
       hare = ccpair_cdr(hare);
       ++len;
     }
     while (hare) {
+      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
       /* Hare and turtle step. */
       {
 	if (hare != turtle) {
-	  turtle = hare;
+	  turtle = ccpair_cdr(turtle);
 	  hare   = ccpair_cdr(hare);
 	  ++len;
 	} else {
@@ -57,8 +59,9 @@ ccpair_length (cce_location_t * L, ccpair_t hare)
 	  cce_raise(L, ccpair_condition_new_circular_list());
 	}
       }
+      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
       /* Hare only step. */
-      {
+      if (hare) {
 	if (hare != turtle) {
 	  hare = ccpair_cdr(hare);
 	  ++len;

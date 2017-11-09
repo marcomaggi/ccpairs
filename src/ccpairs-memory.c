@@ -93,10 +93,43 @@ ccpair_free (ccpair_t P)
 void
 ccpair_free_list (ccpair_t P)
 {
-  while (P) {
-    ccpair_t Q = ccpair_cdr(P);
-    current_allocator->free(current_allocator, P);
-    P = Q;
+  ccpair_t	turtle = P, hare = P, tmp;
+
+  if (hare) {
+    /* Hare only step. */
+    {
+      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
+      tmp  = hare;
+      hare = ccpair_cdr(hare);
+      current_allocator->free(current_allocator, tmp);
+    }
+    while (hare) {
+      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
+      /* Hare and turtle step. */
+      {
+	if (hare != turtle) {
+	  tmp    = hare;
+	  turtle = ccpair_cdr(turtle);
+	  hare   = ccpair_cdr(hare);
+	  current_allocator->free(current_allocator, tmp);
+	} else {
+	  /* This is a circular list. */
+	  return;
+	}
+      }
+      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
+      /* Hare only step. */
+      if (hare) {
+	if (hare != turtle) {
+	  tmp    = hare;
+	  hare   = ccpair_cdr(hare);
+	  current_allocator->free(current_allocator, tmp);
+	} else {
+	  /* This is a circular list. */
+	  return;
+	}
+      }
+    }
   }
 }
 

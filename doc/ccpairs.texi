@@ -410,7 +410,7 @@ Release the memory previously allocated for a pair with @cfunc{ccpair_alloc}.  I
 
 @deftypefun void ccpair_free_list (ccpair_t @var{P})
 Release the memory previously allocated for a list of pairs with @cfunc{ccpair_alloc}.  If @var{P}
-is @cnull{}: nothing happens.
+is @cnull{}: nothing happens.  If @var{P} is a circular list: the pairs are released correctly.
 @end deftypefun
 
 @c page
@@ -432,13 +432,39 @@ return @cfalse{}.
 
 
 @deftypefun bool ccpair_is_last (ccpair_t @var{P})
-Return @ctrue{} if @var{P} is the last pair in its list, that is: if the second item in @var{P} is
-@cnull{}.  Otherwise return @cfalse{}.
+Return @ctrue{} if @var{P} is the last pair in its list, that is: if @var{P} is not @cnull{} and the
+second item in @var{P} is @cnull{}.  Otherwise return @cfalse{}.
 @end deftypefun
 
 @c page
 @node accessors
 @chapter Accessing items in lists
+
+
+@menu
+* accessors pairs::             Accessing list pairs.
+* accessors items::             Accessing list items.
+@end menu
+
+@c page
+@node accessors pairs
+@section Accessing list pairs
+
+
+@deftypefun ccpair_t ccpair_pair_ref (cce_location_t @var{L}, ccpair_t @var{P}, unsigned @var{idx})
+Return a pointer to the pair at index @var{idx} in the list whose first pair is @var{P}.  If the
+list has less than @var{idx} pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_last (cce_location_t * @var{L}, ccpair_t @var{P})
+Return a pointer to the last pair in the list @var{P}.  If @var{P} is @cnull{}: raise an exception
+by performing a non--local exit to @var{L}.
+@end deftypefun
+
+@c page
+@node accessors items
+@section Accessing list items
 
 
 @deftypefun uintptr_t ccpair_ref (cce_location_t @var{L}, ccpair_t @var{P}, unsigned @var{idx})
@@ -534,6 +560,7 @@ if (cce_location(L)) @{
 @menu
 * conditions base::             Base exceptional conditions.
 * conditions not-enough::       Not enough items in list.
+* conditions empty::            Invalid empty list as operand.
 * conditions circular::         Invalid circular list as operand.
 @end menu
 
@@ -637,6 +664,73 @@ if (cce_location(L)) @{
 @end example
 
 @c page
+@node conditions empty
+@section Invalid empty list as operand
+
+
+@cindex Invalid empty list as operand, exceptional condition
+@cindex Exceptional conditions, Invalid empty list as operand
+
+
+@deftp {Struct Typedef} ccpair_descriptor_empty_list_t
+Type of data structure representing the exceptional--condition descriptor for the error: invalid
+empty list as operand.  It has the following public fields:
+
+@table @code
+@item cce_descriptor_t descriptor
+The condition descriptor's base values.
+@end table
+
+The parent of this type descriptor is the one referenced by @code{ccpair_descriptor_base}.
+@end deftp
+
+
+@deftp {Struct Typedef} ccpair_condition_empty_list_t
+Type of data structure representing the exceptional--condition object for the error: invalid empty
+list as operand.  It has the following public fields:
+
+@table @code
+@item cce_condition_t base
+The condition object's base values.
+@end table
+@end deftp
+
+
+@deftypevr {Dynamic Constant} {const ccpair_descriptor_empty_list_t * const} ccpair_descriptor_empty_list
+Pointer to a statically allocated exceptional condition descriptor.
+@end deftypevr
+
+
+@deftypefun {cce_condition_t const *} ccpair_condition_new_empty_list (void)
+Return a pointer to exceptional condition object.
+@end deftypefun
+
+
+@deftypefun bool ccpair_condition_is_empty_list (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} if of type @code{ccpair_descriptor_empty_list}; otherwise return
+@cfalse{}.
+@end deftypefun
+
+
+To catch this exceptional condition we can do:
+
+@example
+cce_location_t        L[1];
+
+if (cce_location(L)) @{
+  if (ccpair_condition_is_empty_list(cce_condition(L))) @{
+    ccpair_condition_empty_list_t * C = \
+      (ccpair_condition_empty_list_t *) cce_condition(L);
+    do_something_with(C);
+  @}
+  cce_run_error_handlers_final(L);
+@} else @{
+  do_something(L);
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+@c page
 @node conditions circular
 @section Invalid circular list as operand
 
@@ -687,7 +781,7 @@ Return @ctrue{} if @var{C} if of type @code{ccpair_descriptor_circular_list}; ot
 
 To catch this exceptional condition we can do:
 
-@smallexample
+@example
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
@@ -701,7 +795,7 @@ if (cce_location(L)) @{
   do_something(L);
   cce_run_cleanup_handlers(L);
 @}
-@end smallexample
+@end example
 
 @c page
 @node handlers

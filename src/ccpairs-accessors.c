@@ -47,4 +47,17 @@ ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx)
   return ccpair_car(P);
 }
 
+ccpair_t
+ccpair_pair_ref (cce_location_t * L, ccpair_t P, unsigned idx)
+{
+  for (unsigned i=0; i<idx; ++i) {
+    if (P) {
+      P = ccpair_cdr(P);
+    } else {
+      cce_raise(L, ccpair_condition_new_not_enough_items());
+    }
+  }
+  return P;
+}
+
 /* end of file */
