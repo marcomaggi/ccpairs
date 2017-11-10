@@ -52,11 +52,11 @@ ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
 }
 
 ccpair_t
-ccpair_last_pair (cce_location_t * L, ccpair_t P)
+ccpair_last_pair (cce_location_t * L, ccpair_t const P)
 {
-  for (; P; P = ccpair_cdr(P)) {
-    if (ccpair_is_last(P)) {
-      return P;
+  for (ccpair_t Q = P; Q; Q = ccpair_cdr(Q)) {
+    if (ccpair_is_last(Q)) {
+      return Q;
     }
   }
   cce_raise(L, ccpair_condition_new_empty_list());

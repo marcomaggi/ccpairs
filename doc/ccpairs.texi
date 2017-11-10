@@ -490,6 +490,13 @@ to @var{L}.
 @end deftypefun
 
 
+@deftypefun uintptr_t ccpair_pair (cce_location_t * @var{L}, ccpair_t @var{P})
+Return the item of the last pair in the list @var{P}.  If @var{P} is @cnull{}: raise an exception by
+performing a non--local exit to @var{L}.
+@end deftypefun
+
+@c ------------------------------------------------------------------------
+
 @deftypefun uintptr_t ccpair_first (cce_location_t @var{L}, ccpair_t @var{P})
 Return the first item in the list whose first pair is @var{P}.  If the list is empty (that is:
 @var{P} is @cnull{}): raise an exception by performing a non--local exit to @var{L}.

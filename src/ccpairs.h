@@ -325,7 +325,7 @@ ccpair_decl ccpair_t ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx
   __attribute__((nonnull(1)));
 
 ccpair_decl ccpair_t ccpair_last_pair (cce_location_t * L, ccpair_t P)
-  __attribute__((nonnull(1),returns_nonnull));
+  __attribute__((nonnull(1,2),returns_nonnull));
 
 
 /** --------------------------------------------------------------------
@@ -337,6 +337,13 @@ static inline uintptr_t
 ccpair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
 {
   return ccpair_car(ccpair_ref_pair(L, P, idx));
+}
+
+__attribute__((always_inline,nonnull(1,2)))
+static inline uintptr_t
+ccpair_last (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_car(ccpair_last_pair(L, P));
 }
 
 /* ------------------------------------------------------------------ */
