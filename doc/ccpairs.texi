@@ -466,13 +466,14 @@ second item in @var{P} is @cnull{}.  Otherwise return @cfalse{}.
 @section Accessing list pairs
 
 
-@deftypefun ccpair_t ccpair_pair_ref (cce_location_t @var{L}, ccpair_t @var{P}, ccpair_idx_t @var{idx})
-Return a pointer to the pair at index @var{idx} in the list whose first pair is @var{P}.  If the
-list has less than @var{idx} pairs: raise an exception by performing a non--local exit to @var{L}.
+@deftypefun ccpair_t ccpair_ref_pair (cce_location_t @var{L}, ccpair_t @var{P}, ccpair_idx_t @var{idx})
+Return a pointer to the pair at the zero--based index @var{idx} in the list whose first pair is
+@var{P}.  If the list length is less than or equal to @var{idx}: raise an exception by performing a
+non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_last (cce_location_t * @var{L}, ccpair_t @var{P})
+@deftypefun ccpair_t ccpair_last_pair (cce_location_t * @var{L}, ccpair_t @var{P})
 Return a pointer to the last pair in the list @var{P}.  If @var{P} is @cnull{}: raise an exception
 by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -483,8 +484,9 @@ by performing a non--local exit to @var{L}.
 
 
 @deftypefun uintptr_t ccpair_ref (cce_location_t @var{L}, ccpair_t @var{P}, ccpair_idx_t @var{idx})
-Return the item at index @var{idx} in the list whose first pair is @var{P}.  If the list has less
-than @var{idx} pairs: raise an exception by performing a non--local exit to @var{L}.
+Return the item at the zero--based index @var{idx} in the list whose first pair is @var{P}.  If the
+list length is less than or equal to @var{idx}: raise an exception by performing a non--local exit
+to @var{L}.
 @end deftypefun
 
 

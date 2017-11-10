@@ -53,15 +53,11 @@ make_list_len (cce_location_t * upper_L, ccpair_len_t len)
     if (cce_location(L)) {
       cce_run_error_handlers_raise(L, upper_L);
     } else {
-      if (1 == len) {
-	P[1] = NULL;
-      } else {
-	P[1+len] = NULL;
-	for (ccpair_idx_t i = len-1; i > 0; --i) {
-	  if (0) { fprintf(stderr, "%s: i=%lu len=%lu\n", __func__, i, len); }
-	  P[i] = ccpair_cons(L, 1+i, P[1+i]);
-	  ccpair_error_handler_pair_init(L, &(P_H[i]), P[i]);
-	}
+      P[len] = NULL;
+      for (ccpair_idx_t i = len-1; i > 0; --i) {
+	if (0) { fprintf(stderr, "%s: i=%lu len=%lu\n", __func__, i, len); }
+	P[i] = ccpair_cons(L, 1+i, P[1+i]);
+	ccpair_error_handler_pair_init(L, &(P_H[i]), P[i]);
       }
       P[0] = ccpair_cons(L, 1, P[1]);
       cce_run_cleanup_handlers(L);
@@ -105,7 +101,7 @@ test_1_1 (void)
     cce_run_error_handlers_final(L);
   } else {
     P = NULL;
-    ccpair_pair_ref(L, P, 1);
+    ccpair_ref_pair(L, P, 1);
     cce_run_cleanup_handlers(L);
   }
   assert(true == exception);
@@ -124,7 +120,7 @@ test_1_2 (void)
   } else {
     P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
-    assert(P == ccpair_pair_ref(L, P, 0));
+    assert(P == ccpair_ref_pair(L, P, 0));
     cce_run_cleanup_handlers(L);
   }
 }
@@ -145,8 +141,8 @@ test_1_3 (void)
     ccpair_cleanup_handler_list_init(L, P_H, P);
     if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: len=%lu\n", __func__, ccpair_length(L, P)); }
-    if (0) { fprintf(stderr, "%s: item=%lu\n", __func__, ccpair_car(ccpair_pair_ref(L, P, 3))); }
-    assert(4 == ccpair_car(ccpair_pair_ref(L, P, 3)));
+    if (0) { fprintf(stderr, "%s: item=%lu\n", __func__, ccpair_car(ccpair_ref_pair(L, P, 3))); }
+    assert(4 == ccpair_car(ccpair_ref_pair(L, P, 3)));
     cce_run_cleanup_handlers(L);
   }
 }
@@ -164,7 +160,7 @@ test_1_4 (void)
   } else {
     P = make_list_len(L, 1024);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    assert(1000 == ccpair_car(ccpair_pair_ref(L, P, 999)));
+    assert(1000 == ccpair_car(ccpair_ref_pair(L, P, 999)));
     cce_run_cleanup_handlers(L);
   }
 }
@@ -229,7 +225,7 @@ test_2_3 (void)
     ccpair_cleanup_handler_list_init(L, P_H, P);
     if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: len=%lu\n", __func__, ccpair_length(L, P)); }
-    if (0) { fprintf(stderr, "%s: item=%lu\n", __func__, ccpair_car(ccpair_pair_ref(L, P, 3))); }
+    if (0) { fprintf(stderr, "%s: item=%lu\n", __func__, ccpair_car(ccpair_ref_pair(L, P, 3))); }
     assert(4 == ccpair_ref(L, P, 3));
     cce_run_cleanup_handlers(L);
   }

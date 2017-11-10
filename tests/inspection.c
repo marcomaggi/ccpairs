@@ -53,15 +53,11 @@ make_list_len (cce_location_t * upper_L, size_t len)
     if (cce_location(L)) {
       cce_run_error_handlers_raise(L, upper_L);
     } else {
-      if (1 == len) {
-	P[1] = NULL;
-      } else {
-	P[1+len] = NULL;
-	for (size_t i = len-1; i > 0; --i) {
-	  if (0) { fprintf(stderr, "%s: i=%lu len=%lu\n", __func__, i, len); }
-	  P[i] = ccpair_cons(L, 1+i, P[1+i]);
-	  ccpair_error_handler_pair_init(L, &(P_H[i]), P[i]);
-	}
+      P[len] = NULL;
+      for (size_t i = len-1; i > 0; --i) {
+	if (0) { fprintf(stderr, "%s: i=%lu len=%lu\n", __func__, i, len); }
+	P[i] = ccpair_cons(L, 1+i, P[1+i]);
+	ccpair_error_handler_pair_init(L, &(P_H[i]), P[i]);
       }
       P[0] = ccpair_cons(L, 1, P[1]);
       cce_run_cleanup_handlers(L);
@@ -212,8 +208,8 @@ test_1_6 (void)
     ccpair_cleanup_handler_list_init(L, P_H, P);
     /* Close a loop making the list circular. */
     {
-      ccpair_t	P_last		= ccpair_last(L, P);
-      ccpair_t	P_loop_end	= ccpair_pair_ref(L, P, 5);
+      ccpair_t	P_last		= ccpair_last_pair(L, P);
+      ccpair_t	P_loop_end	= ccpair_ref_pair(L, P, 5);
       P_last->D = (uintptr_t) P_loop_end;
     }
     ccpair_length(L, P);
@@ -242,8 +238,8 @@ test_1_7 (void)
     ccpair_cleanup_handler_list_init(L, P_H, P);
     /* Close a loop making the list circular. */
     {
-      ccpair_t	P_last		= ccpair_last(L, P);
-      ccpair_t	P_loop_end	= ccpair_pair_ref(L, P, 6);
+      ccpair_t	P_last		= ccpair_last_pair(L, P);
+      ccpair_t	P_loop_end	= ccpair_ref_pair(L, P, 6);
       P_last->D = (uintptr_t) P_loop_end;
     }
     ccpair_length(L, P);

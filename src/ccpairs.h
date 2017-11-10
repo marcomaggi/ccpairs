@@ -239,21 +239,21 @@ struct ccpair_stru_t {
   uintptr_t 	D;
 };
 
-__attribute__((always_inline,const,nonnull(1)))
+__attribute__((always_inline,pure,nonnull(1)))
 static inline uintptr_t
 ccpair_car (ccpair_t P)
 {
   return P->A;
 }
 
-__attribute__((always_inline,const,nonnull(1)))
+__attribute__((always_inline,pure,nonnull(1)))
 static inline ccpair_t
 ccpair_cdr (ccpair_t P)
 {
   return (ccpair_t)(P->D);
 }
 
-__attribute__((always_inline,const,nonnull(1)))
+__attribute__((always_inline,pure,nonnull(1)))
 static inline uintptr_t
 ccpair_cdr_value (ccpair_t P)
 {
@@ -321,26 +321,25 @@ static inline bool ccpair_is_last (ccpair_t P)
  ** Pair accessors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((always_inline,nonnull(1),returns_nonnull))
-static inline ccpair_t
-ccpair_last (cce_location_t * L, ccpair_t P)
-{
-  for (; P; P = ccpair_cdr(P)) {
-    if (ccpair_is_last(P)) {
-      return P;
-    }
-  }
-  cce_raise(L, ccpair_condition_new_empty_list());
-}
+ccpair_decl ccpair_t ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx_t idx)
+  __attribute__((nonnull(1)));
 
-ccpair_decl ccpair_t ccpair_pair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t idx);
+ccpair_decl ccpair_t ccpair_last_pair (cce_location_t * L, ccpair_t P)
+  __attribute__((nonnull(1),returns_nonnull));
 
 
 /** --------------------------------------------------------------------
  ** Item accessors.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl uintptr_t ccpair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t idx);
+__attribute__((always_inline,nonnull(1)))
+static inline uintptr_t
+ccpair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
+{
+  return ccpair_car(ccpair_ref_pair(L, P, idx));
+}
+
+/* ------------------------------------------------------------------ */
 
 __attribute__((always_inline,nonnull(1)))
 static inline uintptr_t

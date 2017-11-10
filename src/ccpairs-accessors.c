@@ -34,21 +34,12 @@
 #include "ccpairs-internals.h"
 
 
-uintptr_t
-ccpair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
-{
-  for (ccpair_idx_t i=0; i<idx; ++i) {
-    if (P) {
-      P = ccpair_cdr(P);
-    } else {
-      cce_raise(L, ccpair_condition_new_not_enough_items());
-    }
-  }
-  return ccpair_car(P);
-}
+/** --------------------------------------------------------------------
+ ** Pair accessors.
+ ** ----------------------------------------------------------------- */
 
 ccpair_t
-ccpair_pair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
+ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
 {
   for (ccpair_idx_t i=0; i<idx; ++i) {
     if (P) {
@@ -59,5 +50,22 @@ ccpair_pair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
   }
   return P;
 }
+
+ccpair_t
+ccpair_last_pair (cce_location_t * L, ccpair_t P)
+{
+  for (; P; P = ccpair_cdr(P)) {
+    if (ccpair_is_last(P)) {
+      return P;
+    }
+  }
+  cce_raise(L, ccpair_condition_new_empty_list());
+}
+
+
+/** --------------------------------------------------------------------
+ ** Item accessors.
+ ** ----------------------------------------------------------------- */
+
 
 /* end of file */
