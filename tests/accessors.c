@@ -336,6 +336,92 @@ test_3_4 (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** Last function.
+ ** ----------------------------------------------------------------- */
+
+void
+test_4_1 (void)
+/* Empty list, "empty list" exception. */
+{
+#if 0
+  cce_location_t	L[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_empty_list(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = NULL;
+    ccpair_last(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+#endif
+}
+
+void
+test_4_2 (void)
+/* One item list, ref pair 0. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  cce_handler_t		P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = ccpair_cons(L, 1, NULL);
+    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    assert(1 == ccpair_last(L, P));
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+void
+test_4_3 (void)
+/* Five items list, success. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  cce_handler_t		P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    //P = make_list_5(L);
+    P = make_list_len(L, 5);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    if (0) { print_list(P); }
+    if (0) { fprintf(stderr, "%s: len=%lu\n", __func__, ccpair_length(L, P)); }
+    if (0) { fprintf(stderr, "%s: item=%lu\n", __func__, ccpair_last(L, P)); }
+    assert(5 == ccpair_last(L, P));
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+void
+test_4_4 (void)
+/* 1024 items list. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  cce_handler_t		P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 1024);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    assert(1024 == ccpair_last(L, P));
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+
 int
 main (void)
 {
@@ -359,6 +445,11 @@ main (void)
   if (1) { test_3_3(); }
   if (1) { test_3_4(); }
 
+  /* last function */
+  if (1) { test_4_1(); }
+  if (1) { test_4_2(); }
+  if (1) { test_4_3(); }
+  if (1) { test_4_4(); }
 
   exit(EXIT_SUCCESS);
 }
