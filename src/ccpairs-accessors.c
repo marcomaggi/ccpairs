@@ -35,9 +35,9 @@
 
 
 uintptr_t
-ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx)
+ccpair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
 {
-  for (unsigned i=0; i<idx; ++i) {
+  for (ccpair_idx_t i=0; i<idx; ++i) {
     if (P) {
       P = ccpair_cdr(P);
     } else {
@@ -48,9 +48,9 @@ ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx)
 }
 
 ccpair_t
-ccpair_pair_ref (cce_location_t * L, ccpair_t P, unsigned idx)
+ccpair_pair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
 {
-  for (unsigned i=0; i<idx; ++i) {
+  for (ccpair_idx_t i=0; i<idx; ++i) {
     if (P) {
       P = ccpair_cdr(P);
     } else {

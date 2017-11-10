@@ -124,6 +124,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * overview::                    Overview of the package.
 * init::                        Library initialisation.
 * version::                     Version functions.
+* typedefs::                    Some type definitions.
 * pairs::                       Pair data structures.
 * memory::                      Memory allocation.
 * inspection::                  Inspecting lists.
@@ -246,6 +247,20 @@ Return an integer representing the library interface current revision number.
 @deftypefun int ccpair_version_interface_age (void)
 Return an integer representing the library interface current age.
 @end deftypefun
+
+@c page
+@node typedefs
+@chapter Some type definitions
+
+
+@deftp {Integer Type} ccpair_idx_t
+Type of indexes used to reference pairs and items in lists.  It is an alias for @objtype{size_t}.
+@end deftp
+
+
+@deftp {Integer Type} ccpair_len_t
+Type of integers used to represent list lengths.  It is an alias for @objtype{size_t}.
+@end deftp
 
 @c page
 @node pairs
@@ -418,7 +433,7 @@ is @cnull{}: nothing happens.  If @var{P} is a circular list: the pairs are rele
 @chapter Inspecting lists
 
 
-@deftypefun size_t ccpair_length (cce_location_t @var{P}, ccpair_t @var{P})
+@deftypefun ccpair_len_t ccpair_length (cce_location_t @var{P}, ccpair_t @var{P})
 Return the number of pairs in the list beginning with @var{P}.  If @var{P} is @cnull{}: return zero.
 If the operand is a circular list: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -451,7 +466,7 @@ second item in @var{P} is @cnull{}.  Otherwise return @cfalse{}.
 @section Accessing list pairs
 
 
-@deftypefun ccpair_t ccpair_pair_ref (cce_location_t @var{L}, ccpair_t @var{P}, unsigned @var{idx})
+@deftypefun ccpair_t ccpair_pair_ref (cce_location_t @var{L}, ccpair_t @var{P}, ccpair_idx_t @var{idx})
 Return a pointer to the pair at index @var{idx} in the list whose first pair is @var{P}.  If the
 list has less than @var{idx} pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -467,7 +482,7 @@ by performing a non--local exit to @var{L}.
 @section Accessing list items
 
 
-@deftypefun uintptr_t ccpair_ref (cce_location_t @var{L}, ccpair_t @var{P}, unsigned @var{idx})
+@deftypefun uintptr_t ccpair_ref (cce_location_t @var{L}, ccpair_t @var{P}, ccpair_idx_t @var{idx})
 Return the item at index @var{idx} in the list whose first pair is @var{P}.  If the list has less
 than @var{idx} pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun

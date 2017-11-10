@@ -56,6 +56,7 @@ check_PROGRAMS	= \
 	tests/version		\
 	tests/cons		\
 	tests/inspection	\
+	tests/accessors		\
 	tests/mapping
 
 TESTS				= $(check_PROGRAMS)
@@ -71,6 +72,9 @@ tests_cons_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_inspection_CPPFLAGS	= $(ccpairs_tests_cppflags)
 tests_inspection_LDADD		= $(ccpairs_tests_ldadd)
+
+tests_accessors_CPPFLAGS	= $(ccpairs_tests_cppflags)
+tests_accessors_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_mapping_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_mapping_LDADD		= $(ccpairs_tests_ldadd)

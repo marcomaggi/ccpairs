@@ -108,6 +108,9 @@ typedef struct ccpair_allocator_t	ccpair_allocator_t;
 typedef ccpair_t ccpair_alloc_fun_t	(cce_location_t *L, ccpair_allocator_t const * allocator);
 typedef void     ccpair_free_fun_t	(ccpair_allocator_t const * allocator, ccpair_t P);
 
+typedef size_t				ccpair_idx_t;
+typedef size_t				ccpair_len_t;
+
 /* ------------------------------------------------------------------ */
 
 typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
@@ -304,7 +307,7 @@ ccpair_is_null (ccpair_t P)
   return (NULL == P)? true : false;
 }
 
-ccpair_decl size_t ccpair_length (cce_location_t * L, ccpair_t P)
+ccpair_decl ccpair_len_t ccpair_length (cce_location_t * L, ccpair_t P)
   __attribute__((nonnull(1)));
 
 __attribute__((always_inline))
@@ -330,14 +333,14 @@ ccpair_last (cce_location_t * L, ccpair_t P)
   cce_raise(L, ccpair_condition_new_empty_list());
 }
 
-ccpair_decl ccpair_t ccpair_pair_ref (cce_location_t * L, ccpair_t P, unsigned idx);
+ccpair_decl ccpair_t ccpair_pair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t idx);
 
 
 /** --------------------------------------------------------------------
  ** Item accessors.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl uintptr_t ccpair_ref (cce_location_t * L, ccpair_t P, unsigned idx);
+ccpair_decl uintptr_t ccpair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t idx);
 
 __attribute__((always_inline,nonnull(1)))
 static inline uintptr_t
