@@ -705,7 +705,8 @@ empty list as operand.  It has the following public fields:
 The condition descriptor's base values.
 @end table
 
-The parent of this type descriptor is the one referenced by @code{ccpair_descriptor_base}.
+The parent of this type descriptor is the one referenced by
+@code{ccpair_descriptor_not_enough_items}.
 @end deftp
 
 

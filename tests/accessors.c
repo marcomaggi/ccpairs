@@ -96,7 +96,7 @@ test_1_1 (void)
 
   if (cce_location(L)) {
     if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
-    assert(ccpair_condition_is_not_enough_items(cce_condition(L)));
+    assert(ccpair_condition_is_empty_list(cce_condition(L)));
     exception = true;
     cce_run_error_handlers_final(L);
   } else {
@@ -258,7 +258,6 @@ void
 test_3_1 (void)
 /* Empty list, "empty list" exception. */
 {
-#if 0
   cce_location_t	L[1];
   ccpair_t		P;
   bool			exception = false;
@@ -274,7 +273,6 @@ test_3_1 (void)
     cce_run_cleanup_handlers(L);
   }
   assert(true == exception);
-#endif
 }
 
 void
@@ -344,7 +342,6 @@ void
 test_4_1 (void)
 /* Empty list, "empty list" exception. */
 {
-#if 0
   cce_location_t	L[1];
   ccpair_t		P;
   bool			exception = false;
@@ -360,7 +357,6 @@ test_4_1 (void)
     cce_run_cleanup_handlers(L);
   }
   assert(true == exception);
-#endif
 }
 
 void
@@ -422,6 +418,308 @@ test_4_4 (void)
 }
 
 
+/** --------------------------------------------------------------------
+ ** First function.
+ ** ----------------------------------------------------------------- */
+
+void
+test_5_1 (void)
+/* Successful retrieval. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  cce_handler_t		P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 19);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    assert(1 == ccpair_first(L, P));
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+void
+test_5_2 (void)
+/* Not enough items in list. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_empty_list(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = NULL;
+    ccpair_first(L, P);
+    fprintf(stderr, "%s: \n", __func__);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Second function.
+ ** ----------------------------------------------------------------- */
+
+void
+test_6_1 (void)
+/* Successful retrieval. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  cce_handler_t		P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 19);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    assert(2 == ccpair_second(L, P));
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+void
+test_6_2 (void)
+/* Empty list. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_empty_list(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = NULL;
+    ccpair_second(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+void
+test_6_3 (void)
+/* Not enough items in list. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		P_H[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_not_enough_items(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 1);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    print_list(P);
+    if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_second(L, P)); }
+    ccpair_second(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Third function.
+ ** ----------------------------------------------------------------- */
+
+void
+test_7_1 (void)
+/* Successful retrieval. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  cce_handler_t		P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 19);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    assert(3 == ccpair_third(L, P));
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+void
+test_7_2 (void)
+/* Empty list. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_empty_list(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = NULL;
+    ccpair_third(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+void
+test_7_3 (void)
+/* Not enough items in list. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		P_H[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_not_enough_items(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 1);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    print_list(P);
+    if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_third(L, P)); }
+    ccpair_third(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+void
+test_7_4 (void)
+/* Not enough items in list: one item short. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		P_H[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_not_enough_items(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 2);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    print_list(P);
+    if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_third(L, P)); }
+    ccpair_third(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+
+/** --------------------------------------------------------------------
+ ** Fourth function.
+ ** ----------------------------------------------------------------- */
+
+void
+test_8_1 (void)
+/* Successful retrieval. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  cce_handler_t		P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 19);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    assert(4 == ccpair_fourth(L, P));
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+void
+test_8_2 (void)
+/* Empty list. */
+{
+  cce_location_t	L[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_empty_list(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = NULL;
+    ccpair_fourth(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+void
+test_8_3 (void)
+/* Not enough items in list. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		P_H[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_not_enough_items(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 1);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    print_list(P);
+    if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_fourth(L, P)); }
+    ccpair_fourth(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+void
+test_8_4 (void)
+/* Not enough items in list: one item short. */
+{
+  cce_location_t	L[1];
+  cce_handler_t		P_H[1];
+  ccpair_t		P;
+  bool			exception = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); };
+    assert(ccpair_condition_is_not_enough_items(cce_condition(L)));
+    exception = true;
+    cce_run_error_handlers_final(L);
+  } else {
+    P = make_list_len(L, 3);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
+    print_list(P);
+    if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_fourth(L, P)); }
+    ccpair_fourth(L, P);
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == exception);
+}
+
+
 int
 main (void)
 {
@@ -450,6 +748,27 @@ main (void)
   if (1) { test_4_2(); }
   if (1) { test_4_3(); }
   if (1) { test_4_4(); }
+
+  /* first function */
+  if (1) { test_5_1(); }
+  if (1) { test_5_2(); }
+
+  /* second function */
+  if (1) { test_6_1(); }
+  if (1) { test_6_2(); }
+  if (1) { test_6_3(); }
+
+  /* third function */
+  if (1) { test_7_1(); }
+  if (1) { test_7_2(); }
+  if (1) { test_7_3(); }
+  if (1) { test_7_4(); }
+
+  /* fourth function */
+  if (1) { test_8_1(); }
+  if (1) { test_8_2(); }
+  if (1) { test_8_3(); }
+  if (1) { test_8_4(); }
 
   exit(EXIT_SUCCESS);
 }

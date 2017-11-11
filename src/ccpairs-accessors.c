@@ -41,22 +41,29 @@
 ccpair_t
 ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
 {
-  for (ccpair_idx_t i=0; i<idx; ++i) {
-    if (P) {
-      P = ccpair_cdr(P);
-    } else {
-      cce_raise(L, ccpair_condition_new_not_enough_items());
+  if (P) {
+    for (ccpair_idx_t i = 0; ; ++i) {
+      if (P) {
+	if (idx > i) {
+	  P = ccpair_cdr(P);
+	} else {
+	  return P;
+	}
+      } else {
+	cce_raise(L, ccpair_condition_new_not_enough_items());
+      }
     }
+  } else {
+    cce_raise(L, ccpair_condition_new_empty_list());
   }
-  return P;
 }
 
 ccpair_t
-ccpair_last_pair (cce_location_t * L, ccpair_t const P)
+ccpair_last_pair (cce_location_t * L, ccpair_t P)
 {
-  for (ccpair_t Q = P; Q; Q = ccpair_cdr(Q)) {
-    if (ccpair_is_last(Q)) {
-      return Q;
+  for (; P; P = ccpair_cdr(P)) {
+    if (ccpair_is_last(P)) {
+      return P;
     }
   }
   cce_raise(L, ccpair_condition_new_empty_list());

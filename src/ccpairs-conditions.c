@@ -98,7 +98,7 @@ condition_not_enough_items_static_message (cce_condition_t const * C CCPAIR_UNUS
 static cce_condition_static_message_fun_t	condition_empty_list_static_message;
 
 static ccpair_descriptor_empty_list_t const descriptor_empty_list = {
-  .descriptor.parent		= &descriptor_base.descriptor,
+  .descriptor.parent		= &descriptor_not_enough_items.descriptor,
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= condition_empty_list_static_message
