@@ -274,7 +274,7 @@ ccpair_decl ccpair_allocator_t const * ccpair_register_allocator (ccpair_allocat
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
 ccpair_decl ccpair_t	ccpair_alloc (cce_location_t * L)
-  __attribute__((__nonnull__(1)));
+  __attribute__((__nonnull__(1),__returns_nonnull__));
 ccpair_decl void	ccpair_free   (ccpair_t P);
 ccpair_decl void	ccpair_free_list (ccpair_t P);
 
@@ -283,6 +283,7 @@ static inline ccpair_t
 ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
 {
   ccpair_t	P = ccpair_alloc(L);
+  if (0) { fprintf(stderr, "%s: cons=%p\n", __func__, (void *)P); }
   P->A = A;
   P->D = (uintptr_t)D;
   return P;
@@ -293,14 +294,14 @@ ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
  ** Inspection.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__))
+__attribute__((__always_inline__,__const__))
 static inline bool
 ccpair_is_empty (ccpair_t P)
 {
   return (NULL == P)? true : false;
 }
 
-__attribute__((__always_inline__))
+__attribute__((__always_inline__,__const__))
 static inline bool
 ccpair_is_null (ccpair_t P)
 {
@@ -310,12 +311,15 @@ ccpair_is_null (ccpair_t P)
 ccpair_decl ccpair_len_t ccpair_length (cce_location_t * L, ccpair_t P)
   __attribute__((__nonnull__(1)));
 
-__attribute__((__always_inline__))
+__attribute__((__always_inline__,__pure__))
 static inline bool
 ccpair_is_last (ccpair_t P)
 {
   return (P && (NULL == ccpair_cdr(P)))? true : false;
 }
+
+ccpair_decl bool ccpair_is_circular (ccpair_t P)
+  __attribute__((__leaf__,__pure__));
 
 
 /** --------------------------------------------------------------------

@@ -23,46 +23,30 @@
  ** ----------------------------------------------------------------- */
 
 ccpair_t
-make_list_5 (cce_location_t * upper_L)
-{
-  cce_location_t	L[1];
-  ccpair_t		P[5];
-  cce_handler_t		P_H[5];
-
-  if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
-  } else {
-    P[4] = ccpair_cons(L, 5, NULL); ccpair_error_handler_pair_init(L, &(P_H[4]), P[4]);
-    P[3] = ccpair_cons(L, 4, P[4]); ccpair_error_handler_pair_init(L, &(P_H[3]), P[3]);
-    P[2] = ccpair_cons(L, 3, P[3]); ccpair_error_handler_pair_init(L, &(P_H[2]), P[2]);
-    P[1] = ccpair_cons(L, 2, P[2]); ccpair_error_handler_pair_init(L, &(P_H[1]), P[1]);
-    P[0] = ccpair_cons(L, 1, P[1]);
-    cce_run_cleanup_handlers(L);
-  }
-  return P[0];
-}
-
-ccpair_t
-make_list_len (cce_location_t * upper_L, ccpair_len_t len)
+make_list_len (cce_location_t * upper_L, size_t len)
 {
   if (len) {
-    cce_location_t	L[1];
-    ccpair_t		P[1+len];
-    cce_handler_t	P_H[len];
+    cce_location_t		L[1];
+    ccpair_t			P[1+len];
+    cce_handler_t		P_H[len];
 
     if (cce_location(L)) {
+      fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
       cce_run_error_handlers_raise(L, upper_L);
     } else {
       P[len] = NULL;
-      for (ccpair_idx_t i = len-1; i > 0; --i) {
+      for (size_t i = len-1; i > 0; --i) {
 	if (0) { fprintf(stderr, "%s: i=%lu len=%lu\n", __func__, i, len); }
 	P[i] = ccpair_cons(L, 1+i, P[1+i]);
+	if (0) { fprintf(stderr, "%s: P[%lu]=%p\n", __func__, i, (void *)(P[i])); }
 	ccpair_error_handler_pair_init(L, &(P_H[i]), P[i]);
       }
       P[0] = ccpair_cons(L, 1, P[1]);
+      if (0) { fprintf(stderr, "%s: P[%u]=%p\n", __func__, 0, (void *)(P[0])); }
       cce_run_cleanup_handlers(L);
+      if (0) { fprintf(stderr, "%s: returning P[0]=%p\n", __func__, (void *)(P[0])); }
+      return P[0];
     }
-    return P[0];
   } else {
     return NULL;
   }
@@ -116,7 +100,9 @@ test_1_2 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
@@ -134,9 +120,10 @@ test_1_3 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
-    //P = make_list_5(L);
     P = make_list_len(L, 5);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     if (0) { print_list(P); }
@@ -156,7 +143,9 @@ test_1_4 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 1024);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -200,7 +189,9 @@ test_2_2 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
@@ -218,9 +209,10 @@ test_2_3 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
-    //P = make_list_5(L);
     P = make_list_len(L, 5);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     if (0) { print_list(P); }
@@ -240,7 +232,9 @@ test_2_4 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 1024);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -284,7 +278,9 @@ test_3_2 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
@@ -302,9 +298,10 @@ test_3_3 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
-    //P = make_list_5(L);
     P = make_list_len(L, 5);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     if (0) { print_list(P); }
@@ -324,7 +321,9 @@ test_3_4 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 1024);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -368,7 +367,9 @@ test_4_2 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
@@ -386,9 +387,10 @@ test_4_3 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
-    //P = make_list_5(L);
     P = make_list_len(L, 5);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     if (0) { print_list(P); }
@@ -408,7 +410,9 @@ test_4_4 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 1024);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -431,7 +435,9 @@ test_5_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -476,7 +482,9 @@ test_6_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -545,7 +553,9 @@ test_7_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -639,7 +649,9 @@ test_8_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -733,7 +745,9 @@ test_9_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -827,7 +841,9 @@ test_10_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -921,7 +937,9 @@ test_11_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -1015,7 +1033,9 @@ test_12_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -1109,7 +1129,9 @@ test_13_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);
@@ -1203,7 +1225,9 @@ test_14_1 (void)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_len(L, 19);
     ccpair_cleanup_handler_list_init(L, P_H, P);

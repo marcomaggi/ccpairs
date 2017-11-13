@@ -56,7 +56,9 @@ test_1_1 (void)
 
   if (cce_location(L)) {
     // handle the exceptional condition
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = make_list_5(L);
     ccpair_cleanup_handler_list_init(L, P_H, P);

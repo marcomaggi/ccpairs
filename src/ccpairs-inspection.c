@@ -36,10 +36,11 @@
 size_t
 ccpair_length (cce_location_t * L, ccpair_t hare)
 {
-  ccpair_t	turtle = hare;
   size_t	len = 0;
 
   if (hare) {
+    ccpair_t	turtle = hare;
+
     /* Hare only step. */
     {
       if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
@@ -73,6 +74,44 @@ ccpair_length (cce_location_t * L, ccpair_t hare)
     }
   }
   return len;
+}
+
+
+bool
+ccpair_is_circular (ccpair_t hare)
+{
+  if (hare) {
+    ccpair_t	turtle = hare;
+
+    /* Hare only step. */
+    {
+      hare = ccpair_cdr(hare);
+    }
+    while (hare) {
+      /* Hare and turtle step. */
+      {
+	if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
+	if (hare != turtle) {
+	  turtle = ccpair_cdr(turtle);
+	  hare   = ccpair_cdr(hare);
+	} else {
+	  /* This is a circular list. */
+	  return true;
+	}
+      }
+      /* Hare only step. */
+      if (hare) {
+	if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
+	if (hare != turtle) {
+	  hare = ccpair_cdr(hare);
+	} else {
+	  /* This is a circular list. */
+	  return true;
+	}
+      }
+    }
+  }
+  return false;
 }
 
 /* end of file */

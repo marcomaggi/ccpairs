@@ -43,6 +43,7 @@ default_alloc (cce_location_t * L, ccpair_allocator_t const * allocator CCPAIR_U
 {
   ccpair_t	P = malloc(sizeof(ccpair_stru_t));
   if (NULL != P) {
+    if (1) { fprintf(stderr, "%s: alloc=%p\n", __func__, (void *)P); }
     return P;
   } else {
     cce_raise(L, cce_condition_new_errno_clear());
@@ -52,6 +53,7 @@ default_alloc (cce_location_t * L, ccpair_allocator_t const * allocator CCPAIR_U
 static void
 default_free (ccpair_allocator_t const * allocator CCPAIR_UNUSED, ccpair_t P)
 {
+  if (1) { fprintf(stderr, "%s: free=%p\n", __func__, (void *)P); }
   free(P);
 }
 
@@ -92,44 +94,15 @@ ccpair_free (ccpair_t P)
 
 void
 ccpair_free_list (ccpair_t P)
+/* Notice  that this  function is  *unable* to  correctly free  circular
+   lists. */
 {
-  ccpair_t	turtle = P, hare = P, tmp;
+  ccpair_t	Q;
 
-  if (hare) {
-    /* Hare only step. */
-    {
-      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
-      tmp  = hare;
-      hare = ccpair_cdr(hare);
-      current_allocator->free(current_allocator, tmp);
-    }
-    while (hare) {
-      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
-      /* Hare and turtle step. */
-      {
-	if (hare != turtle) {
-	  tmp    = hare;
-	  turtle = ccpair_cdr(turtle);
-	  hare   = ccpair_cdr(hare);
-	  current_allocator->free(current_allocator, tmp);
-	} else {
-	  /* This is a circular list. */
-	  return;
-	}
-      }
-      if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
-      /* Hare only step. */
-      if (hare) {
-	if (hare != turtle) {
-	  tmp    = hare;
-	  hare   = ccpair_cdr(hare);
-	  current_allocator->free(current_allocator, tmp);
-	} else {
-	  /* This is a circular list. */
-	  return;
-	}
-      }
-    }
+  while (P) {
+    Q = P;
+    P = ccpair_cdr(P);
+    current_allocator->free(current_allocator, Q);
   }
 }
 

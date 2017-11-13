@@ -25,7 +25,9 @@ test_1_1 (void)
   ccpair_t	P;
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = ccpair_cons(L, 1, NULL);
     {
@@ -48,7 +50,9 @@ test_1_2 (void)
   ccpair_t		P;
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
@@ -74,7 +78,9 @@ test_2_1 (void)
   cce_handler_t		P_H[5];
 
   if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
     cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
   } else {
     P[4] = ccpair_cons(L, 5, NULL); ccpair_cleanup_handler_pair_init(L, &(P_H[4]), P[4]);
     P[3] = ccpair_cons(L, 4, P[4]); ccpair_cleanup_handler_pair_init(L, &(P_H[3]), P[3]);

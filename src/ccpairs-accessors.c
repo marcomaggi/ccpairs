@@ -61,7 +61,9 @@ ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
 ccpair_t
 ccpair_last_pair (cce_location_t * L, ccpair_t P)
 {
+  if (0) { fprintf(stderr, "%s: enter, P=%p\n", __func__, (void *)P); }
   for (; P; P = ccpair_cdr(P)) {
+    if (0) { fprintf(stderr, "%s: check is last P=%p\n", __func__, (void *)P); }
     if (ccpair_is_last(P)) {
       return P;
     }

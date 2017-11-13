@@ -425,7 +425,11 @@ Release the memory previously allocated for a pair with @cfunc{ccpair_alloc}.  I
 
 @deftypefun void ccpair_free_list (ccpair_t @var{P})
 Release the memory previously allocated for a list of pairs with @cfunc{ccpair_alloc}.  If @var{P}
-is @cnull{}: nothing happens.  If @var{P} is a circular list: the pairs are released correctly.
+is @cnull{}: nothing happens.
+
+@quotation
+@strong{NOTE} This function is @strong{unable} to correctly free circular lists.
+@end quotation
 @end deftypefun
 
 @c page
@@ -449,6 +453,11 @@ return @cfalse{}.
 @deftypefun bool ccpair_is_last (ccpair_t @var{P})
 Return @ctrue{} if @var{P} is the last pair in its list, that is: if @var{P} is not @cnull{} and the
 second item in @var{P} is @cnull{}.  Otherwise return @cfalse{}.
+@end deftypefun
+
+
+@deftypefun bool ccpair_is_circular (ccpair_t @var{P})
+Return @ctrue{} if the list referenced by @var{P} is circular; otherwise return @cfalse{}.
 @end deftypefun
 
 @c page
