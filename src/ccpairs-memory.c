@@ -43,7 +43,6 @@ default_alloc (cce_location_t * L, ccpair_allocator_t const * allocator CCPAIR_U
 {
   ccpair_t	P = malloc(sizeof(ccpair_stru_t));
   if (NULL != P) {
-    if (1) { fprintf(stderr, "%s: alloc=%p\n", __func__, (void *)P); }
     return P;
   } else {
     cce_raise(L, cce_condition_new_errno_clear());
@@ -53,7 +52,6 @@ default_alloc (cce_location_t * L, ccpair_allocator_t const * allocator CCPAIR_U
 static void
 default_free (ccpair_allocator_t const * allocator CCPAIR_UNUSED, ccpair_t P)
 {
-  if (1) { fprintf(stderr, "%s: free=%p\n", __func__, (void *)P); }
   free(P);
 }
 
