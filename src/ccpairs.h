@@ -139,7 +139,7 @@ ccpair_decl int		ccpair_version_interface_age		(void);
  ** ----------------------------------------------------------------- */
 
 ccpair_decl void	ccpair_init (void)
-  __attribute__((constructor));
+  __attribute__((__constructor__));
 
 
 /** --------------------------------------------------------------------
@@ -283,7 +283,6 @@ static inline ccpair_t
 ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
 {
   ccpair_t	P = ccpair_alloc(L);
-  if (0) { fprintf(stderr, "%s: cons=%p\n", __func__, (void *)P); }
   P->A = A;
   P->D = (uintptr_t)D;
   return P;
