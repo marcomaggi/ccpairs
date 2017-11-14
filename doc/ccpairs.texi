@@ -178,6 +178,7 @@ following definitions before including @strong{all} the header files:
 
 @menu
 * overview linking::            Linking code with the library.
+* overview lists::              How lists work.
 @end menu
 
 @c page
@@ -203,6 +204,141 @@ AC_CHECK_LIB([ccpairs],[cct_version_string],,
 AC_CHECK_HEADERS([ccpairs.h],,
   [AC_MSG_FAILURE([test for CCPairs header failed])])
 @end example
+
+@c page
+@node overview lists
+@section How lists work
+
+
+@value{PACKAGE} implements simply--linked lists in the style of the Scheme language; Scheme is a
+dialect of Lisp.  A well structured, or @dfn{proper}, Scheme list is a chain of ``pairs'', where
+each pair is an ordered couple of machine words:
+
+@itemize
+@item
+The first or left or @dfn{car} machine word is meant to contain the list--node payload--value,
+either directly in the machine word or as value referenced by a pointer.
+
+@item
+The second or right or @dfn{cdr} machine word is meant to contain a pointer to the next node in the
+list, or @cnull{} if there are no more nodes.
+@end itemize
+
+Here is an example of list with three pairs, which means that there are three payload items:
+
+@example
+ ---------       ---------       ---------
+| A1 | D1 | --> | A2 | D2 | --> | A3 | D3 | --> NULL
+ ---------       ---------       ---------
+   |               |               |
+   v               v               v
+ value1          value2          value3
+@end example
+
+From the point of view of the public @value{PACKAGE} @api{}: pairs are immutable; internally the
+functions may mutate the pairs while building a new list.
+
+Immutable pairs mean that it is possible and encouraged to write functions that share the tail of a
+list; here is an example of lists layout where two lists share the tail:
+
+@example
+ -------       -------       -------       -------
+| A | D | --> | A | D | --> | A | D | --> | A | D | --> NULL
+ -------       -------       -------       -------
+                              ^
+ -------       -------        |
+| A | D | --> | A | D | ------
+ -------       -------
+@end example
+
+@noindent
+care must be taken if we need to append lists that may share the tail with other lists.
+
+By using the first word of a pair as a pointer to list: we can represent binary trees; here is an
+example:
+
+@example
+ -------       -------
+| A | D | --> | A | D | --> NULL
+ -------       -------
+  |                 |
+  |                 |     -------       -------
+  |                  --> | A | D | --> | A | D | --> NULL
+  |                       -------       -------
+  v
+ -------       -------       -------
+| A | D | --> | A | D | --> | A | D | --> NULL
+ -------       -------       -------
+  |
+  v
+ -------
+| A | D | --> NULL
+ -------
+@end example
+
+@noindent
+this works only if we use some sort of tagging in the first words to distinguish a pointer to pair
+from a payload value.
+
+Unless otherwise specified: the functions of this library @strong{do not} work with circular lists.
+A circular list looks as follows:
+
+@example
+ -------       -------       -------       -------
+| A | D | --> | A | D | --> | A | D | --> | A | D |
+ -------       -------       -------       -------
+                ^                               |
+                |                               |
+                 -------------------------------
+@end example
+
+@noindent
+It is generally a bad idea to create circular lists; if we need them: we should mimic an actually
+circular chain of pointers with an iterator that ``wraps around''.
+
+It is sometimes useful to crate a @dfn{tail--concatenated pair} or @dfn{tconc}; it structure is the
+following, where the tconc is the first pair:
+
+@example
+ -------       -------       -------       -------
+| A | D | --> | A | D | --> | A | D | --> | A | D |--> NULL
+ -------       -------       -------       -------
+  |                                         ^
+  |                                         |
+   -----------------------------------------
+@end example
+
+@noindent
+the first word in the first pair holds a pointer to the last pair in the chain; when the list is
+empty, the structure is:
+
+@example
+ -------
+| A | D | --> NULL
+ -------
+  |
+   --> NULL
+@end example
+
+It is sometimes useful to create an @dfn{association list} or @dfn{alist} as a simple key/value
+structure; an alist has the following structure:
+
+@example
+ -------       -------       -------       -------
+| A | D | --> | A | D | --> | A | D | --> | A | D | --> NULL
+ -------       -------       -------       -------
+  |             |             |             |
+  v             v             v             v
+ -------       -------       -------       -------
+| A | D |     | A | D |     | A | D |     | A | D |
+ -------       -------       -------       -------
+  |   |         |   |         |   |         |   |
+ key val       key val       key val       key val
+@end example
+
+@noindent
+we find a value by performing a linear search for the corresponding key.  An empty alist is the
+pointer @cnull{}.
 
 @c page
 @node init
@@ -308,6 +444,12 @@ Return the first value in the pair as unsigned integer.  The first value in a pa
 
 @deftypefun ccpair_t ccpair_cdr (ccpair_t @var{P})
 Return the second value in the pair as pointer to pair.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_car_pair (ccpair_t @var{P})
+Return the first value in the pair as pointer to pair.  This function is useful when the pair is a
+node in a tree.
 @end deftypefun
 
 
