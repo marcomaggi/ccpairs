@@ -83,6 +83,21 @@ installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
 
 #page
+#### testing under GDB
+
+$(builddir)/.gdbinit:
+	ln -sv "$(top_srcdir)/gdbinit" "$(builddir)/.gdbinit"
+
+# This rule is meant to be used as:
+#
+#   $ make all gdb-test FILE=tests/inspection CFLAGS='-g'
+#
+# after having created an appropriate file "$(top_srcdir)/.gdbinit".
+#
+gdb-test: $(builddir)/.gdbinit
+	libtool --mode=execute gdb $$FILE
+
+#page
 #### Coverity support
 #
 # We can visit the project site at:
