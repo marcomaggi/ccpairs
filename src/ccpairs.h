@@ -254,6 +254,13 @@ ccpair_cdr (ccpair_t P)
 }
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_car_pair (ccpair_t P)
+{
+  return (ccpair_t)(P->A);
+}
+
+__attribute__((__always_inline__,__pure__,__nonnull__(1)))
 static inline uintptr_t
 ccpair_cdr_value (ccpair_t P)
 {
