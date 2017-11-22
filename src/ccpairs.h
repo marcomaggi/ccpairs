@@ -285,6 +285,11 @@ ccpair_decl ccpair_t	ccpair_alloc (cce_location_t * L)
 ccpair_decl void	ccpair_free   (ccpair_t P);
 ccpair_decl void	ccpair_free_list (ccpair_t P);
 
+
+/** --------------------------------------------------------------------
+ ** Constructors.
+ ** ----------------------------------------------------------------- */
+
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpair_t
 ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
@@ -293,6 +298,20 @@ ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
   P->A = A;
   P->D = (uintptr_t)D;
   return P;
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_cons_improper (cce_location_t * L, uintptr_t A, uintptr_t D)
+{
+  return ccpair_cons(L, A, (ccpair_t)D);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_cons_node (cce_location_t * L, ccpair_t A, ccpair_t D)
+{
+  return ccpair_cons(L, (uintptr_t)A, D);
 }
 
 
@@ -337,6 +356,78 @@ ccpair_decl ccpair_t ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx
 
 ccpair_decl ccpair_t ccpair_last_pair (cce_location_t * L, ccpair_t P)
   __attribute__((__nonnull__(1),__returns_nonnull__));
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_first_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 0);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_second_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 1);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_third_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 2);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_fourth_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 3);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_fifth_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 4);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_sixth_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 5);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_seventh_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 6);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_eighth_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 7);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_nineth_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 8);
+}
+
+__attribute__((__always_inline__,__nonnull__(1)))
+static inline ccpair_t
+ccpair_tenth_pair (cce_location_t * L, ccpair_t P)
+{
+  return ccpair_ref_pair(L, P, 9);
+}
 
 
 /** --------------------------------------------------------------------

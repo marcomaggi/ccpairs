@@ -127,6 +127,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * typedefs::                    Some type definitions.
 * pairs::                       Pair data structures.
 * memory::                      Memory allocation.
+* constructors::                Constructing pairs and lists.
 * inspection::                  Inspecting lists.
 * accessors::                   Accessing items in lists.
 * conditions::                  Exceptional condition objects.
@@ -457,17 +458,6 @@ node in a tree.
 Return the second value in the pair as unsigned integer.
 @end deftypefun
 
-
-@deftypefun void ccpair_cons (uintptr_t @var{A}, ccpair_t @var{D})
-Allocate a new pair using the currently selected memory allocator.  Initialise the first value with
-@var{A} and the second value with @var{D}.
-@end deftypefun
-
-
-@deftypefun void ccpair_free (ccpair_t @var{P})
-Release the memory allocated for @var{P} using the currently selected memory allocator.
-@end deftypefun
-
 @c page
 @node memory
 @chapter Memory allocation
@@ -496,6 +486,15 @@ Pointer to a function that releases pair structures.
 @end table
 
 The predefined memory allocator uses the standard functions @cfunc{malloc} and @cfunc{free}.
+
+If we need some state associated to the allocator, we can just embed this structure into another:
+
+@example
+struct my_allocator_t @{
+  ccpair_allocator_t    A;
+  some_state_t          S;
+@};
+@end example
 @end deftp
 
 
@@ -554,8 +553,10 @@ static ccpair_allocator_t const standard_allocator = @{
 All the following functions use the currently selected pair allocator.
 
 
-@deftypefun ccpair_t ccpair_alloc (void)
-Allocate a new pair structure and return a pointer to it.
+@deftypefun ccpair_t ccpair_alloc (cce_location_t * @var{L})
+Allocate a new pair structure and return a pointer to it.  If successful: return a pointer to the
+new structure (this function never returns @cnull{}); otherwise raise an exception performing a
+non--local exit to @var{L}.
 @end deftypefun
 
 
@@ -575,11 +576,33 @@ is @cnull{}: nothing happens.
 @end deftypefun
 
 @c page
+@node constructors
+@chapter Constructing pairs and lists
+
+
+@deftypefun ccpair_t ccpair_cons (cce_location_t * @var{L}, uintptr_t @var{A}, ccpair_t @var{D})
+Allocate a new pair using the currently selected memory allocator; initialise the first value with
+@var{A} and the second value with @var{D}.  If successful: return a pointer to the new structure
+(this function never returns @cnull{}); otherwise raise an exception performing a non--local exit to
+@var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_cons_improper (cce_location_t * @var{L}, uintptr_t @var{A}, uintptr_t @var{D})
+Like @cfunc{ccpair_cons} but accept a @code{uintptr_t} as second argument.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_cons_node (cce_location_t * @var{L}, ccpair_t @var{A}, ccpair_t @var{D})
+Like @cfunc{ccpair_cons} but accept a @code{ccpair_t} as first argument.
+@end deftypefun
+
+@c page
 @node inspection
 @chapter Inspecting lists
 
 
-@deftypefun ccpair_len_t ccpair_length (cce_location_t @var{P}, ccpair_t @var{P})
+@deftypefun ccpair_len_t ccpair_length (cce_location_t @var{L}, ccpair_t @var{P})
 Return the number of pairs in the list beginning with @var{P}.  If @var{P} is @cnull{}: return zero.
 If the operand is a circular list: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -629,6 +652,71 @@ Return a pointer to the last pair in the list @var{P}.  If @var{P} is @cnull{}: 
 by performing a non--local exit to @var{L}.
 @end deftypefun
 
+@c ------------------------------------------------------------------------
+
+@subsubheading Numbered accessors
+
+
+@deftypefun ccpair_t ccpair_first_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the first pair in the list whose first pair is @var{P} (that is: return @var{P} itself).  If
+the list is empty (that is: @var{P} is @cnull{}): raise an exception by performing a non--local exit
+to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_second_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the second pair in the list whose first pair is @var{P}.  If the list has less than two
+pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_third_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the third pair in the list whose first pair is @var{P}.  If the list has less than three
+pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_fourth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the fourth pair in the list whose first pair is @var{P}.  If the list has less than four
+pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_fifth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the fifth pair in the list whose first pair is @var{P}.  If the list has less than five
+pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_sixth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the sixth pair in the list whose first pair is @var{P}.  If the list has less than six pairs:
+raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_seventh_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the seventh pair in the list whose first pair is @var{P}.  If the list has less than seven
+pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_eighth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the eighth pair in the list whose first pair is @var{P}.  If the list has less than eigth
+pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_nineth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the nineth pair in the list whose first pair is @var{P}.  If the list has less than nine
+pairs: raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_tenth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+Return the tenth pair in the list whose first pair is @var{P}.  If the list has less than ten pairs:
+raise an exception by performing a non--local exit to @var{L}.
+@end deftypefun
+
 @c page
 @node accessors items
 @section Accessing list items
@@ -647,6 +735,9 @@ performing a non--local exit to @var{L}.
 @end deftypefun
 
 @c ------------------------------------------------------------------------
+
+@subsubheading Numbered accessors
+
 
 @deftypefun uintptr_t ccpair_first (cce_location_t @var{L}, ccpair_t @var{P})
 Return the first item in the list whose first pair is @var{P}.  If the list is empty (that is:
