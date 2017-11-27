@@ -722,7 +722,7 @@ if (cce_location(L)) @{
 @end deftypefun
 
 @c page
-@node constructors lists
+@node constructors lists,  , constructors pairs, constructors
 @section List constructors
 
 
@@ -730,9 +730,88 @@ if (cce_location(L)) @{
 Build a new list filling it with items and return a pointer to the first pair.  If an error occurs:
 raise an exception by performing a non--local exit to @var{L}.
 
-New items are built with the constructor @var{C}.  If an error occurs while building the list: items
-already built are destroyed using the destructor @var{D}.
+New items are built with the constructor @var{C}, which receives as argument the index of the item
+in the list, starting with zero.  When all the items meant to be in the list have been built: the
+constructor must raise a break exception with using the CCExceptions @api{} as follows:
+
+@example
+cce_raise(L, cce_condition_new_break());
+@end example
+
+If an error occurs while building the list: the pairs already allocated are released; the items
+already built are released using the destructor @var{D}.
 @end deftypefun
+
+
+To build an example of list construction, let's consider the following data values used as simple
+item payload:
+
+@example
+typedef struct data_t @{
+  ccpair_idx_t  N;
+@} data_t;
+
+data_t *
+data_constructor (cce_destination_t L, ccpair_idx_t N)
+@{
+  data_t * item = cce_sys_malloc(sizeof(data_t));
+  item->N = N;
+  return item;
+@}
+
+void
+data_destructor (data_t * data)
+@{
+  free(item);
+@}
+@end example
+
+@noindent
+we can put @math{3} such data values into a list built with @cfunc{ccpair_list} using the following
+constructor and destructor:
+
+@example
+uintptr_t
+item_constructor (cce_destination_t L, ccpair_idx_t idx)
+@{
+  switch (idx) @{
+  case 0:
+  case 1:
+  case 2:
+    return data_constructor(L, idx);
+  case 3:
+    cce_raise(L, cce_condition_new_break());
+  default:
+    cce_raise(L, cce_condition_new_logic_error());
+  @}
+@}
+
+void
+item_destructor (uintptr_t item)
+@{
+  data_t * data = (data_t *)item;
+  data_destructor(data);
+@}
+@end example
+
+@noindent
+we can build the list with the following code:
+
+@example
+cce_location_t                L[1];
+ccpair_t                      P;
+ccpair_list_item_handler_t    P_H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers_final(L);
+@} else @{
+  P = ccpair_list(L, item_constructor, item_destructor);
+  ccpair_cleanup_handler_list_item_init(L, P_H, P,
+     item_destructor);
+  ...
+  cce_run_cleanup_handlers(L);
+@}
+@end example
 
 @c page
 @node inspection

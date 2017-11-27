@@ -101,19 +101,14 @@ ccpair_handler_list_item_function (cce_condition_t const * C CCPAIR_UNUSED, cce_
   ccpair_t			P = (ccpair_t) (H->handler.pointer);
 
   if (0) { fprintf(stderr, "%s: releasing list %p with item destructor\n", __func__, (void *)P); }
-  H->item_destructor(ccpair_car(P));
 
   /* Notice that  this function is  *unable* to correctly  free circular
      lists. */
-  {
-    ccpair_t	Q;
-
-    while (P) {
-      Q = P;
-      P = ccpair_cdr(P);
-      H->item_destructor(ccpair_car(Q));
-      ccpair_current_allocator->free(ccpair_current_allocator, Q);
-    }
+  while (P) {
+    ccpair_t	Q = P;
+    P = ccpair_cdr(P);
+    H->item_destructor(ccpair_car(Q));
+    ccpair_current_allocator->free(ccpair_current_allocator, Q);
   }
 }
 
