@@ -1040,43 +1040,10 @@ if (cce_location(L)) @{
 @end example
 
 @menu
-* conditions base::             Base exceptional conditions.
 * conditions not-enough::       Not enough items in list.
 * conditions empty::            Invalid empty list as operand.
 * conditions circular::         Invalid circular list as operand.
 @end menu
-
-@c page
-@node conditions base
-@section Base exceptional conditions
-
-
-@cindex Base exceptional condition
-@cindex Exceptional conditions, base
-
-
-@deftp {Struct Typedef} ccpair_descriptor_base_t
-Type of data structure representing the base exceptional--condition descriptor for all the
-conditions defined by @value{PACKAGE}.  It has the following public fields:
-
-@table @code
-@item cce_descriptor_t descriptor
-The condition descriptor's base values.
-@end table
-
-The parent of this type descriptor is the root type descriptor defined by the CCExceptions library;
-@xref{conditions root, CCExceptions, CCExceptions, ccexceptions, CCExceptions}.
-@end deftp
-
-
-@deftypevr {Dynamic Constant} {const ccpair_descriptor_base_t * const} ccpair_descriptor_base
-Pointer to a statically allocated exceptional condition descriptor.
-@end deftypevr
-
-
-@deftypefun bool ccpair_condition_is_base (cce_condition_t const * @var{C})
-Return @true{} if @var{C} is of type @objtype{ccpair_descriptor_base_t}; otherwise return @false{}.
-@end deftypefun
 
 @c page
 @node conditions not-enough
@@ -1096,7 +1063,8 @@ items in list.  It has the following public fields:
 The condition descriptor's base values.
 @end table
 
-The parent of this type descriptor is the one referenced by @code{ccpair_descriptor_base}.
+The parent of this type descriptor is the one referenced by @code{cce_descriptor_logic_error_ptr};
+@xref{conditions logic error, CCExceptions, CCExceptions, ccexceptions, CCExceptions}.
 @end deftp
 
 
@@ -1231,7 +1199,8 @@ circular list as operand.  It has the following public fields:
 The condition descriptor's base values.
 @end table
 
-The parent of this type descriptor is the one referenced by @code{ccpair_descriptor_base}.
+The parent of this type descriptor is the one referenced by @code{cce_descriptor_logic_error_ptr};
+@xref{conditions logic error, CCExceptions, CCExceptions, ccexceptions, CCExceptions}.
 @end deftp
 
 

@@ -35,36 +35,14 @@
 
 
 /** --------------------------------------------------------------------
- ** Base exceptional condition descriptor.
- ** ----------------------------------------------------------------- */
-
-static cce_condition_static_message_fun_t	descriptor_base_static_message;
-
-static ccpair_descriptor_base_t descriptor_base = {
-  /* This "parent" field is set by the initialisation function. */
-  .descriptor.parent		= NULL,
-  .descriptor.delete		= NULL,
-  .descriptor.final		= NULL,
-  .descriptor.static_message	= descriptor_base_static_message
-};
-
-ccpair_descriptor_base_t const * const ccpair_descriptor_base = &descriptor_base;
-
-const char *
-descriptor_base_static_message (cce_condition_t const * C CCPAIR_UNUSED)
-{
-  return "CCPair exceptional condition";
-}
-
-
-/** --------------------------------------------------------------------
  ** Exceptional condition descriptor: not enough items in list.
  ** ----------------------------------------------------------------- */
 
 static cce_condition_static_message_fun_t	condition_not_enough_items_static_message;
 
-static ccpair_descriptor_not_enough_items_t const descriptor_not_enough_items = {
-  .descriptor.parent		= &descriptor_base.descriptor,
+static ccpair_descriptor_not_enough_items_t descriptor_not_enough_items = {
+  /* This field is set by the initialisation function below. */
+  .descriptor.parent		= NULL,
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= condition_not_enough_items_static_message
@@ -131,8 +109,9 @@ condition_empty_list_static_message (cce_condition_t const * C CCPAIR_UNUSED)
 
 static cce_condition_static_message_fun_t	condition_circular_list_static_message;
 
-static ccpair_descriptor_circular_list_t const descriptor_circular_list = {
-  .descriptor.parent		= &descriptor_base.descriptor,
+static ccpair_descriptor_circular_list_t descriptor_circular_list = {
+  /* This field is set by the initialisation function below. */
+  .descriptor.parent		= NULL,
   .descriptor.delete		= NULL,
   .descriptor.final		= NULL,
   .descriptor.static_message	= condition_circular_list_static_message
@@ -166,7 +145,8 @@ condition_circular_list_static_message (cce_condition_t const * C CCPAIR_UNUSED)
 void
 ccpair_conditions_module_initialisation (void)
 {
-  cce_descriptor_set_root_parent(&descriptor_base.descriptor);
+  descriptor_not_enough_items.descriptor.parent	= &(cce_descriptor_logic_error_ptr->descriptor);
+  descriptor_circular_list.descriptor.parent	= &(cce_descriptor_logic_error_ptr->descriptor);
 }
 
 
