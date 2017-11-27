@@ -298,6 +298,8 @@ simple_item_constructor__exception_at_4 (cce_destination_t L, ccpair_idx_t idx)
  ** Async item constructors and destructors.
  ** ----------------------------------------------------------------- */
 
+/* An async item is an asynchronous  resource that must be allocated and
+   released. */
 typedef struct async_item_t {
   uintptr_t	N;
 } async_item_t;
@@ -309,12 +311,17 @@ async_item_ref (uintptr_t _item)
   return item->N;
 }
 
-/* ------------------------------------------------------------------ */
+async_item_t *
+async_item_constructor (uintptr_t N)
+{
+  async_item_t *	item = malloc(sizeof(async_item_t));
+  item->N = N;
+  return item;
+}
 
 void
-async_item_destructor__noop (uintptr_t _item)
-/* This is  to be used when  building lists of integers  stored directly
-   into "uintptr_t" values. */
+async_item_destructor (uintptr_t _item)
+/* This is to be used when building lists of async items. */
 {
   async_item_t *	item = (async_item_t *)_item;
   if (0) { fprintf(stderr, "%s: item destructed %lu\n", __func__, item->N); }
@@ -334,8 +341,7 @@ async_item_constructor__one_integer_item (cce_destination_t L, ccpair_idx_t idx)
 {
   switch (idx) {
   case 0: {
-    async_item_t *	item = malloc(sizeof(async_item_t));
-    item->N = idx;
+    async_item_t *	item = async_item_constructor(idx);
     if (0) { fprintf(stderr, "%s: item constructed %lu\n", __func__, idx); }
     item_state_set_constructed(idx);
     return (uintptr_t)item;
@@ -355,8 +361,7 @@ async_item_constructor__three_integer_items (cce_destination_t L, ccpair_idx_t i
   case 0:
   case 1:
   case 2: {
-    async_item_t *	item = malloc(sizeof(async_item_t));
-    item->N = idx;
+    async_item_t *	item = async_item_constructor(idx);
     if (0) { fprintf(stderr, "%s: item constructed %lu\n", __func__, idx); }
     item_state_set_constructed(idx);
     return (uintptr_t)item;
@@ -387,8 +392,7 @@ async_item_constructor__exception_at_1 (cce_destination_t L, ccpair_idx_t idx)
 {
   switch (idx) {
   case 0: {
-    async_item_t *	item = malloc(sizeof(async_item_t));
-    item->N = idx;
+    async_item_t *	item = async_item_constructor(idx);
     if (0) { fprintf(stderr, "%s: item constructed %lu\n", __func__, idx); }
     item_state_set_constructed(idx);
     return (uintptr_t)item;
@@ -406,8 +410,7 @@ async_item_constructor__exception_at_2 (cce_destination_t L, ccpair_idx_t idx)
   switch (idx) {
   case 0:
   case 1: {
-    async_item_t *	item = malloc(sizeof(async_item_t));
-    item->N = idx;
+    async_item_t *	item = async_item_constructor(idx);
     if (0) { fprintf(stderr, "%s: item constructed %lu\n", __func__, idx); }
     item_state_set_constructed(idx);
     return (uintptr_t)item;
@@ -426,8 +429,7 @@ async_item_constructor__exception_at_3 (cce_destination_t L, ccpair_idx_t idx)
   case 0:
   case 1:
   case 2: {
-    async_item_t *	item = malloc(sizeof(async_item_t));
-    item->N = idx;
+    async_item_t *	item = async_item_constructor(idx);
     if (0) { fprintf(stderr, "%s: item constructed %lu\n", __func__, idx); }
     item_state_set_constructed(idx);
     return (uintptr_t)item;
@@ -447,8 +449,7 @@ async_item_constructor__exception_at_4 (cce_destination_t L, ccpair_idx_t idx)
   case 1:
   case 2:
   case 3: {
-    async_item_t *	item = malloc(sizeof(async_item_t));
-    item->N = idx;
+    async_item_t *	item = async_item_constructor(idx);
     if (0) { fprintf(stderr, "%s: item constructed %lu\n", __func__, idx); }
     item_state_set_constructed(idx);
     return (uintptr_t)item;
@@ -503,7 +504,7 @@ test_1_2 (void)
   } else {
     item_state_init();
     P = ccpair_list(L, simple_item_constructor__one_integer_item, simple_item_destructor__noop);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
     assert(1 == ccpair_length(L, P));
     assert(0 == ccpair_car(P));
     assert(true  == item_state_is_constructed(0));
@@ -530,7 +531,7 @@ test_1_3 (void)
   } else {
     item_state_init();
     P = ccpair_list(L, simple_item_constructor__three_integer_items, simple_item_destructor__noop);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    ccpair_cleanup_handler_list_init(L, P_H, P);
     assert(3 == ccpair_length(L, P));
     assert(0 == ccpair_car(P));
     assert(1 == ccpair_ref(L, P, 1));
@@ -661,7 +662,7 @@ test_2_1 (void)
     cce_run_error_handlers_final(L);
     exit(EXIT_FAILURE);
   } else {
-    P = ccpair_list(L, async_item_constructor__break_immediately, async_item_destructor__noop);
+    P = ccpair_list(L, async_item_constructor__break_immediately, async_item_destructor);
     assert(0 == ccpair_length(L, P));
     if (0) { print_list(stderr, P); }
     cce_run_cleanup_handlers(L);
@@ -674,9 +675,9 @@ test_2_2 (void)
    item constructor function must raise a break exception when the index
    operand is 1.  There is a noop item destructor function. */
 {
-  cce_location_t	L[1];
-  ccpair_t		P;
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_t			P;
+  ccpair_list_item_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
@@ -684,8 +685,8 @@ test_2_2 (void)
     exit(EXIT_FAILURE);
   } else {
     item_state_init();
-    P = ccpair_list(L, async_item_constructor__one_integer_item, async_item_destructor__noop);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    P = ccpair_list(L, async_item_constructor__one_integer_item, async_item_destructor);
+    ccpair_cleanup_handler_list_item_init(L, P_H, P, async_item_destructor);
     assert(1 == ccpair_length(L, P));
     assert(0 == async_item_ref(ccpair_car(P)));
     assert(true  == item_state_is_constructed(0));
@@ -693,6 +694,7 @@ test_2_2 (void)
     if (0) { print_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
+  assert(true  == item_state_is_destructed(0));
 }
 
 void
@@ -701,9 +703,9 @@ test_2_3 (void)
    The item constructor  function must raise a break  exception when the
    index operand is 3.  There is a noop item destructor function. */
 {
-  cce_location_t	L[1];
-  ccpair_t		P;
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_t			P;
+  ccpair_list_item_handler_t	P_H[1];
 
   if (cce_location(L)) {
     fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
@@ -711,8 +713,8 @@ test_2_3 (void)
     exit(EXIT_FAILURE);
   } else {
     item_state_init();
-    P = ccpair_list(L, async_item_constructor__three_integer_items, async_item_destructor__noop);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    P = ccpair_list(L, async_item_constructor__three_integer_items, async_item_destructor);
+    ccpair_cleanup_handler_list_item_init(L, P_H, P, async_item_destructor);
     assert(3 == ccpair_length(L, P));
     assert(0 == async_item_ref(ccpair_car(P)));
     assert(1 == async_item_ref(ccpair_ref(L, P, 1)));
@@ -724,6 +726,9 @@ test_2_3 (void)
     if (0) { print_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
+  assert(true  == item_state_is_destructed(0));
+  assert(true  == item_state_is_destructed(1));
+  assert(true  == item_state_is_destructed(2));
 }
 
 void
@@ -742,7 +747,7 @@ test_2_4 (void)
     flag = true;
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_0, async_item_destructor__noop);
+    ccpair_list(L, async_item_constructor__exception_at_0, async_item_destructor);
     flag = false;
     cce_run_cleanup_handlers(L);
   }
@@ -765,7 +770,7 @@ test_2_5 (void)
     flag = true;
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_1, async_item_destructor__noop);
+    ccpair_list(L, async_item_constructor__exception_at_1, async_item_destructor);
     flag = false;
     cce_run_cleanup_handlers(L);
   }
@@ -789,7 +794,7 @@ test_2_6 (void)
     flag = true;
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_2, async_item_destructor__noop);
+    ccpair_list(L, async_item_constructor__exception_at_2, async_item_destructor);
     flag = false;
     cce_run_cleanup_handlers(L);
   }
@@ -814,7 +819,7 @@ test_2_7 (void)
     flag = true;
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_3, async_item_destructor__noop);
+    ccpair_list(L, async_item_constructor__exception_at_3, async_item_destructor);
     flag = false;
     cce_run_cleanup_handlers(L);
   }
