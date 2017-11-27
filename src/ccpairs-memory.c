@@ -60,14 +60,14 @@ static ccpair_allocator_t const default_allocator = {
   .free		= default_free
 };
 
-static ccpair_allocator_t const * current_allocator = &default_allocator;
+ccpair_allocator_t const * ccpair_current_allocator = &default_allocator;
 
 ccpair_allocator_t const *
 ccpair_register_allocator (ccpair_allocator_t const * new_allocator)
 {
-  ccpair_allocator_t const *	old_allocator = current_allocator;
+  ccpair_allocator_t const *	old_allocator = ccpair_current_allocator;
   assert(new_allocator);
-  current_allocator = new_allocator;
+  ccpair_current_allocator = new_allocator;
   return old_allocator;
 }
 
@@ -79,14 +79,14 @@ ccpair_register_allocator (ccpair_allocator_t const * new_allocator)
 ccpair_t
 ccpair_alloc (cce_location_t * L)
 {
-  return current_allocator->alloc(L, current_allocator);
+  return ccpair_current_allocator->alloc(L, ccpair_current_allocator);
 }
 
 void
 ccpair_free (ccpair_t P)
 {
   if (P) {
-    current_allocator->free(current_allocator, P);
+    ccpair_current_allocator->free(ccpair_current_allocator, P);
   }
 }
 
@@ -100,7 +100,7 @@ ccpair_free_list (ccpair_t P)
   while (P) {
     Q = P;
     P = ccpair_cdr(P);
-    current_allocator->free(current_allocator, Q);
+    ccpair_current_allocator->free(ccpair_current_allocator, Q);
   }
 }
 

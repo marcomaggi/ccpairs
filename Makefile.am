@@ -45,6 +45,7 @@ libccpairs_la_SOURCES	= \
 	src/ccpairs-conditions.c		\
 	src/ccpairs-exception-handlers.c	\
 	src/ccpairs-memory.c			\
+	src/ccpairs-constructors.c		\
 	src/ccpairs-inspection.c		\
 	src/ccpairs-accessors.c			\
 	src/ccpairs-mapping.c
@@ -57,6 +58,7 @@ check_PROGRAMS	= \
 	tests/cons		\
 	tests/inspection	\
 	tests/accessors		\
+	tests/constructors	\
 	tests/mapping
 
 TESTS				= $(check_PROGRAMS)
@@ -75,6 +77,9 @@ tests_inspection_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_accessors_CPPFLAGS	= $(ccpairs_tests_cppflags)
 tests_accessors_LDADD		= $(ccpairs_tests_ldadd)
+
+tests_constructors_CPPFLAGS	= $(ccpairs_tests_cppflags)
+tests_constructors_LDADD	= $(ccpairs_tests_ldadd)
 
 tests_mapping_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_mapping_LDADD		= $(ccpairs_tests_ldadd)

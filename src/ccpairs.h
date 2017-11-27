@@ -111,6 +111,10 @@ typedef void     ccpair_free_fun_t	(ccpair_allocator_t const * allocator, ccpair
 typedef size_t				ccpair_idx_t;
 typedef size_t				ccpair_len_t;
 
+typedef struct ccpair_item_handler_t		ccpair_item_handler_t;
+typedef struct ccpair_pair_item_handler_t	ccpair_pair_item_handler_t;
+typedef struct ccpair_list_item_handler_t	ccpair_list_item_handler_t;
+
 /* ------------------------------------------------------------------ */
 
 typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
@@ -290,7 +294,7 @@ ccpair_decl void	ccpair_free_list (ccpair_t P);
  ** Constructors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1)))
+__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline ccpair_t
 ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
 {
@@ -313,6 +317,14 @@ ccpair_cons_node (cce_location_t * L, ccpair_t A, ccpair_t D)
 {
   return ccpair_cons(L, (uintptr_t)A, D);
 }
+
+/* ------------------------------------------------------------------ */
+
+typedef uintptr_t ccpair_item_constructor_t (cce_location_t * L, ccpair_idx_t idx);
+typedef void      ccpair_item_destructor_t  (uintptr_t item);
+
+ccpair_decl ccpair_t ccpair_list (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3)));
 
 
 /** --------------------------------------------------------------------
@@ -586,6 +598,124 @@ cce_decl void ccpair_cleanup_handler_list_init (cce_location_t * L, cce_handler_
 
 cce_decl void ccpair_error_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
   __attribute__((__nonnull__(1,2,3)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined exception handler: pair memory release with item destructor.
+ ** ----------------------------------------------------------------- */
+
+struct ccpair_pair_item_handler_t {
+  cce_handler_t			handler;
+  ccpair_item_destructor_t *	item_destructor;
+};
+
+ccpair_decl void ccpair_cleanup_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H,
+							ccpair_t P, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+ccpair_decl void ccpair_error_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H,
+						      ccpair_t P, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined exception handler: list memory release with item destructor.
+ ** ----------------------------------------------------------------- */
+
+struct ccpair_list_item_handler_t {
+  cce_handler_t			handler;
+  ccpair_item_destructor_t *	item_destructor;
+};
+
+ccpair_decl void ccpair_cleanup_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H,
+							ccpair_t P, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+ccpair_decl void ccpair_error_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H,
+						      ccpair_t P, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+
+/** --------------------------------------------------------------------
+ ** Predefined exception handler: item destructor.
+ ** ----------------------------------------------------------------- */
+
+struct ccpair_item_handler_t {
+  cce_handler_t			handler;
+  ccpair_item_destructor_t *	item_destructor;
+};
+
+ccpair_decl void ccpair_cleanup_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H,
+						   uintptr_t item, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,4)));
+
+ccpair_decl void ccpair_error_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H,
+						 uintptr_t item, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,4)));
+
+
+
+/** --------------------------------------------------------------------
+ ** Constructors with exception handlers initialisation.
+ ** ----------------------------------------------------------------- */
+
+__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_cons_error_handler (cce_location_t * L, uintptr_t A, ccpair_t D, cce_handler_t * H)
+{
+  ccpair_t	P = ccpair_cons(L, A, D);
+  ccpair_error_handler_pair_init(L, H, P);
+  return P;
+}
+
+__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_cons_cleanup_handler (cce_location_t * L, uintptr_t A, ccpair_t D, cce_handler_t * H)
+{
+  ccpair_t	P = ccpair_cons(L, A, D);
+  ccpair_cleanup_handler_pair_init(L, H, P);
+  return P;
+}
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_cons_improper_error_handler (cce_location_t * L, uintptr_t A, uintptr_t D, cce_handler_t * H)
+{
+  ccpair_t	P = ccpair_cons_improper(L, A, D);
+  ccpair_error_handler_pair_init(L, H, P);
+  return P;
+}
+
+__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_cons_improper_cleanup_handler (cce_location_t * L, uintptr_t A, uintptr_t D, cce_handler_t * H)
+{
+  ccpair_t	P = ccpair_cons_improper(L, A, D);
+  ccpair_cleanup_handler_pair_init(L, H, P);
+  return P;
+}
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_cons_node_error_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cce_handler_t * H)
+{
+  ccpair_t	P = ccpair_cons_node(L, A, D);
+  ccpair_error_handler_pair_init(L, H, P);
+  return P;
+}
+
+__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_cons_node_cleanup_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cce_handler_t * H)
+{
+  ccpair_t	P = ccpair_cons_node(L, A, D);
+  ccpair_cleanup_handler_pair_init(L, H, P);
+  return P;
+}
 
 
 /** --------------------------------------------------------------------

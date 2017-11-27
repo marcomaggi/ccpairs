@@ -567,12 +567,12 @@ main (void)
   ccpair_init();
 
   /* Length function */
-  if (0) { test_1_1(); }
-  if (0) { test_1_2(); }
-  if (0) { test_1_3(); }
-  if (0) { test_1_4(); }
-  if (0) { test_1_5(); }
-  if (0) { test_1_6(); }
+  if (1) { test_1_1(); }
+  if (1) { test_1_2(); }
+  if (1) { test_1_3(); }
+  if (1) { test_1_4(); }
+  if (1) { test_1_5(); }
+  if (1) { test_1_6(); }
   if (1) { test_1_7(); }
 
   /* Is-null function */
