@@ -722,7 +722,7 @@ if (cce_location(L)) @{
 @end deftypefun
 
 @c page
-@node constructors lists,  , constructors pairs, constructors
+@node constructors lists
 @section List constructors
 
 
@@ -740,6 +740,13 @@ cce_raise(L, cce_condition_new_break());
 
 If an error occurs while building the list: the pairs already allocated are released; the items
 already built are released using the destructor @var{D}.
+@end deftypefun
+
+
+@deftypefun ccpair_t ccpair_list_cleanup_handler (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D}, ccpair_list_item_handler_t * @var{H})
+@deftypefunx ccpair_t ccpair_list_error_handler (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D}, ccpair_list_item_handler_t * @var{H})
+Like @cfunc{ccpair_list}, but, when successful, register the resulting list into the cleanup or
+error handler @var{H}.
 @end deftypefun
 
 
@@ -795,7 +802,7 @@ item_destructor (uintptr_t item)
 @end example
 
 @noindent
-we can build the list with the following code:
+we can build the list using @cfunc{ccpair_list} with the following code:
 
 @example
 cce_location_t                L[1];
@@ -808,6 +815,24 @@ if (cce_location(L)) @{
   P = ccpair_list(L, item_constructor, item_destructor);
   ccpair_cleanup_handler_list_item_init(L, P_H, P,
      item_destructor);
+  ...
+  cce_run_cleanup_handlers(L);
+@}
+@end example
+
+@noindent
+we can build the list using @cfunc{ccpair_list_cleanup_handler} with the following code:
+
+@example
+cce_location_t                L[1];
+ccpair_t                      P;
+ccpair_list_item_handler_t    P_H[1];
+
+if (cce_location(L)) @{
+  cce_run_error_handlers_final(L);
+@} else @{
+  P = ccpair_list_cleanup_handler(L, item_constructor,
+     item_destructor, P_H);
   ...
   cce_run_cleanup_handlers(L);
 @}

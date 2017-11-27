@@ -115,6 +115,9 @@ typedef struct ccpair_item_handler_t		ccpair_item_handler_t;
 typedef struct ccpair_pair_item_handler_t	ccpair_pair_item_handler_t;
 typedef struct ccpair_list_item_handler_t	ccpair_list_item_handler_t;
 
+typedef uintptr_t ccpair_item_constructor_t (cce_location_t * L, ccpair_idx_t idx);
+typedef void      ccpair_item_destructor_t  (uintptr_t item);
+
 /* ------------------------------------------------------------------ */
 
 typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
@@ -319,9 +322,6 @@ ccpair_cons_node (cce_location_t * L, ccpair_t A, ccpair_t D)
 }
 
 /* ------------------------------------------------------------------ */
-
-typedef uintptr_t ccpair_item_constructor_t (cce_location_t * L, ccpair_idx_t idx);
-typedef void      ccpair_item_destructor_t  (uintptr_t item);
 
 ccpair_decl ccpair_t ccpair_list (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3)));
@@ -714,6 +714,26 @@ ccpair_cons_node_cleanup_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cc
 {
   ccpair_t	P = ccpair_cons_node(L, A, D);
   ccpair_cleanup_handler_pair_init(L, H, P);
+  return P;
+}
+
+/* ------------------------------------------------------------------ */
+
+__attribute__((__always_inline__,__nonnull__(1,2,3,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_list_error_handler (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D, ccpair_list_item_handler_t * H)
+{
+  ccpair_t	P = ccpair_list(L, C, D);
+  ccpair_error_handler_list_item_init(L, H, P, D);
+  return P;
+}
+
+__attribute__((__always_inline__,__nonnull__(1,2,3,4),__returns_nonnull__))
+static inline ccpair_t
+ccpair_list_cleanup_handler (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D, ccpair_list_item_handler_t * H)
+{
+  ccpair_t	P = ccpair_list(L, C, D);
+  ccpair_cleanup_handler_list_item_init(L, H, P, D);
   return P;
 }
 
