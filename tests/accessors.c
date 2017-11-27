@@ -531,7 +531,7 @@ test_6_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_second(L, P)); }
     ccpair_second(L, P);
     cce_run_cleanup_handlers(L);
@@ -602,7 +602,7 @@ test_7_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_third(L, P)); }
     ccpair_third(L, P);
     cce_run_cleanup_handlers(L);
@@ -627,7 +627,7 @@ test_7_4 (void)
   } else {
     P = make_list_len(L, 2);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_third(L, P)); }
     ccpair_third(L, P);
     cce_run_cleanup_handlers(L);
@@ -698,7 +698,7 @@ test_8_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_fourth(L, P)); }
     ccpair_fourth(L, P);
     cce_run_cleanup_handlers(L);
@@ -723,7 +723,7 @@ test_8_4 (void)
   } else {
     P = make_list_len(L, 3);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_fourth(L, P)); }
     ccpair_fourth(L, P);
     cce_run_cleanup_handlers(L);
@@ -794,7 +794,7 @@ test_9_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_fifth(L, P)); }
     ccpair_fifth(L, P);
     cce_run_cleanup_handlers(L);
@@ -819,7 +819,7 @@ test_9_4 (void)
   } else {
     P = make_list_len(L, 4);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_fifth(L, P)); }
     ccpair_fifth(L, P);
     cce_run_cleanup_handlers(L);
@@ -890,7 +890,7 @@ test_10_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_sixth(L, P)); }
     ccpair_sixth(L, P);
     cce_run_cleanup_handlers(L);
@@ -915,7 +915,7 @@ test_10_4 (void)
   } else {
     P = make_list_len(L, 5);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_sixth(L, P)); }
     ccpair_sixth(L, P);
     cce_run_cleanup_handlers(L);
@@ -986,7 +986,7 @@ test_11_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_seventh(L, P)); }
     ccpair_seventh(L, P);
     cce_run_cleanup_handlers(L);
@@ -1011,7 +1011,7 @@ test_11_4 (void)
   } else {
     P = make_list_len(L, 6);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_seventh(L, P)); }
     ccpair_seventh(L, P);
     cce_run_cleanup_handlers(L);
@@ -1082,7 +1082,7 @@ test_12_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_eighth(L, P)); }
     ccpair_eighth(L, P);
     cce_run_cleanup_handlers(L);
@@ -1107,7 +1107,7 @@ test_12_4 (void)
   } else {
     P = make_list_len(L, 7);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_eighth(L, P)); }
     ccpair_eighth(L, P);
     cce_run_cleanup_handlers(L);
@@ -1178,7 +1178,7 @@ test_13_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_nineth(L, P)); }
     ccpair_nineth(L, P);
     cce_run_cleanup_handlers(L);
@@ -1203,7 +1203,7 @@ test_13_4 (void)
   } else {
     P = make_list_len(L, 8);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_nineth(L, P)); }
     ccpair_nineth(L, P);
     cce_run_cleanup_handlers(L);
@@ -1274,7 +1274,7 @@ test_14_3 (void)
   } else {
     P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_tenth(L, P)); }
     ccpair_tenth(L, P);
     cce_run_cleanup_handlers(L);
@@ -1299,7 +1299,7 @@ test_14_4 (void)
   } else {
     P = make_list_len(L, 9);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    print_list(P);
+    if (0) { print_list(P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_tenth(L, P)); }
     ccpair_tenth(L, P);
     cce_run_cleanup_handlers(L);

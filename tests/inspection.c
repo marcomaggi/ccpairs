@@ -438,7 +438,7 @@ void
 test_5_3 (void)
 /* Linear five items list. */
 {
-  if (1) { fprintf(stderr, "%s: enter\n", __func__); }
+  if (0) { fprintf(stderr, "%s: enter\n", __func__); }
   cce_location_t	L[1];
   ccpair_t		P;
   cce_handler_t		P_H[1];
