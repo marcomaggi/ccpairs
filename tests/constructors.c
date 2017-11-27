@@ -674,7 +674,7 @@ test_1_7 (void)
 
 
 /** --------------------------------------------------------------------
- ** List function: lists of async items.
+ ** List function: lists of items as asynchronous resources.
  ** ----------------------------------------------------------------- */
 
 void
@@ -762,9 +762,9 @@ test_2_3 (void)
 
 void
 test_2_4 (void)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
-   The  item constructor  function raises  an error  exception when  the
-   index operand is 0. */
+/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+   constructor function raises an error exception when the index operand
+   is 0. */
 {
   cce_location_t	L[1];
   bool volatile		flag = false;
@@ -785,9 +785,9 @@ test_2_4 (void)
 
 void
 test_2_5 (void)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
-   The  item constructor  function raises  an error  exception when  the
-   index operand is 1. */
+/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+   constructor function raises an error exception when the index operand
+   is 1. */
 {
   cce_location_t	L[1];
   bool volatile		flag = false;
@@ -809,9 +809,9 @@ test_2_5 (void)
 
 void
 test_2_6 (void)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
-   The  item constructor  function raises  an error  exception when  the
-   index operand is 2. */
+/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+   constructor function raises an error exception when the index operand
+   is 2. */
 {
   cce_location_t	L[1];
   bool volatile		flag = false;
@@ -834,9 +834,9 @@ test_2_6 (void)
 
 void
 test_2_7 (void)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
-   The  item constructor  function raises  an error  exception when  the
-   index operand is 3. */
+/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+   constructor function raises an error exception when the index operand
+   is 3. */
 {
   cce_location_t	L[1];
   bool volatile		flag = false;
@@ -849,6 +849,195 @@ test_2_7 (void)
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_3, async_item_destructor);
+    flag = false;
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == flag);
+  assert(true == item_state_is_destructed(0));
+  assert(true == item_state_is_destructed(1));
+  assert(true == item_state_is_destructed(2));
+}
+
+
+/** --------------------------------------------------------------------
+ ** List function: lists of items as asynchronous resources, cleanup handler.
+ ** ----------------------------------------------------------------- */
+
+void
+test_3_1 (void)
+/* Use "ccpair_list_cleanup_handler()" to build an empty list.  The item
+   constructor function must raise a break exception immediately.  There
+   is a noop item destructor function. */
+{
+  cce_location_t		L[1];
+  ccpair_t			P;
+  ccpair_list_item_handler_t	P_H[1];
+
+  if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
+  } else {
+    P = ccpair_list_cleanup_handler(L, async_item_constructor__break_immediately, async_item_destructor, P_H);
+    assert(0 == ccpair_length(L, P));
+    if (0) { print_data_list(stderr, P); }
+    cce_run_cleanup_handlers(L);
+  }
+}
+
+void
+test_3_2 (void)
+/* Use "ccpair_list_cleanup_handler()" to build  a list of "data_t" with
+   one item.  The item constructor function must raise a break exception
+   when the index operand is 1. */
+{
+  cce_location_t		L[1];
+  ccpair_t			P;
+  ccpair_list_item_handler_t	P_H[1];
+
+  if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
+  } else {
+    item_state_init();
+    P = ccpair_list_cleanup_handler(L, async_item_constructor__one_integer_item, async_item_destructor, P_H);
+    assert(1 == ccpair_length(L, P));
+    assert(0 == async_item_ref(ccpair_car(P)));
+    assert(true  == item_state_is_constructed(0));
+    assert(false == item_state_is_constructed(1));
+    if (0) { print_data_list(stderr, P); }
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true  == item_state_is_destructed(0));
+}
+
+void
+test_3_3 (void)
+/* Use "ccpair_list_cleanup_handler()" to build  a list of "data_t" with
+   three  items.   The item  constructor  function  must raise  a  break
+   exception when the index operand is 3. */
+{
+  cce_location_t		L[1];
+  ccpair_t			P;
+  ccpair_list_item_handler_t	P_H[1];
+
+  if (cce_location(L)) {
+    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    exit(EXIT_FAILURE);
+  } else {
+    item_state_init();
+    P = ccpair_list_cleanup_handler(L, async_item_constructor__three_integer_items, async_item_destructor, P_H);
+    assert(3 == ccpair_length(L, P));
+    assert(0 == async_item_ref(ccpair_car(P)));
+    assert(1 == async_item_ref(ccpair_ref(L, P, 1)));
+    assert(2 == async_item_ref(ccpair_ref(L, P, 2)));
+    assert(true  == item_state_is_constructed(0));
+    assert(true  == item_state_is_constructed(1));
+    assert(true  == item_state_is_constructed(2));
+    assert(false == item_state_is_constructed(3));
+    if (0) { print_data_list(stderr, P); }
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true  == item_state_is_destructed(0));
+  assert(true  == item_state_is_destructed(1));
+  assert(true  == item_state_is_destructed(2));
+}
+
+void
+test_3_4 (void)
+/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+   item constructor  function raises an  error exception when  the index
+   operand is 0. */
+{
+  cce_location_t		L[1];
+  ccpair_list_item_handler_t	P_H[1];
+  bool volatile		flag = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); }
+    assert(cce_condition_is_error(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    flag = true;
+  } else {
+    item_state_init();
+    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_0, async_item_destructor, P_H);
+    flag = false;
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == flag);
+}
+
+void
+test_3_5 (void)
+/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+   item constructor  function raises an  error exception when  the index
+   operand is 1. */
+{
+  cce_location_t		L[1];
+  ccpair_list_item_handler_t	P_H[1];
+  bool volatile			flag = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); }
+    assert(cce_condition_is_error(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    flag = true;
+  } else {
+    item_state_init();
+    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_1, async_item_destructor, P_H);
+    flag = false;
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == flag);
+  assert(true == item_state_is_destructed(0));
+}
+
+void
+test_3_6 (void)
+/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+   item constructor  function raises an  error exception when  the index
+   operand is 2. */
+{
+  cce_location_t		L[1];
+  ccpair_list_item_handler_t	P_H[1];
+  bool volatile			flag = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); }
+    assert(cce_condition_is_error(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    flag = true;
+  } else {
+    item_state_init();
+    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_2, async_item_destructor, P_H);
+    flag = false;
+    cce_run_cleanup_handlers(L);
+  }
+  assert(true == flag);
+  assert(true == item_state_is_destructed(0));
+  assert(true == item_state_is_destructed(1));
+}
+
+void
+test_3_7 (void)
+/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+   item constructor  function raises an  error exception when  the index
+   operand is 3. */
+{
+  cce_location_t		L[1];
+  ccpair_list_item_handler_t	P_H[1];
+  bool volatile		flag = false;
+
+  if (cce_location(L)) {
+    if (0) { fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L))); }
+    assert(cce_condition_is_error(cce_condition(L)));
+    cce_run_error_handlers_final(L);
+    flag = true;
+  } else {
+    item_state_init();
+    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_3, async_item_destructor, P_H);
     flag = false;
     cce_run_cleanup_handlers(L);
   }
@@ -872,6 +1061,7 @@ main (void)
   if (1) { test_1_5(); }
   if (1) { test_1_6(); }
   if (1) { test_1_7(); }
+
   if (1) { test_2_1(); }
   if (1) { test_2_2(); }
   if (1) { test_2_3(); }
@@ -879,6 +1069,14 @@ main (void)
   if (1) { test_2_5(); }
   if (1) { test_2_6(); }
   if (1) { test_2_7(); }
+
+  if (1) { test_3_1(); }
+  if (1) { test_3_2(); }
+  if (1) { test_3_3(); }
+  if (1) { test_3_4(); }
+  if (1) { test_3_5(); }
+  if (1) { test_3_6(); }
+  if (1) { test_3_7(); }
 
   exit(EXIT_SUCCESS);
 }
