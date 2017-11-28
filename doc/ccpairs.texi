@@ -37,6 +37,10 @@
 
 @c ------------------------------------------------------------
 
+@set CCEXCEPTIONS_REQUIRED_VERSION      0.6.1
+
+@c ------------------------------------------------------------
+
 @set GITHUB_URL                 @url{https://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
 @set BITBUCKET_URL              @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
 @set DOWNLOAD_URL               @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}/downloads}
@@ -49,10 +53,12 @@
 
 @copying
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing a simply linked lists data structures, in the style of the Scheme language.
+implementing a simply linked lists data structures, in the style of the Scheme language.  The
+library targets @posix{} systems.
 
-The package depends upon the external package CCExceptions at least version 0.6.1, and relies on
-@command{pkg-config} to find it installed on the system.
+The package depends upon the external package CCExceptions at least version
+@value{CCEXCEPTIONS_REQUIRED_VERSION}, and relies on @command{pkg-config} to find it installed on
+the system.
 
 The package is distributed under the terms of the @gnu{} Lesser General Public License (@lgpl{}).
 
@@ -154,10 +160,12 @@ Indexes
 
 
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing simply linked lists data structures, in the style of the Scheme language.
+implementing simply linked lists data structures, in the style of the Scheme language.  The library
+targets @posix{} systems.
 
-The package depends upon the external package CCExceptions at least version 0.6.1, and relies on
-@command{pkg-config} to find it installed on the system.
+The package depends upon the external package CCExceptions at least version
+@value{CCEXCEPTIONS_REQUIRED_VERSION}, and relies on @command{pkg-config} to find it installed on
+the system.
 
 @value{PACKAGE} installs the single header file @file{ccpairs.h}.  All the function names in the
 @api{} are prefixed with @code{ccpair_}; all the preprocessor symbol names are prefixed with

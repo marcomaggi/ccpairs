@@ -9,7 +9,8 @@
 ## Introduction
 
 This package installs a C11  language library implementing simply linked
-lists data structures, in the style of the Scheme language.
+lists data structures, in the style of the Scheme language.  The library
+targets POSIX systems.
 
 The  package depends  upon the  external package  CCExceptions at  least
 version 0.6.1,  and relies on `pkg-config`  to find it installed  on the
