@@ -63,8 +63,8 @@ check_PROGRAMS	= \
 
 TESTS				= $(check_PROGRAMS)
 
-ccpairs_tests_cppflags		= -I$(srcdir)/src $(CCEXCEPTIONS_FLAGS)
-ccpairs_tests_ldadd		= libccpairs.la $(CCEXCEPTIONS_LIBS)
+ccpairs_tests_cppflags		= -I$(srcdir)/src $(CCEXCEPTIONS_FLAGS) $(CCTESTS_CFLAGS)
+ccpairs_tests_ldadd		= libccpairs.la $(CCEXCEPTIONS_LIBS) $(CCTESTS_LIBS)
 
 tests_version_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_version_LDADD		= $(ccpairs_tests_ldadd)

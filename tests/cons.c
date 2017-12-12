@@ -12,64 +12,66 @@
   See the COPYING file.
 */
 
+
+/** --------------------------------------------------------------------
+ ** Headers.
+ ** ----------------------------------------------------------------- */
+
+#include <cctests.h>
 #include <ccpairs.h>
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+
+/** --------------------------------------------------------------------
+ ** Single pair allocation.
+ ** ----------------------------------------------------------------- */
+
 void
-test_1_1 (void)
+test_1_1 (cce_destination_t L CCE_UNUSED)
 /* Single pair allocation and release. */
 {
-  cce_location_t	L[1];
   ccpair_t	P;
 
-  if (cce_location(L)) {
-    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
-    exit(EXIT_FAILURE);
-  } else {
-    P = ccpair_cons(L, 1, NULL);
-    {
-      assert(NULL != P);
-      assert(1    == ccpair_car(P));
-      assert(NULL == ccpair_cdr(P));
-      assert(0    == ccpair_cdr_value(P));
-    }
-    ccpair_free(P);
-    cce_run_cleanup_handlers(L);
+  P = ccpair_cons(L, 1, NULL);
+  {
+    cctests_assert(NULL != P);
+    cctests_assert(1    == ccpair_car(P));
+    cctests_assert(NULL == ccpair_cdr(P));
+    cctests_assert(0    == ccpair_cdr_value(P));
   }
+  ccpair_free(P);
 }
 
 void
-test_1_2 (void)
+test_1_2 (cce_destination_t upper_L)
 /* Single pair allocation and release using the exception handler. */
 {
   cce_location_t	L[1];
   cce_handler_t		P_H[1];
-  ccpair_t		P;
 
   if (cce_location(L)) {
-    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
-    exit(EXIT_FAILURE);
+    cce_run_error_handlers_raise(L, upper_L);
   } else {
-    P = ccpair_cons(L, 1, NULL);
+    ccpair_t	P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
     {
-      assert(NULL != P);
-      assert(1    == ccpair_car(P));
-      assert(NULL == ccpair_cdr(P));
-      assert(0    == ccpair_cdr_value(P));
+      cctests_assert(NULL != P);
+      cctests_assert(1    == ccpair_car(P));
+      cctests_assert(NULL == ccpair_cdr(P));
+      cctests_assert(0    == ccpair_cdr_value(P));
     }
     cce_run_cleanup_handlers(L);
   }
 }
 
-/* ------------------------------------------------------------------ */
+
+/** --------------------------------------------------------------------
+ ** Chain of pairs.
+ ** ----------------------------------------------------------------- */
 
 void
-test_2_1 (void)
+test_2_1 (cce_destination_t upper_L)
 /* Chain  of  pairs.   The list:  1,  2,  3,  4,  5, NULL  allocated  in
    reverse. */
 {
@@ -78,9 +80,7 @@ test_2_1 (void)
   cce_handler_t		P_H[5];
 
   if (cce_location(L)) {
-    fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-    cce_run_error_handlers_final(L);
-    exit(EXIT_FAILURE);
+    cce_run_error_handlers_raise(L, upper_L);
   } else {
     P[4] = ccpair_cons(L, 5, NULL); ccpair_cleanup_handler_pair_init(L, &(P_H[4]), P[4]);
     P[3] = ccpair_cons(L, 4, P[4]); ccpair_cleanup_handler_pair_init(L, &(P_H[3]), P[3]);
@@ -96,23 +96,34 @@ test_2_1 (void)
 	if (0) {
 	  fprintf(stderr, "%s: i=%lu, car(Q)=%lu\n", __func__, i, ccpair_car(Q));
 	}
-	assert(i == ccpair_car(Q));
+	cctests_assert(i == ccpair_car(Q));
       }
     }
     cce_run_cleanup_handlers(L);
   }
 }
 
+
 int
 main (void)
 {
   ccpair_init();
+  cctests_init("cons");
+  {
+    cctests_begin_group("single pair");
+    {
+      cctests_run(test_1_1);
+      cctests_run(test_1_2);
+    }
+    cctests_end_group();
 
-  if (1) { test_1_1(); }
-  if (1) { test_1_2(); }
-  if (1) { test_2_1(); }
-
-  exit(EXIT_SUCCESS);
+    cctests_begin_group("chain of pairs");
+    {
+      cctests_run(test_2_1);
+    }
+    cctests_end_group();
+  }
+  cctests_final();
 }
 
 /* end of file */
