@@ -56,10 +56,10 @@ test_1_2 (cce_destination_t upper_L)
     ccpair_t	P = ccpair_cons(L, 1, NULL);
     ccpair_cleanup_handler_pair_init(L, P_H, P);
     {
-      cctests_assert(NULL != P);
-      cctests_assert(1    == ccpair_car(P));
-      cctests_assert(NULL == ccpair_cdr(P));
-      cctests_assert(0    == ccpair_cdr_value(P));
+      cctests_assert(L, NULL != P);
+      cctests_assert(L, 1    == ccpair_car(P));
+      cctests_assert(L, NULL == ccpair_cdr(P));
+      cctests_assert(L, 0    == ccpair_cdr_value(P));
     }
     cce_run_cleanup_handlers(L);
   }
@@ -96,7 +96,7 @@ test_2_1 (cce_destination_t upper_L)
 	if (0) {
 	  fprintf(stderr, "%s: i=%lu, car(Q)=%lu\n", __func__, i, ccpair_car(Q));
 	}
-	cctests_assert(i == ccpair_car(Q));
+	cctests_assert(L, i == ccpair_car(Q));
       }
     }
     cce_run_cleanup_handlers(L);

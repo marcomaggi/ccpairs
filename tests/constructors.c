@@ -512,7 +512,7 @@ test_1_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_list(L, simple_item_constructor__break_immediately, simple_item_destructor__noop);
-    cctests_assert(0 == ccpair_length(L, P));
+    cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
@@ -533,10 +533,10 @@ test_1_2 (cce_destination_t upper_L)
     item_state_init();
     ccpair_t	P = ccpair_list(L, simple_item_constructor__one_integer_item, simple_item_destructor__noop);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    cctests_assert(1 == ccpair_length(L, P));
-    cctests_assert(0 == ccpair_car(P));
-    cctests_assert(true  == item_state_is_constructed(0));
-    cctests_assert(false == item_state_is_constructed(1));
+    cctests_assert(L, 1 == ccpair_length(L, P));
+    cctests_assert(L, 0 == ccpair_car(P));
+    cctests_assert(L, true  == item_state_is_constructed(0));
+    cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
@@ -557,14 +557,14 @@ test_1_3 (cce_destination_t upper_L)
     item_state_init();
     ccpair_t	P = ccpair_list(L, simple_item_constructor__three_integer_items, simple_item_destructor__noop);
     ccpair_cleanup_handler_list_init(L, P_H, P);
-    cctests_assert(3 == ccpair_length(L, P));
-    cctests_assert(0 == ccpair_car(P));
-    cctests_assert(1 == ccpair_ref(L, P, 1));
-    cctests_assert(2 == ccpair_ref(L, P, 2));
-    cctests_assert(true  == item_state_is_constructed(0));
-    cctests_assert(true  == item_state_is_constructed(1));
-    cctests_assert(true  == item_state_is_constructed(2));
-    cctests_assert(false == item_state_is_constructed(3));
+    cctests_assert(L, 3 == ccpair_length(L, P));
+    cctests_assert(L, 0 == ccpair_car(P));
+    cctests_assert(L, 1 == ccpair_ref(L, P, 1));
+    cctests_assert(L, 2 == ccpair_ref(L, P, 2));
+    cctests_assert(L, true  == item_state_is_constructed(0));
+    cctests_assert(L, true  == item_state_is_constructed(1));
+    cctests_assert(L, true  == item_state_is_constructed(2));
+    cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
@@ -605,7 +605,7 @@ test_1_5 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
     item_state_init();
     ccpair_list(L, simple_item_constructor__exception_at_1, simple_item_destructor__noop);
@@ -627,8 +627,8 @@ test_1_6 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
-    cctests_assert(true == item_state_is_destructed(1));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(1));
   } else {
     item_state_init();
     ccpair_list(L, simple_item_constructor__exception_at_2, simple_item_destructor__noop);
@@ -650,9 +650,9 @@ test_1_7 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
-    cctests_assert(true == item_state_is_destructed(1));
-    cctests_assert(true == item_state_is_destructed(2));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(1));
+    cctests_assert(upper_L, true == item_state_is_destructed(2));
   } else {
     item_state_init();
     ccpair_list(L, simple_item_constructor__exception_at_3, simple_item_destructor__noop);
@@ -677,7 +677,7 @@ test_2_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_list(L, async_item_constructor__break_immediately, async_item_destructor);
-    cctests_assert(0 == ccpair_length(L, P));
+    cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_data_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
@@ -698,14 +698,14 @@ test_2_2 (cce_destination_t upper_L)
     item_state_init();
     ccpair_t	P = ccpair_list(L, async_item_constructor__one_integer_item, async_item_destructor);
     ccpair_cleanup_handler_list_item_init(L, P_H, P, async_item_destructor);
-    cctests_assert(1 == ccpair_length(L, P));
-    cctests_assert(0 == async_item_ref(ccpair_car(P)));
-    cctests_assert(true  == item_state_is_constructed(0));
-    cctests_assert(false == item_state_is_constructed(1));
+    cctests_assert(L, 1 == ccpair_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
+    cctests_assert(L, true  == item_state_is_constructed(0));
+    cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
-  cctests_assert(true  == item_state_is_destructed(0));
+  cctests_assert(upper_L, true  == item_state_is_destructed(0));
 }
 
 void
@@ -723,20 +723,20 @@ test_2_3 (cce_destination_t upper_L)
     item_state_init();
     ccpair_t	P = ccpair_list(L, async_item_constructor__three_integer_items, async_item_destructor);
     ccpair_cleanup_handler_list_item_init(L, P_H, P, async_item_destructor);
-    cctests_assert(3 == ccpair_length(L, P));
-    cctests_assert(0 == async_item_ref(ccpair_car(P)));
-    cctests_assert(1 == async_item_ref(ccpair_ref(L, P, 1)));
-    cctests_assert(2 == async_item_ref(ccpair_ref(L, P, 2)));
-    cctests_assert(true  == item_state_is_constructed(0));
-    cctests_assert(true  == item_state_is_constructed(1));
-    cctests_assert(true  == item_state_is_constructed(2));
-    cctests_assert(false == item_state_is_constructed(3));
+    cctests_assert(L, 3 == ccpair_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
+    cctests_assert(L, 1 == async_item_ref(ccpair_ref(L, P, 1)));
+    cctests_assert(L, 2 == async_item_ref(ccpair_ref(L, P, 2)));
+    cctests_assert(L, true  == item_state_is_constructed(0));
+    cctests_assert(L, true  == item_state_is_constructed(1));
+    cctests_assert(L, true  == item_state_is_constructed(2));
+    cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_data_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
-  cctests_assert(true  == item_state_is_destructed(0));
-  cctests_assert(true  == item_state_is_destructed(1));
-  cctests_assert(true  == item_state_is_destructed(2));
+  cctests_assert(upper_L, true  == item_state_is_destructed(0));
+  cctests_assert(upper_L, true  == item_state_is_destructed(1));
+  cctests_assert(upper_L, true  == item_state_is_destructed(2));
 }
 
 void
@@ -774,7 +774,7 @@ test_2_5 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_1, async_item_destructor);
@@ -796,8 +796,8 @@ test_2_6 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
-    cctests_assert(true == item_state_is_destructed(1));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(1));
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_2, async_item_destructor);
@@ -819,9 +819,9 @@ test_2_7 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
-    cctests_assert(true == item_state_is_destructed(1));
-    cctests_assert(true == item_state_is_destructed(2));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(1));
+    cctests_assert(upper_L, true == item_state_is_destructed(2));
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_3, async_item_destructor);
@@ -847,7 +847,7 @@ test_3_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_list_cleanup_handler(L, async_item_constructor__break_immediately, async_item_destructor, P_H);
-    cctests_assert(0 == ccpair_length(L, P));
+    cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_data_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
@@ -867,14 +867,14 @@ test_3_2 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list_cleanup_handler(L, async_item_constructor__one_integer_item, async_item_destructor, P_H);
-    cctests_assert(1 == ccpair_length(L, P));
-    cctests_assert(0 == async_item_ref(ccpair_car(P)));
-    cctests_assert(true  == item_state_is_constructed(0));
-    cctests_assert(false == item_state_is_constructed(1));
+    cctests_assert(L, 1 == ccpair_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
+    cctests_assert(L, true  == item_state_is_constructed(0));
+    cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
-  cctests_assert(true  == item_state_is_destructed(0));
+  cctests_assert(upper_L, true  == item_state_is_destructed(0));
 }
 
 void
@@ -891,20 +891,20 @@ test_3_3 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list_cleanup_handler(L, async_item_constructor__three_integer_items, async_item_destructor, P_H);
-    cctests_assert(3 == ccpair_length(L, P));
-    cctests_assert(0 == async_item_ref(ccpair_car(P)));
-    cctests_assert(1 == async_item_ref(ccpair_ref(L, P, 1)));
-    cctests_assert(2 == async_item_ref(ccpair_ref(L, P, 2)));
-    cctests_assert(true  == item_state_is_constructed(0));
-    cctests_assert(true  == item_state_is_constructed(1));
-    cctests_assert(true  == item_state_is_constructed(2));
-    cctests_assert(false == item_state_is_constructed(3));
+    cctests_assert(L, 3 == ccpair_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
+    cctests_assert(L, 1 == async_item_ref(ccpair_ref(L, P, 1)));
+    cctests_assert(L, 2 == async_item_ref(ccpair_ref(L, P, 2)));
+    cctests_assert(L, true  == item_state_is_constructed(0));
+    cctests_assert(L, true  == item_state_is_constructed(1));
+    cctests_assert(L, true  == item_state_is_constructed(2));
+    cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_data_list(stderr, P); }
     cce_run_cleanup_handlers(L);
   }
-  cctests_assert(true  == item_state_is_destructed(0));
-  cctests_assert(true  == item_state_is_destructed(1));
-  cctests_assert(true  == item_state_is_destructed(2));
+  cctests_assert(upper_L, true  == item_state_is_destructed(0));
+  cctests_assert(upper_L, true  == item_state_is_destructed(1));
+  cctests_assert(upper_L, true  == item_state_is_destructed(2));
 }
 
 void
@@ -944,7 +944,7 @@ test_3_5 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
     item_state_init();
     ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_1, async_item_destructor, P_H);
@@ -967,8 +967,8 @@ test_3_6 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
-    cctests_assert(true == item_state_is_destructed(1));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(1));
   } else {
     item_state_init();
     ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_2, async_item_destructor, P_H);
@@ -991,9 +991,9 @@ test_3_7 (cce_destination_t upper_L)
     } else {
       cce_run_error_handlers_raise(L, upper_L);
     }
-    cctests_assert(true == item_state_is_destructed(0));
-    cctests_assert(true == item_state_is_destructed(1));
-    cctests_assert(true == item_state_is_destructed(2));
+    cctests_assert(upper_L, true == item_state_is_destructed(0));
+    cctests_assert(upper_L, true == item_state_is_destructed(1));
+    cctests_assert(upper_L, true == item_state_is_destructed(2));
   } else {
     item_state_init();
     ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_3, async_item_destructor, P_H);
