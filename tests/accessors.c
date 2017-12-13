@@ -90,7 +90,7 @@ test_1_1 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_ref_pair(L, P, 1);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -165,7 +165,7 @@ test_2_1 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_ref(L, P, 1);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -240,7 +240,7 @@ test_3_1 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_last_pair(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -315,7 +315,7 @@ test_4_1 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_last(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -407,7 +407,7 @@ test_5_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_first(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -448,7 +448,7 @@ test_6_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_second(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -469,7 +469,7 @@ test_6_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_second(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -510,7 +510,7 @@ test_7_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_third(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -531,7 +531,7 @@ test_7_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_third(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -552,7 +552,7 @@ test_7_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 2);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_third(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -593,7 +593,7 @@ test_8_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_fourth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -614,7 +614,7 @@ test_8_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_fourth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -635,7 +635,7 @@ test_8_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 3);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_fourth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -676,7 +676,7 @@ test_9_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_fifth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -697,7 +697,7 @@ test_9_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_fifth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -718,7 +718,7 @@ test_9_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 4);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_fifth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -759,7 +759,7 @@ test_10_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_sixth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -780,7 +780,7 @@ test_10_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_sixth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -801,7 +801,7 @@ test_10_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 5);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_sixth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -842,7 +842,7 @@ test_11_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_seventh(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -863,7 +863,7 @@ test_11_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_seventh(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -884,7 +884,7 @@ test_11_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 6);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_seventh(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -925,7 +925,7 @@ test_12_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_eighth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -946,7 +946,7 @@ test_12_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_eighth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -967,7 +967,7 @@ test_12_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 7);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_eighth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -1008,7 +1008,7 @@ test_13_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_nineth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -1029,7 +1029,7 @@ test_13_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_nineth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -1050,7 +1050,7 @@ test_13_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 8);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_nineth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -1091,7 +1091,7 @@ test_14_2 (cce_destination_t upper_L)
   } else {
     ccpair_t	P = NULL;
     ccpair_tenth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -1112,7 +1112,7 @@ test_14_3 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 1);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_tenth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -1133,7 +1133,7 @@ test_14_4 (cce_destination_t upper_L)
     ccpair_t	P = make_list_len(L, 9);
     ccpair_cleanup_handler_list_init(L, P_H, P);
     ccpair_tenth(L, P);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 

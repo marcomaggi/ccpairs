@@ -656,7 +656,7 @@ test_1_7 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list(L, simple_item_constructor__exception_at_3, simple_item_destructor__noop);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -756,7 +756,7 @@ test_2_4 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_0, async_item_destructor);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -778,7 +778,7 @@ test_2_5 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_1, async_item_destructor);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -801,7 +801,7 @@ test_2_6 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_2, async_item_destructor);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -825,7 +825,7 @@ test_2_7 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list(L, async_item_constructor__exception_at_3, async_item_destructor);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -925,7 +925,7 @@ test_3_4 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_0, async_item_destructor, P_H);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -948,7 +948,7 @@ test_3_5 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_1, async_item_destructor, P_H);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -972,7 +972,7 @@ test_3_6 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_2, async_item_destructor, P_H);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -997,7 +997,7 @@ test_3_7 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_3, async_item_destructor, P_H);
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 

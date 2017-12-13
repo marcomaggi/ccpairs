@@ -206,7 +206,7 @@ test_1_5 (cce_destination_t upper_L)
     ccpair_length(L, P);
     /* If  we are  still  here: "ccpair_length()"  failed  to deted  the
        circular list, this is an error. */
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -236,7 +236,7 @@ test_1_6 (cce_destination_t upper_L)
     ccpair_length(L, P);
     /* If  we are  still  here: "ccpair_length()"  failed  to deted  the
        circular list, this is an error. */
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
@@ -266,7 +266,7 @@ test_1_7 (cce_destination_t upper_L)
     ccpair_length(L, P);
     /* If  we are  still  here: "ccpair_length()"  failed  to deted  the
        circular list, this is an error. */
-    cce_raise(L, cctests_condition_new_failure());
+    cctests_raise_unreachable(L);
   }
 }
 
