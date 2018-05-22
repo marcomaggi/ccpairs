@@ -7,7 +7,7 @@ AC_INIT([CCPairs],[0.1.0-devel.0],
   [ccpairs],[http://marcomaggi.github.com/ccpairs])
 dnl This is the revision number of this configure.ac
 AC_REVISION([0.1])
-AC_COPYRIGHT([Copyright (c) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+AC_COPYRIGHT([Copyright (c) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
 This program is free software: you  can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by
@@ -43,27 +43,21 @@ LT_INIT
 dnl page
 #### libraries interface version
 
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.1d0.0])
-AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpair],1,0,0)
 
 dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CCPAIRS_PKG_CONFIG_VERSION],[0.1])
+AC_SUBST([CCTEMPLATE_PKG_CONFIG_VERSION],[0.1])
 
-MM_LIBTOOL_LIBRARY_VERSIONS([ccpair],1,0,0)
+AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.1d0.0])
+AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
 
 dnl page
 #### basic system inspection
 
-AC_LANG([C])
-AC_PROG_CC_C99
-AX_CHECK_COMPILE_FLAG([-std=c11],[],[AC_MSG_ERROR([*** Compiler does not support -std=c11])],[-pedantic])
+MMUX_CHECK_TARGET_OS
 
-AS_VAR_SET(AX_CFLAGS,[-std=c11])
-AS_VAR_APPEND(AX_CFLAGS,[" -Wall -Wextra"])
-AX_GCC_VERSION
-AS_IF([test "x$GCC" = "xyes"],
-  [AS_CASE("$GCC_VERSION",
-     [7.*],[AS_VAR_APPEND(AX_CFLAGS,[" -pedantic -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict -Wnull-dereference -Wjump-misses-init -Wdouble-promotion -Wshadow -Wformat=2 -Wmisleading-indentation"])])])
+AC_LANG([C])
+MMUX_LANG_C11
 AC_SUBST(AX_CFLAGS)
 
 AM_PROG_AS
@@ -83,23 +77,14 @@ dnl AC_CACHE_SAVE
 dnl page
 #### external libraries
 
-PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.6.1])
-PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.1])
+MMUX_CHECK_PKG_CONFIG_MACROS
+PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.8.0])
+PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.1])
+PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.2.0],,[AC_MSG_WARN([package CCTests not found])])
+
+AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
 
 AC_CACHE_SAVE
-
-dnl page
-#### operating system specific configuration
-
-dnl AS_CASE("$target_os",
-dnl   [*linux*],[],
-dnl   [*bsd*],[],
-dnl   [*cygwin*],[],
-dnl   [*darwin*],[ccpairs_OS_DARWIN=yes])
-dnl AM_CONDITIONAL([WANT_LINUX], [test "x$ccpairs_OS_LINUX"  = xyes])
-dnl AM_CONDITIONAL([WANT_BSD],   [test "x$ccpairs_OS_BSD"    = xyes])
-dnl AM_CONDITIONAL([WANT_CYGWIN],[test "x$ccpairs_OS_CYGWIN" = xyes])
-dnl AM_CONDITIONAL([WANT_DARWIN],[test "x$ccpairs_OS_DARWIN" = xyes])
 
 dnl page
 #### finish

@@ -2,27 +2,27 @@
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/XXX/badge)](https://bestpractices.coreinfrastructure.org/projects/XXX)
 [![Build Status](https://travis-ci.org/marcomaggi/ccpairs.svg?branch=master)](https://travis-ci.org/marcomaggi/ccpairs)
-[![Coverity passed](https://scan.coverity.com/projects/12801/badge.svg)](https://scan.coverity.com/projects/marcomaggi-ccpairs)
 [![codecov](https://codecov.io/gh/marcomaggi/ccpairs/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/ccpairs)
 
 
 ## Introduction
 
 This package installs a C11  language library implementing simply linked
-lists data structures, in the style of the Scheme language.  The library
-targets POSIX systems.
+lists data structures, in the style of the Scheme language.
 
-The  package depends  upon the  external package  CCExceptions at  least
-version 0.6.1,  and relies on `pkg-config`  to find it installed  on the
-system.
+The library targets POSIX systems.  The library depends on the packages:
+CCExceptions, at least version 0.8.0;  CCMemory, at least version 0.1.0.
+To run the test suite: the  package depends upon the package CCTests, at
+least version 0.2.0.
 
-The  package makes  use of  the GNU  Autotools and  it is  tested, using
-Travis CI, on both Ubuntu GNU+Linux systems and OS X systems.
+The package uses the GNU Autotools and it is tested, using Travis CI, on
+both Ubuntu GNU+Linux  systems and OS X systems.  The  package relies on
+`pkg-config` to find the dependencies installed on the system.
 
 
 ## License
 
-Copyright (c) 2017 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
+Copyright (c) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
 All rights reserved.
 
 This program is free software: you  can redistribute it and/or modify it

@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -44,11 +44,11 @@ ccpair_handler_pair_function (const cce_condition_t * C CCPAIR_UNUSED, cce_handl
 }
 
 void
-ccpair_cleanup_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+ccpair_clean_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
 {
   H->function	= ccpair_handler_pair_function;
   H->pointer	= P;
-  cce_register_cleanup_handler(L, H);
+  cce_register_clean_handler(L, H);
 }
 
 void
@@ -73,11 +73,11 @@ ccpair_handler_list_function (const cce_condition_t * C CCPAIR_UNUSED, cce_handl
 }
 
 void
-ccpair_cleanup_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+ccpair_clean_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
 {
   H->function	= ccpair_handler_list_function;
   H->pointer	= P;
-  cce_register_cleanup_handler(L, H);
+  cce_register_clean_handler(L, H);
 }
 
 void
@@ -113,12 +113,12 @@ ccpair_handler_list_item_function (cce_condition_t const * C CCPAIR_UNUSED, cce_
 }
 
 void
-ccpair_cleanup_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
+ccpair_clean_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
 {
   H->handler.function	= ccpair_handler_list_item_function;
   H->handler.pointer	= P;
   H->item_destructor	= D;
-  cce_register_cleanup_handler(L, &(H->handler));
+  cce_register_clean_handler(L, &(H->handler));
 }
 
 void
@@ -148,12 +148,12 @@ ccpair_handler_pair_item_function (cce_condition_t const * C CCPAIR_UNUSED, cce_
 }
 
 void
-ccpair_cleanup_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
+ccpair_clean_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
 {
   H->handler.function	= ccpair_handler_pair_item_function;
   H->handler.pointer	= P;
   H->item_destructor	= D;
-  cce_register_cleanup_handler(L, &(H->handler));
+  cce_register_clean_handler(L, &(H->handler));
 }
 
 void
@@ -184,12 +184,12 @@ ccpair_handler_item_function (const cce_condition_t * C CCPAIR_UNUSED, cce_handl
 }
 
 void
-ccpair_cleanup_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H, uintptr_t item, ccpair_item_destructor_t * D)
+ccpair_clean_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H, uintptr_t item, ccpair_item_destructor_t * D)
 {
   H->handler.function	= ccpair_handler_item_function;
   H->handler.pointer	= (void *) item;
   H->item_destructor	= D;
-  cce_register_cleanup_handler(L, &(H->handler));
+  cce_register_clean_handler(L, &(H->handler));
 }
 
 void

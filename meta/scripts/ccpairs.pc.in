@@ -19,8 +19,9 @@ sysconfdir=@sysconfdir@
 ## ------------------------------------------------------------
 
 Name: @PACKAGE_NAME@
-Description: template C library
+Description: C11 library implementing simply linked lists
 Version: @CCPAIRS_PKG_CONFIG_VERSION@
+Requires: ccexceptions >= 0.8.0, ccmemory >= 0.1
 Libs: -L${libdir} -lccpairs
 Cflags: -I${includedir}
 

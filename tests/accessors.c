@@ -7,7 +7,7 @@
 
 	Test file for accessors functions.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -48,7 +48,7 @@ make_list_len (cce_location_t * upper_L, size_t len)
       }
       P[0] = ccpair_cons(L, 1, P[1]);
       if (0) { fprintf(stderr, "%s: P[%u]=%p\n", __func__, 0, (void *)(P[0])); }
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
       if (0) { fprintf(stderr, "%s: returning P[0]=%p\n", __func__, (void *)(P[0])); }
       return P[0];
     }
@@ -105,9 +105,9 @@ test_1_2 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    ccpair_clean_handler_pair_init(L, P_H, P);
     cctests_assert(L, P == ccpair_ref_pair(L, P, 0));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -122,9 +122,9 @@ test_1_3 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 5);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 4 == ccpair_car(ccpair_ref_pair(L, P, 3)));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -139,9 +139,9 @@ test_1_4 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 1024);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 1000 == ccpair_car(ccpair_ref_pair(L, P, 999)));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -180,9 +180,9 @@ test_2_2 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    ccpair_clean_handler_pair_init(L, P_H, P);
     cctests_assert(L, 1 == ccpair_ref(L, P, 0));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -197,9 +197,9 @@ test_2_3 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 5);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 4 == ccpair_ref(L, P, 3));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -214,9 +214,9 @@ test_2_4 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 1024);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 1000 == ccpair_ref(L, P, 999));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -255,9 +255,9 @@ test_3_2 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    ccpair_clean_handler_pair_init(L, P_H, P);
     cctests_assert(L, P == ccpair_last_pair(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -272,9 +272,9 @@ test_3_3 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 5);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 5 == ccpair_car(ccpair_last_pair(L, P)));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -289,9 +289,9 @@ test_3_4 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 1024);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 1024 == ccpair_car(ccpair_last_pair(L, P)));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -330,9 +330,9 @@ test_4_2 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    ccpair_clean_handler_pair_init(L, P_H, P);
     cctests_assert(L, 1 == ccpair_last(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -347,9 +347,9 @@ test_4_3 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 5);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 5 == ccpair_last(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -364,9 +364,9 @@ test_4_4 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 1024);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 1024 == ccpair_last(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -386,9 +386,9 @@ test_5_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 1 == ccpair_first(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -427,9 +427,9 @@ test_6_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 2 == ccpair_second(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -467,7 +467,7 @@ test_6_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_second(L, P);
     cctests_raise_unreachable(L);
   }
@@ -489,9 +489,9 @@ test_7_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 3 == ccpair_third(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -529,7 +529,7 @@ test_7_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_third(L, P);
     cctests_raise_unreachable(L);
   }
@@ -550,7 +550,7 @@ test_7_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 2);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_third(L, P);
     cctests_raise_unreachable(L);
   }
@@ -572,9 +572,9 @@ test_8_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 4 == ccpair_fourth(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -612,7 +612,7 @@ test_8_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_fourth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -633,7 +633,7 @@ test_8_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 3);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_fourth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -655,9 +655,9 @@ test_9_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 5 == ccpair_fifth(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -695,7 +695,7 @@ test_9_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_fifth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -716,7 +716,7 @@ test_9_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 4);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_fifth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -738,9 +738,9 @@ test_10_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 6 == ccpair_sixth(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -778,7 +778,7 @@ test_10_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_sixth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -799,7 +799,7 @@ test_10_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 5);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_sixth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -821,9 +821,9 @@ test_11_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 7 == ccpair_seventh(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -861,7 +861,7 @@ test_11_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_seventh(L, P);
     cctests_raise_unreachable(L);
   }
@@ -882,7 +882,7 @@ test_11_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 6);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_seventh(L, P);
     cctests_raise_unreachable(L);
   }
@@ -904,9 +904,9 @@ test_12_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 8 == ccpair_eighth(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -944,7 +944,7 @@ test_12_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_eighth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -965,7 +965,7 @@ test_12_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 7);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_eighth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -987,9 +987,9 @@ test_13_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 9 == ccpair_nineth(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -1027,7 +1027,7 @@ test_13_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_nineth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -1048,7 +1048,7 @@ test_13_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 8);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_nineth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -1070,9 +1070,9 @@ test_14_1 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 19);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 10 == ccpair_tenth(L, P));
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -1110,7 +1110,7 @@ test_14_3 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 1);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_tenth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -1131,7 +1131,7 @@ test_14_4 (cce_destination_t upper_L)
     }
   } else {
     ccpair_t	P = make_list_len(L, 9);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     ccpair_tenth(L, P);
     cctests_raise_unreachable(L);
   }
@@ -1141,7 +1141,7 @@ test_14_4 (cce_destination_t upper_L)
 int
 main (void)
 {
-  ccpair_init();
+  ccpair_library_init();
 
   cctests_init("accessors");
   {

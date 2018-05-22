@@ -33,11 +33,13 @@
 
 @c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the
 @c list of copyright years.
-@set COPYRIGHT_YEARS            2017
+@set COPYRIGHT_YEARS            2017, 2018
 
 @c ------------------------------------------------------------
 
-@set CCEXCEPTIONS_REQUIRED_VERSION      0.6.1
+@set CCEXCEPTIONS_VERSION       0.8.0
+@set CCMEMORY_VERSION           0.1.0
+@set CCTESTS_VERSION            0.2.0
 
 @c ------------------------------------------------------------
 
@@ -53,12 +55,12 @@
 
 @copying
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing a simply linked lists data structures, in the style of the Scheme language.  The
-library targets @posix{} systems.
+implementing a simply linked lists data structures, in the style of the Scheme language.
 
-The package depends upon the external package CCExceptions at least version
-@value{CCEXCEPTIONS_REQUIRED_VERSION}, and relies on @command{pkg-config} to find it installed on
-the system.
+The library targets @posix{} platforms.  The library depends on the packages: CCExceptions, at least
+version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.  To run
+the test suite: the package depends upon the package CCTests, at least version
+@value{CCTESTS_VERSION}.
 
 The package is distributed under the terms of the @gnu{} Lesser General Public License (@lgpl{}).
 
@@ -160,12 +162,10 @@ Indexes
 
 
 This document describes version @value{VERSION} of @value{PACKAGE}, a C11 language library
-implementing simply linked lists data structures, in the style of the Scheme language.  The library
-targets @posix{} systems.
+implementing simply linked lists data structures, in the style of the Scheme language.
 
-The package depends upon the external package CCExceptions at least version
-@value{CCEXCEPTIONS_REQUIRED_VERSION}, and relies on @command{pkg-config} to find it installed on
-the system.
+The library targets @posix{} platforms.  The library depends on the packages: CCExceptions, at least
+version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.
 
 @value{PACKAGE} installs the single header file @file{ccpairs.h}.  All the function names in the
 @api{} are prefixed with @code{ccpair_}; all the preprocessor symbol names are prefixed with
@@ -195,7 +195,6 @@ following definitions before including @strong{all} the header files:
 @section Linking code with the library
 
 
-This package installs a data file for @command{pkg-config}, so when searching for the installed
 library with the @gnu{} Autotools, we can add the following macro use to @file{configure.ac}:
 
 @example
@@ -203,7 +202,27 @@ PKG_CHECK_MODULES([CCPAIRS],[ccpairs >= 0.1])
 @end example
 
 @noindent
-which will set the variables @code{CCPAIR_LIBS} and @code{CCPAIR_CFLAGS}.
+which will set the variables @code{CCPAIRS_LIBS} and @code{CCPAIRS_CFLAGS}.  To avoid problems with
+@command{pkg-config}, we need to remember that:
+
+@itemize
+@item
+The macro file defining @code{PKG_CHECK_MODULES} is installed by the package @code{pkg-config}; such
+file usually is in one of the locations:
+
+@center @file{/usr/share/aclocal/pkg.m4}
+@center @file{/usr/local/share/aclocal/pkg.m4}
+
+@item
+The macro file is located by @command{aclocal}, which in turn is installed by the package @gnu{}
+Automake; @command{aclocal} is used by @command{autoreconf}.  We must make sure that
+@command{aclocal} finds the installed macro files; for this purpose we can use the environment
+variable @env{ACLOCAL_PATH}; under a Bourne shell we can do this with:
+
+@example
+export ACLOCAL_PATH=/usr/local/share/aclocal:/usr/share/aclocal
+@end example
+@end itemize
 
 Alternatively we can use the raw @gnu{} Autoconf macros:
 
@@ -354,7 +373,7 @@ pointer @cnull{}.
 @chapter Library initialisation
 
 
-@deftypefun void ccpair_init (void)
+@deftypefun void ccpair_library_init (void)
 Initialise the internal structures of the library.  It is fine to call this function multiple times.
 
 @quotation

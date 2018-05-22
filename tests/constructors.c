@@ -7,7 +7,7 @@
 
 	Test file for constructor functions.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -66,7 +66,7 @@ make_list_len (cce_destination_t upper_L, size_t len)
 	fprintf(stderr, "%s: P[0]=%p, car(P[0])=%lu, cdr(P[0])=%p\n", __func__,
 		(void *)(P[0]), ccpair_car(P[0]), (void *)ccpair_cdr(P[0]));
       }
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
       if (0) { fprintf(stderr, "%s: returning P[0]=%p)\n", __func__, (void *)(P[0])); }
       if (0) { print_list(stderr, P[0]); }
       return P[0];
@@ -514,7 +514,7 @@ test_1_1 (cce_destination_t upper_L)
     ccpair_t	P = ccpair_list(L, simple_item_constructor__break_immediately, simple_item_destructor__noop);
     cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -532,13 +532,13 @@ test_1_2 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, simple_item_constructor__one_integer_item, simple_item_destructor__noop);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 1 == ccpair_length(L, P));
     cctests_assert(L, 0 == ccpair_car(P));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -556,7 +556,7 @@ test_1_3 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, simple_item_constructor__three_integer_items, simple_item_destructor__noop);
-    ccpair_cleanup_handler_list_init(L, P_H, P);
+    ccpair_clean_handler_list_init(L, P_H, P);
     cctests_assert(L, 3 == ccpair_length(L, P));
     cctests_assert(L, 0 == ccpair_car(P));
     cctests_assert(L, 1 == ccpair_ref(L, P, 1));
@@ -566,7 +566,7 @@ test_1_3 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(2));
     cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -679,7 +679,7 @@ test_2_1 (cce_destination_t upper_L)
     ccpair_t	P = ccpair_list(L, async_item_constructor__break_immediately, async_item_destructor);
     cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_data_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -697,13 +697,13 @@ test_2_2 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, async_item_constructor__one_integer_item, async_item_destructor);
-    ccpair_cleanup_handler_list_item_init(L, P_H, P, async_item_destructor);
+    ccpair_clean_handler_list_item_init(L, P_H, P, async_item_destructor);
     cctests_assert(L, 1 == ccpair_length(L, P));
     cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
 }
@@ -722,7 +722,7 @@ test_2_3 (cce_destination_t upper_L)
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, async_item_constructor__three_integer_items, async_item_destructor);
-    ccpair_cleanup_handler_list_item_init(L, P_H, P, async_item_destructor);
+    ccpair_clean_handler_list_item_init(L, P_H, P, async_item_destructor);
     cctests_assert(L, 3 == ccpair_length(L, P));
     cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
     cctests_assert(L, 1 == async_item_ref(ccpair_ref(L, P, 1)));
@@ -732,7 +732,7 @@ test_2_3 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(2));
     cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_data_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
   cctests_assert(upper_L, true  == item_state_is_destructed(1));
@@ -831,12 +831,12 @@ test_2_7 (cce_destination_t upper_L)
 
 
 /** --------------------------------------------------------------------
- ** List function: lists of items as asynchronous resources, cleanup handler.
+ ** List function: lists of items as asynchronous resources, clean handler.
  ** ----------------------------------------------------------------- */
 
 void
 test_3_1 (cce_destination_t upper_L)
-/* Use "ccpair_list_cleanup_handler()" to build an empty list.  The item
+/* Use "ccpair_list_clean_handler()" to build an empty list.  The item
    constructor function must raise a break exception immediately.  There
    is a noop item destructor function. */
 {
@@ -846,16 +846,16 @@ test_3_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_error_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_list_cleanup_handler(L, async_item_constructor__break_immediately, async_item_destructor, P_H);
+    ccpair_t	P = ccpair_list_clean_handler(L, async_item_constructor__break_immediately, async_item_destructor, P_H);
     cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_data_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
 void
 test_3_2 (cce_destination_t upper_L)
-/* Use "ccpair_list_cleanup_handler()" to build  a list of "data_t" with
+/* Use "ccpair_list_clean_handler()" to build  a list of "data_t" with
    one item.  The item constructor function must raise a break exception
    when the index operand is 1. */
 {
@@ -866,20 +866,20 @@ test_3_2 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_cleanup_handler(L, async_item_constructor__one_integer_item, async_item_destructor, P_H);
+    ccpair_t	P = ccpair_list_clean_handler(L, async_item_constructor__one_integer_item, async_item_destructor, P_H);
     cctests_assert(L, 1 == ccpair_length(L, P));
     cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
 }
 
 void
 test_3_3 (cce_destination_t upper_L)
-/* Use "ccpair_list_cleanup_handler()" to build  a list of "data_t" with
+/* Use "ccpair_list_clean_handler()" to build  a list of "data_t" with
    three  items.   The item  constructor  function  must raise  a  break
    exception when the index operand is 3. */
 {
@@ -890,7 +890,7 @@ test_3_3 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_cleanup_handler(L, async_item_constructor__three_integer_items, async_item_destructor, P_H);
+    ccpair_t	P = ccpair_list_clean_handler(L, async_item_constructor__three_integer_items, async_item_destructor, P_H);
     cctests_assert(L, 3 == ccpair_length(L, P));
     cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
     cctests_assert(L, 1 == async_item_ref(ccpair_ref(L, P, 1)));
@@ -900,7 +900,7 @@ test_3_3 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(2));
     cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_data_list(stderr, P); }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
   cctests_assert(upper_L, true  == item_state_is_destructed(1));
@@ -909,7 +909,7 @@ test_3_3 (cce_destination_t upper_L)
 
 void
 test_3_4 (cce_destination_t upper_L)
-/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+/* Use "ccpair_list_clean_handler()" to build a list of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 0. */
 {
@@ -924,14 +924,14 @@ test_3_4 (cce_destination_t upper_L)
     }
   } else {
     item_state_init();
-    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_0, async_item_destructor, P_H);
+    ccpair_list_clean_handler(L, async_item_constructor__exception_at_0, async_item_destructor, P_H);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_3_5 (cce_destination_t upper_L)
-/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+/* Use "ccpair_list_clean_handler()" to build a list of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 1. */
 {
@@ -947,14 +947,14 @@ test_3_5 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
     item_state_init();
-    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_1, async_item_destructor, P_H);
+    ccpair_list_clean_handler(L, async_item_constructor__exception_at_1, async_item_destructor, P_H);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_3_6 (cce_destination_t upper_L)
-/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+/* Use "ccpair_list_clean_handler()" to build a list of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 2. */
 {
@@ -971,14 +971,14 @@ test_3_6 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(1));
   } else {
     item_state_init();
-    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_2, async_item_destructor, P_H);
+    ccpair_list_clean_handler(L, async_item_constructor__exception_at_2, async_item_destructor, P_H);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_3_7 (cce_destination_t upper_L)
-/* Use "ccpair_list_cleanup_handler()" to build a list of "data_t".  The
+/* Use "ccpair_list_clean_handler()" to build a list of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 3. */
 {
@@ -996,7 +996,7 @@ test_3_7 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(2));
   } else {
     item_state_init();
-    ccpair_list_cleanup_handler(L, async_item_constructor__exception_at_3, async_item_destructor, P_H);
+    ccpair_list_clean_handler(L, async_item_constructor__exception_at_3, async_item_destructor, P_H);
     cctests_raise_unreachable(L);
   }
 }
@@ -1005,7 +1005,7 @@ test_3_7 (cce_destination_t upper_L)
 int
 main (void)
 {
-  ccpair_init();
+  ccpair_library_init();
 
   cctests_init("constructors");
   {

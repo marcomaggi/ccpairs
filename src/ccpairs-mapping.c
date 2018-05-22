@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -65,7 +65,7 @@ ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t
 	Q    = T;
       }
 
-      cce_run_cleanup_handlers(L);
+      cce_run_clean_handlers(L);
     }
   }
   /* Return the head of the new list. */

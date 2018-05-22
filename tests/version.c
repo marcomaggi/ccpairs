@@ -7,7 +7,7 @@
 
 	Test file for version functions.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -19,7 +19,7 @@
 int
 main (int argc CCPAIR_UNUSED, const char *const argv[] CCPAIR_UNUSED)
 {
-  ccpair_init();
+  ccpair_library_init();
 
   printf("version number string: %s\n", ccpair_version_string());
   printf("libtool version number: %d:%d:%d\n",

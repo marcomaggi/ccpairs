@@ -7,7 +7,7 @@
 
 	Test file for basic construction functions.
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -28,17 +28,17 @@
  ** ----------------------------------------------------------------- */
 
 void
-test_1_1 (cce_destination_t L CCE_UNUSED)
+test_1_1 (cce_destination_t L)
 /* Single pair allocation and release. */
 {
   ccpair_t	P;
 
   P = ccpair_cons(L, 1, NULL);
   {
-    cctests_assert(NULL != P);
-    cctests_assert(1    == ccpair_car(P));
-    cctests_assert(NULL == ccpair_cdr(P));
-    cctests_assert(0    == ccpair_cdr_value(P));
+    cctests_assert(L, NULL != P);
+    cctests_assert(L, 1    == ccpair_car(P));
+    cctests_assert(L, NULL == ccpair_cdr(P));
+    cctests_assert(L, 0    == ccpair_cdr_value(P));
   }
   ccpair_free(P);
 }
@@ -54,14 +54,14 @@ test_1_2 (cce_destination_t upper_L)
     cce_run_error_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_cleanup_handler_pair_init(L, P_H, P);
+    ccpair_clean_handler_pair_init(L, P_H, P);
     {
       cctests_assert(L, NULL != P);
       cctests_assert(L, 1    == ccpair_car(P));
       cctests_assert(L, NULL == ccpair_cdr(P));
       cctests_assert(L, 0    == ccpair_cdr_value(P));
     }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -82,11 +82,11 @@ test_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_error_handlers_raise(L, upper_L);
   } else {
-    P[4] = ccpair_cons(L, 5, NULL); ccpair_cleanup_handler_pair_init(L, &(P_H[4]), P[4]);
-    P[3] = ccpair_cons(L, 4, P[4]); ccpair_cleanup_handler_pair_init(L, &(P_H[3]), P[3]);
-    P[2] = ccpair_cons(L, 3, P[3]); ccpair_cleanup_handler_pair_init(L, &(P_H[2]), P[2]);
-    P[1] = ccpair_cons(L, 2, P[2]); ccpair_cleanup_handler_pair_init(L, &(P_H[1]), P[1]);
-    P[0] = ccpair_cons(L, 1, P[1]); ccpair_cleanup_handler_pair_init(L, &(P_H[0]), P[0]);
+    P[4] = ccpair_cons(L, 5, NULL); ccpair_clean_handler_pair_init(L, &(P_H[4]), P[4]);
+    P[3] = ccpair_cons(L, 4, P[4]); ccpair_clean_handler_pair_init(L, &(P_H[3]), P[3]);
+    P[2] = ccpair_cons(L, 3, P[3]); ccpair_clean_handler_pair_init(L, &(P_H[2]), P[2]);
+    P[1] = ccpair_cons(L, 2, P[2]); ccpair_clean_handler_pair_init(L, &(P_H[1]), P[1]);
+    P[0] = ccpair_cons(L, 1, P[1]); ccpair_clean_handler_pair_init(L, &(P_H[0]), P[0]);
 
     {
       uintptr_t	i;
@@ -99,7 +99,7 @@ test_2_1 (cce_destination_t upper_L)
 	cctests_assert(L, i == ccpair_car(Q));
       }
     }
-    cce_run_cleanup_handlers(L);
+    cce_run_clean_handlers(L);
   }
 }
 
@@ -107,7 +107,7 @@ test_2_1 (cce_destination_t upper_L)
 int
 main (void)
 {
-  ccpair_init();
+  ccpair_library_init();
   cctests_init("cons");
   {
     cctests_begin_group("single pair");

@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -85,6 +85,7 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 #include <ccexceptions.h>
+#include <ccmemory.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -145,7 +146,7 @@ ccpair_decl int		ccpair_version_interface_age		(void);
  ** Initialisation functions.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl void	ccpair_init (void)
+ccpair_decl void ccpair_library_init (void)
   __attribute__((__constructor__));
 
 
@@ -582,7 +583,7 @@ ccpair_map_forward (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
  ** Predefined exception handler: pair memory release.
  ** ----------------------------------------------------------------- */
 
-cce_decl void ccpair_cleanup_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+cce_decl void ccpair_clean_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
   __attribute__((__nonnull__(1,2,3)));
 
 cce_decl void ccpair_error_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
@@ -593,7 +594,7 @@ cce_decl void ccpair_error_handler_pair_init (cce_location_t * L, cce_handler_t 
  ** Predefined exception handler: list memory release.
  ** ----------------------------------------------------------------- */
 
-cce_decl void ccpair_cleanup_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+cce_decl void ccpair_clean_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
   __attribute__((__nonnull__(1,2,3)));
 
 cce_decl void ccpair_error_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
@@ -609,7 +610,7 @@ struct ccpair_pair_item_handler_t {
   ccpair_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_cleanup_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H,
+ccpair_decl void ccpair_clean_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H,
 							ccpair_t P, ccpair_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
@@ -627,7 +628,7 @@ struct ccpair_list_item_handler_t {
   ccpair_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_cleanup_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H,
+ccpair_decl void ccpair_clean_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H,
 							ccpair_t P, ccpair_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
@@ -645,7 +646,7 @@ struct ccpair_item_handler_t {
   ccpair_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_cleanup_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H,
+ccpair_decl void ccpair_clean_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H,
 						   uintptr_t item, ccpair_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,4)));
 
@@ -670,10 +671,10 @@ ccpair_cons_error_handler (cce_location_t * L, uintptr_t A, ccpair_t D, cce_hand
 
 __attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
 static inline ccpair_t
-ccpair_cons_cleanup_handler (cce_location_t * L, uintptr_t A, ccpair_t D, cce_handler_t * H)
+ccpair_cons_clean_handler (cce_location_t * L, uintptr_t A, ccpair_t D, cce_handler_t * H)
 {
   ccpair_t	P = ccpair_cons(L, A, D);
-  ccpair_cleanup_handler_pair_init(L, H, P);
+  ccpair_clean_handler_pair_init(L, H, P);
   return P;
 }
 
@@ -690,10 +691,10 @@ ccpair_cons_improper_error_handler (cce_location_t * L, uintptr_t A, uintptr_t D
 
 __attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
 static inline ccpair_t
-ccpair_cons_improper_cleanup_handler (cce_location_t * L, uintptr_t A, uintptr_t D, cce_handler_t * H)
+ccpair_cons_improper_clean_handler (cce_location_t * L, uintptr_t A, uintptr_t D, cce_handler_t * H)
 {
   ccpair_t	P = ccpair_cons_improper(L, A, D);
-  ccpair_cleanup_handler_pair_init(L, H, P);
+  ccpair_clean_handler_pair_init(L, H, P);
   return P;
 }
 
@@ -710,10 +711,10 @@ ccpair_cons_node_error_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cce_
 
 __attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
 static inline ccpair_t
-ccpair_cons_node_cleanup_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cce_handler_t * H)
+ccpair_cons_node_clean_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cce_handler_t * H)
 {
   ccpair_t	P = ccpair_cons_node(L, A, D);
-  ccpair_cleanup_handler_pair_init(L, H, P);
+  ccpair_clean_handler_pair_init(L, H, P);
   return P;
 }
 
@@ -730,10 +731,10 @@ ccpair_list_error_handler (cce_location_t * L, ccpair_item_constructor_t * C, cc
 
 __attribute__((__always_inline__,__nonnull__(1,2,3,4),__returns_nonnull__))
 static inline ccpair_t
-ccpair_list_cleanup_handler (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D, ccpair_list_item_handler_t * H)
+ccpair_list_clean_handler (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D, ccpair_list_item_handler_t * H)
 {
   ccpair_t	P = ccpair_list(L, C, D);
-  ccpair_cleanup_handler_list_item_init(L, H, P, D);
+  ccpair_clean_handler_list_item_init(L, H, P, D);
   return P;
 }
 

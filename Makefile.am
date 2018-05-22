@@ -34,9 +34,9 @@ ccpairs_AGE		= @ccpair_VERSION_INTERFACE_AGE@
 include_HEADERS		= src/ccpairs.h
 
 lib_LTLIBRARIES		= libccpairs.la
-libccpairs_la_CPPFLAGS	= $(CCEXCEPTIONS_CFLAGS)
+libccpairs_la_CPPFLAGS	= $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
 libccpairs_la_LDFLAGS	= -version-info $(ccpairs_CURRENT):$(ccpairs_REVISION):$(ccpairs_AGE) \
-			  $(CCEXCEPTIONS_LIBS)
+			  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS)
 libccpairs_la_SOURCES	= \
 	src/ccpairs.h				\
 	src/ccpairs-internals.h			\
@@ -61,10 +61,16 @@ check_PROGRAMS	= \
 	tests/constructors	\
 	tests/mapping
 
+if MMUX_TESTING_ENABLED
 TESTS				= $(check_PROGRAMS)
+endif
 
-ccpairs_tests_cppflags		= -I$(srcdir)/src $(CCEXCEPTIONS_FLAGS) $(CCTESTS_CFLAGS)
-ccpairs_tests_ldadd		= libccpairs.la $(CCEXCEPTIONS_LIBS) $(CCTESTS_LIBS)
+ccpairs_tests_cppflags		= -I$(srcdir)/src \
+	$(CCEXCEPTIONS_FLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
+ccpairs_tests_ldadd		= libccpairs.la \
+	$(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCTESTS_LIBS)
+
+## --------------------------------------------------------------------
 
 tests_version_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_version_LDADD		= $(ccpairs_tests_ldadd)
@@ -84,6 +90,8 @@ tests_constructors_LDADD	= $(ccpairs_tests_ldadd)
 tests_mapping_CPPFLAGS		= $(ccpairs_tests_cppflags)
 tests_mapping_LDADD		= $(ccpairs_tests_ldadd)
 
+## --------------------------------------------------------------------
+
 installcheck-local: $(TESTS)
 	@for f in $(TESTS); do $(builddir)/$$f; done
 
@@ -101,59 +109,6 @@ $(builddir)/.gdbinit:
 #
 gdb-test: $(builddir)/.gdbinit
 	libtool --mode=execute gdb $$FILE
-
-#page
-#### Coverity support
-#
-# We can visit the project site at:
-#
-#    <https://scan.coverity.com/projects/marcomaggi-ccpairs>
-#
-# Remember to  put in  the PATH  the directory  in which  the Coverity
-# tools are installed; for example:
-#
-#    $ export PATH=/opt/coverity/8.7.0/cov-analysis-linux64-8.7.0/bin:$PATH
-#
-# The tool  will use  a temporary directory  "$(builddir)/cov-int"; we
-# must *not* change this pathname.
-#
-# To generate and submit a report we must do:
-#
-#    $ make clean
-#    $ make coverity-scan
-#    $ make coverity-archive
-#    $ make coverity-upload
-#
-# after "make  coverity-scan" we should  check that the last  lines of
-# the file "cov-int/build-log.txt" report a successful build:
-#
-#    $ tail cov-int/build-log.txt
-#
-# NOTE If  your Linux kernel  is at version 4.8  or above you  have to
-# first issue the command:
-#
-#    $ sudo /sbin/sysctl vsyscall=emulate
-#
-# to make the Coverity tools work.
-#
-
-CCPAIRS_COVERITY_TOKEN_FILE = /home/unsafe-users/marco-devel/.coverity-ccpairs-token
-
-.PHONY: coverity-scan coverity-archive coverity-upload
-
-coverity-scan:
-	cov-build --dir cov-int make -j 4
-
-coverity-archive:
-	tar caf ccpairs.xz cov-int
-
-coverity-upload:
-	curl --form token=$$(<$(CCPAIRS_COVERITY_TOKEN_FILE)) \
-	     --form email='marco.maggi-ipsu@poste.it' \
-	     --form file='@ccpairs.xz' \
-	     --form version="$(VERSION)" \
-	     --form description="A build description" \
-	     'https://scan.coverity.com/builds?project=marcomaggi%2Fccpairs'
 
 #page
 #### Static analysis with Clang's Static Analyzer
