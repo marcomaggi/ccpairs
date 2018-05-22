@@ -1,6 +1,5 @@
 # ccpairs
 
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/XXX/badge)](https://bestpractices.coreinfrastructure.org/projects/XXX)
 [![Build Status](https://travis-ci.org/marcomaggi/ccpairs.svg?branch=master)](https://travis-ci.org/marcomaggi/ccpairs)
 [![codecov](https://codecov.io/gh/marcomaggi/ccpairs/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/ccpairs)
 
@@ -169,16 +168,6 @@ the GNU Project software can be found here:
 
 ## Badges and static analysis
 
-### CII Best Practices
-
-The  Linux  Foundation's  Core   Infrastructure  Initiative  (CII)  Best
-Practices badge is a way for Free/Libre and Open Source Software (FLOSS)
-projects to show that they follow  best practices.  We can find the self
-certification at:
-
-[https://bestpractices.coreinfrastructure.org/projects/XXX/](https://bestpractices.coreinfrastructure.org/projects/XXX/)
-
-
 ### Travis CI
 
 Travis CI is  a hosted, distributed continuous  integration service used
@@ -189,18 +178,6 @@ project's dashboard at:
 
 Usage of this  service is configured through the  file `.travis.yml` and
 additional scripts are under the directory `meta/travis-ci`.
-
-
-### Coverity Scan
-
-Coverity Scan is  a service providing the results of  static analysis on
-open source coding projects.  We can find this project's dashboard at:
-
-[https://scan.coverity.com/projects/marcomaggi-ccpairs](https://scan.coverity.com/projects/marcomaggi-ccpairs)
-
-Usage of this  service is implemented with make rules;  see the relevant
-section in the file `Makefile.am`.  To access the service a unique token
-is needed: this token is private and is owned by the current maintainer.
 
 
 ### Clang's Static Analyzer
@@ -225,4 +202,15 @@ project's dashboard at:
 Usage of  this service is  implemented through direct  interface between
 GitHub and Codecov  sites; it configured through  the file `codecov.yml`
 and appropriate entries in Travis CI's matrix of builds.
+
+
+### Codacy
+
+Codacy is  an online service  providing code  review.  We can  find this
+project's dashboard at:
+
+[https://www.codacy.com/app/marcomaggi/ccpairs](https://www.codacy.com/app/marcomaggi/ccpairs)
+
+Usage of this service is  implemented through direct integration between
+GitHub and Codacy sites.
 
