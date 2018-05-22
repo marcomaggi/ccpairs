@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/marcomaggi/ccpairs.svg?branch=master)](https://travis-ci.org/marcomaggi/ccpairs)
 [![codecov](https://codecov.io/gh/marcomaggi/ccpairs/branch/master/graph/badge.svg)](https://codecov.io/gh/marcomaggi/ccpairs)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9e94dd2f62c14cd6bc4236605ab8a5a4)](https://www.codacy.com/app/marcomaggi/ccpairs?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomaggi/ccpairs&amp;utm_campaign=Badge_Grade)
 
 
 ## Introduction
