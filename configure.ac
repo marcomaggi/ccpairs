@@ -2,7 +2,7 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([CCPairs],[0.1.0-devel.0],
+AC_INIT([CCPairs],[0.1.0-devel.1],
   [marco.maggi-ipsu@poste.it],
   [ccpairs],[http://marcomaggi.github.com/ccpairs])
 dnl This is the revision number of this configure.ac
@@ -48,7 +48,7 @@ MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpair],1,0,0)
 dnl This is the version stored in the pkg-config data file.
 AC_SUBST([CCTEMPLATE_PKG_CONFIG_VERSION],[0.1])
 
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.1d0.0])
+AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.1d0.1])
 AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
 
 dnl page
