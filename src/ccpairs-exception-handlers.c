@@ -108,7 +108,7 @@ ccpair_handler_list_item_function (cce_condition_t const * C CCPAIR_UNUSED, cce_
     ccpair_t	Q = P;
     P = ccpair_cdr(P);
     H->item_destructor(ccpair_car(Q));
-    ccpair_current_allocator->free(ccpair_current_allocator, Q);
+    ccpair_free(Q);
   }
 }
 
@@ -144,7 +144,7 @@ ccpair_handler_pair_item_function (cce_condition_t const * C CCPAIR_UNUSED, cce_
 
   if (0) { fprintf(stderr, "%s: releasing pair %p with item destructor\n", __func__, (void *)P); }
   H->item_destructor(ccpair_car(P));
-  ccpair_current_allocator->free(ccpair_current_allocator, P);
+  ccpair_free(P);
 }
 
 void

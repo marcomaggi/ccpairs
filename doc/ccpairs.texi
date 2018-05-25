@@ -9,6 +9,15 @@
 
 @c page
 @c ------------------------------------------------------------
+@c Local macros.
+@c ------------------------------------------------------------
+
+@macro ccmemoryref{NODE,TITLE}
+@ref{\NODE\,\TITLE\,\TITLE\,ccmemory}
+@end macro
+
+@c page
+@c ------------------------------------------------------------
 @c Values.
 @c ------------------------------------------------------------
 
@@ -175,7 +184,7 @@ The library's @api{} uses both @code{inline} functions and preprocessor macros t
 common operations at the call site.
 
 Notice that, before using the library, we need to call the global initialisation function
-@cfunc{ccpair_init}.
+@cfunc{ccpair_library_init}.
 
 @strong{IMPORTANT} To use the library we must enable the @posix{} features when including the
 standard header files; so either we include @file{ccpair.h} as first header, or we include the
@@ -490,91 +499,17 @@ Return the second value in the pair as unsigned integer.
 @chapter Memory allocation
 
 
-@menu
-* memory allocator::            Selecting a custom memory allocator.
-* memory functions::            Allocating and releasing pairs.
-@end menu
+@value{PACKAGE} uses the memory allocators @api{} defined by CCMemory.  There is a peculiarity:
+@value{PACKAGE} can correctly use only allocators whose memory releasing function does not raise
+exceptions, or raises ignorable exceptions.
 
-@c page
-@node memory allocator
-@section Selecting a custom memory allocator
+By default, @value{PACKAGE} uses the standard allocator @code{ccmem_standard_allocator};
+@ccmemoryref{std, The standard allocator}.
 
 
-@deftp {Struct Type} ccpair_allocator_t
-Represent a memory allocator to be used to allocate and release memory for pair structures.  It has
-the following fields:
-
-@table @code
-@item ccpair_alloc_fun_t * alloc
-Pointer to a function that allocates pair structures.
-
-@item ccpair_free_fun_t * free
-Pointer to a function that releases pair structures.
-@end table
-
-The predefined memory allocator uses the standard functions @cfunc{malloc} and @cfunc{free}.
-
-If we need some state associated to the allocator, we can just embed this structure into another:
-
-@example
-struct my_allocator_t @{
-  ccpair_allocator_t    A;
-  some_state_t          S;
-@};
-@end example
-@end deftp
-
-
-@deftypefn {Function Type} ccpair_t ccpair_alloc_fun_t (cce_location_t * @var{L}, ccpair_allocator_t const * @var{allocator})
-Type of function that allocates a new pair structure using the @var{allocator}.  If successful:
-return a pointer to the new structure; otherwise raise an exception performing a non--local exit to
-@var{L}.
-@end deftypefn
-
-
-@deftypefn {Function Type} void ccpair_free_fun_t (ccpair_allocator_t const * @var{allocator}, ccpair_t @var{P})
-Type of function that releases the pair structure @var{P}, using the @var{allocator}.  This function
-cannot fail.
-@end deftypefn
-
-
-@deftypefun {ccpair_allocator_t const *} ccpair_register_allocator (ccpair_allocator_t const * @var{allocator})
+@deftypefun {ccmem_allocator_t const *} ccpair_register_allocator (ccmem_allocator_t const * @var{allocator})
 Register a new custom allocator and return a pointer to the previous one.
 @end deftypefun
-
-
-As example, the following code implements an allocator using the standard functions @cfunc{malloc}
-and @cfunc{free}:
-
-@example
-static ccpair_t
-standard_alloc (cce_location_t * L,
-   ccpair_allocator_t const * allocator CCPAIR_UNUSED)
-@{
-  ccpair_t      P = malloc(sizeof(ccpair_stru_t));
-  if (NULL != P) @{
-    return P;
-  @} else @{
-    cce_raise(L, cce_condition_new_errno_clear());
-  @}
-@}
-
-static void
-standard_free (ccpair_allocator_t const * allocator
-   CCPAIR_UNUSED, ccpair_t P)
-@{
-  free(P);
-@}
-
-static ccpair_allocator_t const standard_allocator = @{
-  .alloc        = standard_alloc,
-  .free         = standard_free
-@};
-@end example
-
-@c page
-@node memory functions
-@section Allocating and releasing pairs
 
 
 All the following functions use the currently selected pair allocator.

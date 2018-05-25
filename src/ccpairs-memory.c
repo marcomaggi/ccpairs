@@ -38,35 +38,13 @@
  ** Predefined memory allocator.
  ** ----------------------------------------------------------------- */
 
-static ccpair_t
-default_alloc (cce_location_t * L, ccpair_allocator_t const * allocator CCPAIR_UNUSED)
+ccmem_allocator_t const * ccpair_current_allocator;
+
+ccmem_allocator_t const *
+ccpair_register_allocator (ccmem_allocator_t const * new_allocator)
 {
-  ccpair_t	P = malloc(sizeof(ccpair_stru_t));
-  if (NULL != P) {
-    return P;
-  } else {
-    cce_raise(L, cce_condition_new_errno_clear());
-  }
-}
+  ccmem_allocator_t const *	old_allocator = ccpair_current_allocator;
 
-static void
-default_free (ccpair_allocator_t const * allocator CCPAIR_UNUSED, ccpair_t P)
-{
-  free(P);
-}
-
-static ccpair_allocator_t const default_allocator = {
-  .alloc	= default_alloc,
-  .free		= default_free
-};
-
-ccpair_allocator_t const * ccpair_current_allocator = &default_allocator;
-
-ccpair_allocator_t const *
-ccpair_register_allocator (ccpair_allocator_t const * new_allocator)
-{
-  ccpair_allocator_t const *	old_allocator = ccpair_current_allocator;
-  assert(new_allocator);
   ccpair_current_allocator = new_allocator;
   return old_allocator;
 }
@@ -79,28 +57,42 @@ ccpair_register_allocator (ccpair_allocator_t const * new_allocator)
 ccpair_t
 ccpair_alloc (cce_location_t * L)
 {
-  return ccpair_current_allocator->alloc(L, ccpair_current_allocator);
+  return ccmem_malloc(L, ccpair_current_allocator, sizeof(ccpair_t));
 }
 
 void
 ccpair_free (ccpair_t P)
 {
   if (P) {
-    ccpair_current_allocator->free(ccpair_current_allocator, P);
+    cce_location_t	L[1];
+
+    if (cce_location(L)) {
+      /* Absorb the exception. */
+      cce_run_catch_handlers_final(L);
+    } else {
+      ccmem_free(L, ccpair_current_allocator, P);
+      cce_run_body_handlers(L);
+    }
   }
 }
 
 void
-ccpair_free_list (ccpair_t P)
+ccpair_free_list (ccpair_t volatile P)
 /* Notice  that this  function is  *unable* to  correctly free  circular
    lists. */
 {
-  ccpair_t	Q;
-
   while (P) {
-    Q = P;
+    cce_location_t	L[1];
+    ccpair_t		Q = P;
+
     P = ccpair_cdr(P);
-    ccpair_current_allocator->free(ccpair_current_allocator, Q);
+    if (cce_location(L)) {
+      /* Absorb the exception. */
+      cce_run_catch_handlers_final(L);
+    } else {
+      ccmem_free(L, ccpair_current_allocator, Q);
+      cce_run_body_handlers(L);
+    }
   }
 }
 

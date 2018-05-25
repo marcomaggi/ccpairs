@@ -34,6 +34,7 @@
 void
 ccpair_library_init (void)
 {
+  ccpair_current_allocator = ccmem_standard_allocator;
   ccpair_conditions_module_initialisation();
 }
 

@@ -280,17 +280,14 @@ ccpair_cdr_value (ccpair_t P)
  ** Memory allocation.
  ** ----------------------------------------------------------------- */
 
-struct ccpair_allocator_t {
-  ccpair_alloc_fun_t *		alloc;
-  ccpair_free_fun_t *		free;
-};
-
-ccpair_decl ccpair_allocator_t const * ccpair_register_allocator (ccpair_allocator_t const * allocator)
+ccpair_decl ccmem_allocator_t const * ccpair_register_allocator (ccmem_allocator_t const * allocator)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
 ccpair_decl ccpair_t	ccpair_alloc (cce_location_t * L)
   __attribute__((__nonnull__(1),__returns_nonnull__));
+
 ccpair_decl void	ccpair_free   (ccpair_t P);
+
 ccpair_decl void	ccpair_free_list (ccpair_t P);
 
 
