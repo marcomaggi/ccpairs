@@ -50,18 +50,18 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
     if (cce_location(L)) {
       if (cce_condition_is_break(cce_condition(L))) {
 	if (0) { fprintf(stderr, "%s: break at first item\n", __func__); }
-	cce_run_clean_handlers(L);
+	cce_run_body_handlers(L);
 	return head;
       } else {
 	if (0) { fprintf(stderr, "%s: error at first item\n", __func__); }
-	cce_run_error_handlers_raise(L, upper_L);
+	cce_run_catch_handlers_raise(L, upper_L);
       }
     } else {
       if (0) { fprintf(stderr, "%s: doing item 0\n", __func__); }
       first_item = C(L, 0);
       ccpair_error_handler_item_init(L, first_item_H, first_item, D);
       head = ccpair_cons(L, first_item, NULL);
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
   }
 
@@ -74,11 +74,11 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
     if (cce_location(L)) {
       if (cce_condition_is_break(cce_condition(L))) {
 	if (0) { fprintf(stderr, "%s: break at item\n", __func__); }
-	cce_run_clean_handlers(L);
+	cce_run_body_handlers(L);
 	return head;
       } else {
 	if (0) { fprintf(stderr, "%s: error at item\n", __func__); }
-	cce_run_error_handlers_raise(L, upper_L);
+	cce_run_catch_handlers_raise(L, upper_L);
       }
     } else {
       ccpair_t		prev = head;
@@ -91,7 +91,7 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
 	prev	= (ccpair_t)  (prev->D);
       }
 
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
       return head;
     }
   }

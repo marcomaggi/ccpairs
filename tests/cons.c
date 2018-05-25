@@ -51,7 +51,7 @@ test_1_2 (cce_destination_t upper_L)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
     ccpair_clean_handler_pair_init(L, P_H, P);
@@ -61,7 +61,7 @@ test_1_2 (cce_destination_t upper_L)
       cctests_assert(L, NULL == ccpair_cdr(P));
       cctests_assert(L, 0    == ccpair_cdr_value(P));
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 }
 
@@ -80,7 +80,7 @@ test_2_1 (cce_destination_t upper_L)
   cce_handler_t		P_H[5];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     P[4] = ccpair_cons(L, 5, NULL); ccpair_clean_handler_pair_init(L, &(P_H[4]), P[4]);
     P[3] = ccpair_cons(L, 4, P[4]); ccpair_clean_handler_pair_init(L, &(P_H[3]), P[3]);
@@ -99,7 +99,7 @@ test_2_1 (cce_destination_t upper_L)
 	cctests_assert(L, i == ccpair_car(Q));
       }
     }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 }
 

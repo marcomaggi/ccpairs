@@ -13,7 +13,7 @@ lists data structures, in the style of the Scheme language.
 The library targets POSIX systems.  The library depends on the packages:
 CCExceptions, at least version 0.8.0;  CCMemory, at least version 0.1.0.
 To run the test suite: the  package depends upon the package CCTests, at
-least version 0.2.0.
+least version 0.3.0.
 
 The package uses the GNU Autotools and it is tested, using Travis CI, on
 both Ubuntu GNU+Linux  systems and OS X systems.  The  package relies on
@@ -165,6 +165,18 @@ the documentation is available online:
 the GNU Project software can be found here:
 
 [http://www.gnu.org/](http://www.gnu.org/)
+
+the package CCExceptions is available at:
+
+[https://github.com/marcomaggi/ccexceptions/](https://github.com/marcomaggi/ccexceptions/)
+
+the package CCMemory is available at:
+
+[https://github.com/marcomaggi/ccmemory/](https://github.com/marcomaggi/ccmemory/)
+
+the package CCTests is available at:
+
+[https://github.com/marcomaggi/cctests/](https://github.com/marcomaggi/cctests/)
 
 
 ## Badges and static analysis

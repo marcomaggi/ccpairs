@@ -39,7 +39,7 @@
 
 @set CCEXCEPTIONS_VERSION       0.8.0
 @set CCMEMORY_VERSION           0.1.0
-@set CCTESTS_VERSION            0.2.0
+@set CCTESTS_VERSION            0.3.0
 
 @c ------------------------------------------------------------
 

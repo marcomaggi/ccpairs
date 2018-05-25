@@ -47,7 +47,7 @@ make_list_len (cce_destination_t upper_L, size_t len)
 
     if (cce_location(L)) {
       fprintf(stderr, "%s: %s\n", __func__, cce_condition_static_message(cce_condition(L)));
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     } else {
       P[len] = NULL;
       for (size_t i = len-1; i > 0; --i) {
@@ -66,7 +66,7 @@ make_list_len (cce_destination_t upper_L, size_t len)
 	fprintf(stderr, "%s: P[0]=%p, car(P[0])=%lu, cdr(P[0])=%p\n", __func__,
 		(void *)(P[0]), ccpair_car(P[0]), (void *)ccpair_cdr(P[0]));
       }
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
       if (0) { fprintf(stderr, "%s: returning P[0]=%p)\n", __func__, (void *)(P[0])); }
       if (0) { print_list(stderr, P[0]); }
       return P[0];
@@ -509,12 +509,12 @@ test_1_1 (cce_destination_t upper_L)
   cce_location_t	L[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_list(L, simple_item_constructor__break_immediately, simple_item_destructor__noop);
     cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 }
 
@@ -528,7 +528,7 @@ test_1_2 (cce_destination_t upper_L)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, simple_item_constructor__one_integer_item, simple_item_destructor__noop);
@@ -538,7 +538,7 @@ test_1_2 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 }
 
@@ -552,7 +552,7 @@ test_1_3 (cce_destination_t upper_L)
   cce_handler_t		P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, simple_item_constructor__three_integer_items, simple_item_destructor__noop);
@@ -566,7 +566,7 @@ test_1_3 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(2));
     cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 }
 
@@ -580,9 +580,9 @@ test_1_4 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
     item_state_init();
@@ -601,9 +601,9 @@ test_1_5 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
@@ -623,9 +623,9 @@ test_1_6 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
     cctests_assert(upper_L, true == item_state_is_destructed(1));
@@ -646,9 +646,9 @@ test_1_7 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
     cctests_assert(upper_L, true == item_state_is_destructed(1));
@@ -674,12 +674,12 @@ test_2_1 (cce_destination_t upper_L)
   cce_location_t	L[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_list(L, async_item_constructor__break_immediately, async_item_destructor);
     cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_data_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 }
 
@@ -693,7 +693,7 @@ test_2_2 (cce_destination_t upper_L)
   ccpair_list_item_handler_t	P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, async_item_constructor__one_integer_item, async_item_destructor);
@@ -703,7 +703,7 @@ test_2_2 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
 }
@@ -718,7 +718,7 @@ test_2_3 (cce_destination_t upper_L)
   ccpair_list_item_handler_t	P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list(L, async_item_constructor__three_integer_items, async_item_destructor);
@@ -732,7 +732,7 @@ test_2_3 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(2));
     cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_data_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
   cctests_assert(upper_L, true  == item_state_is_destructed(1));
@@ -749,9 +749,9 @@ test_2_4 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
     item_state_init();
@@ -770,9 +770,9 @@ test_2_5 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
@@ -792,9 +792,9 @@ test_2_6 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
     cctests_assert(upper_L, true == item_state_is_destructed(1));
@@ -815,9 +815,9 @@ test_2_7 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
     cctests_assert(upper_L, true == item_state_is_destructed(1));
@@ -844,12 +844,12 @@ test_3_1 (cce_destination_t upper_L)
   ccpair_list_item_handler_t	P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_list_clean_handler(L, async_item_constructor__break_immediately, async_item_destructor, P_H);
     cctests_assert(L, 0 == ccpair_length(L, P));
     if (0) { print_data_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
 }
 
@@ -863,7 +863,7 @@ test_3_2 (cce_destination_t upper_L)
   ccpair_list_item_handler_t	P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list_clean_handler(L, async_item_constructor__one_integer_item, async_item_destructor, P_H);
@@ -872,7 +872,7 @@ test_3_2 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
 }
@@ -887,7 +887,7 @@ test_3_3 (cce_destination_t upper_L)
   ccpair_list_item_handler_t	P_H[1];
 
   if (cce_location(L)) {
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
     ccpair_t	P = ccpair_list_clean_handler(L, async_item_constructor__three_integer_items, async_item_destructor, P_H);
@@ -900,7 +900,7 @@ test_3_3 (cce_destination_t upper_L)
     cctests_assert(L, true  == item_state_is_constructed(2));
     cctests_assert(L, false == item_state_is_constructed(3));
     if (0) { print_data_list(stderr, P); }
-    cce_run_clean_handlers(L);
+    cce_run_body_handlers(L);
   }
   cctests_assert(upper_L, true  == item_state_is_destructed(0));
   cctests_assert(upper_L, true  == item_state_is_destructed(1));
@@ -918,9 +918,9 @@ test_3_4 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
   } else {
     item_state_init();
@@ -940,9 +940,9 @@ test_3_5 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
@@ -963,9 +963,9 @@ test_3_6 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
     cctests_assert(upper_L, true == item_state_is_destructed(1));
@@ -987,9 +987,9 @@ test_3_7 (cce_destination_t upper_L)
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
     } else {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     }
     cctests_assert(upper_L, true == item_state_is_destructed(0));
     cctests_assert(upper_L, true == item_state_is_destructed(1));

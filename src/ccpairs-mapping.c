@@ -48,7 +48,7 @@ ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t
     cce_handler_t	R_H[1];
 
     if (cce_location(L)) {
-      cce_run_error_handlers_raise(L, upper_L);
+      cce_run_catch_handlers_raise(L, upper_L);
     } else {
       /* We perform the  first application outside of the  loop, so that
 	 we can initialise the handler for R. */
@@ -65,7 +65,7 @@ ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t
 	Q    = T;
       }
 
-      cce_run_clean_handlers(L);
+      cce_run_body_handlers(L);
     }
   }
   /* Return the head of the new list. */
