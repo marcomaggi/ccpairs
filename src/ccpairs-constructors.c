@@ -39,7 +39,7 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
   {
     cce_location_t		L[1];
     uintptr_t			first_item;
-    ccpair_item_handler_t	first_item_H[1];
+    ccpair_item_error_handler_t	first_item_H[1];
 
     /* First build  the first item.   If the constructor "C()"  raises a
        break exception: the HEAD will stay NULL and we return it.
@@ -59,7 +59,7 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
     } else {
       if (0) { fprintf(stderr, "%s: doing item 0\n", __func__); }
       first_item = C(L, 0);
-      ccpair_error_handler_item_init(L, first_item_H, first_item, D);
+      ccpair_item_error_handler_init(L, first_item_H, first_item, D);
       head = ccpair_cons(L, first_item, NULL);
       cce_run_body_handlers(L);
     }
@@ -68,8 +68,8 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
   /* Build the other pairs and items.  If the constructor "C()" raises a
      break exception: the list is finished and we return the HEAD. */
   {
-    cce_location_t		L[1];
-    ccpair_list_item_handler_t	head_H[1];
+    cce_location_t			L[1];
+    ccpair_list_item_error_handler_t	head_H[1];
 
     if (cce_location(L)) {
       if (cce_condition_is_break(cce_condition(L))) {
@@ -83,7 +83,7 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
     } else {
       ccpair_t		prev = head;
 
-      ccpair_error_handler_list_item_init(L, head_H, head, D);
+      ccpair_list_item_error_handler_init(L, head_H, head, D);
 
       for (ccpair_idx_t idx=1;; ++idx) {
 	if (0) { fprintf(stderr, "%s: doing item %lu\n", __func__, idx); }
@@ -95,6 +95,85 @@ ccpair_list (cce_destination_t upper_L, ccpair_item_constructor_t * C, ccpair_it
       return head;
     }
   }
+}
+
+
+/** --------------------------------------------------------------------
+ ** Constructors with exception handlers initialisation.
+ ** ----------------------------------------------------------------- */
+
+ccpair_t
+ccpair_cons_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, uintptr_t A, ccpair_t D)
+{
+  ccpair_t	P = ccpair_cons(L, A, D);
+  ccpair_pair_error_handler_init(L, H, P);
+  return P;
+}
+
+ccpair_t
+ccpair_cons_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, uintptr_t A, ccpair_t D)
+{
+  ccpair_t	P = ccpair_cons(L, A, D);
+  ccpair_pair_clean_handler_init(L, H, P);
+  return P;
+}
+
+/* ------------------------------------------------------------------ */
+
+ccpair_t
+ccpair_cons_improper_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
+{
+  ccpair_t	P = ccpair_cons_improper(L, A, D);
+  ccpair_pair_error_handler_init(L, H, P);
+  return P;
+}
+
+ccpair_t
+ccpair_cons_improper_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
+{
+  ccpair_t	P = ccpair_cons_improper(L, A, D);
+  ccpair_pair_clean_handler_init(L, H, P);
+  return P;
+}
+
+/* ------------------------------------------------------------------ */
+
+ccpair_t
+ccpair_cons_node_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, ccpair_t A, ccpair_t D)
+{
+  ccpair_t	P = ccpair_cons_node(L, A, D);
+  ccpair_pair_error_handler_init(L, H, P);
+  return P;
+}
+
+ccpair_t
+ccpair_cons_node_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, ccpair_t A, ccpair_t D)
+{
+  ccpair_t	P = ccpair_cons_node(L, A, D);
+  ccpair_pair_clean_handler_init(L, H, P);
+  return P;
+}
+
+/* ------------------------------------------------------------------ */
+
+ccpair_t
+ccpair_list_guarded_error (cce_location_t * L, ccpair_list_item_error_handler_t * H,
+			   ccpair_item_constructor_t * item_constructor,
+			   ccpair_item_destructor_t  * item_destructor)
+{
+  ccpair_t	P = ccpair_list(L, item_constructor, item_destructor);
+  ccpair_list_item_error_handler_init(L, H, P, item_destructor);
+  return P;
+}
+
+ccpair_t
+ccpair_list_guarded_clean (cce_location_t * L, ccpair_list_item_clean_handler_t * H,
+			   ccpair_item_constructor_t * item_constructor,
+			   ccpair_item_destructor_t  * item_destructor)
+{
+  ccpair_t	P = ccpair_list(L, item_constructor, item_destructor);
+  ccpair_list_item_clean_handler_init(L, H, P, item_destructor);
+  return P;
 }
 
 /* end of file */

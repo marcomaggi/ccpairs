@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -64,15 +64,7 @@ void
 ccpair_free (ccpair_t P)
 {
   if (P) {
-    cce_location_t	L[1];
-
-    if (cce_location(L)) {
-      /* Absorb the exception. */
-      cce_run_catch_handlers_final(L);
-    } else {
-      ccmem_free(L, ccpair_current_allocator, P);
-      cce_run_body_handlers(L);
-    }
+    ccmem_free(ccpair_current_allocator, P);
   }
 }
 
@@ -82,17 +74,10 @@ ccpair_free_list (ccpair_t volatile P)
    lists. */
 {
   while (P) {
-    cce_location_t	L[1];
-    ccpair_t		Q = P;
+    ccpair_t	Q = P;
 
     P = ccpair_cdr(P);
-    if (cce_location(L)) {
-      /* Absorb the exception. */
-      cce_run_catch_handlers_final(L);
-    } else {
-      ccmem_free(L, ccpair_current_allocator, Q);
-      cce_run_body_handlers(L);
-    }
+    ccmem_free(ccpair_current_allocator, Q);
   }
 }
 

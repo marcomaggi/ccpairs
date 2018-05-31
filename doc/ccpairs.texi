@@ -499,12 +499,8 @@ Return the second value in the pair as unsigned integer.
 @chapter Memory allocation
 
 
-@value{PACKAGE} uses the memory allocators @api{} defined by CCMemory.  There is a peculiarity:
-@value{PACKAGE} can correctly use only allocators whose memory releasing function does not raise
-exceptions, or raises ignorable exceptions.
-
-By default, @value{PACKAGE} uses the standard allocator @code{ccmem_standard_allocator};
-@ccmemoryref{std, The standard allocator}.
+@value{PACKAGE} uses the memory allocators @api{} defined by CCMemory; by default, it uses the
+standard allocator @code{ccmem_standard_allocator}; @ccmemoryref{std, The standard allocator}.
 
 
 @deftypefun {ccmem_allocator_t const *} ccpair_register_allocator (ccmem_allocator_t const * @var{allocator})
@@ -552,6 +548,16 @@ is @cnull{}: nothing happens.
 @section Pair constructors
 
 
+@menu
+* constructors pairs plain::    Plain pair constructors.
+* constructors pairs guarded::  Guarded pair constructors.
+@end menu
+
+@c page
+@node constructors pairs plain
+@subsection Plain pair constructors
+
+
 @deftypefun ccpair_t ccpair_cons (cce_location_t * @var{L}, uintptr_t @var{A}, ccpair_t @var{D})
 Allocate a new pair using the currently selected memory allocator; initialise the first value with
 @var{A} and the second value with @var{D}.  If successful: return a pointer to the new structure
@@ -563,11 +569,11 @@ cce_location_t  L[1]
 ccpair_t        P;
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   P = ccpair_cons(L, 1, NULL);
   ...
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 @end deftypefun
@@ -581,11 +587,11 @@ cce_location_t  L[1]
 ccpair_t        P;
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   P = ccpair_cons_improper(L, 1, 2);
   ...
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 @end deftypefun
@@ -600,7 +606,7 @@ ccpair_t        P, Q;
 cce_handler_t   P_H[1], Q_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   Q = ccpair_cons_node(L, 1, NULL);
   cce_error_handler_pair_init(L, Q_H, Q);
@@ -608,18 +614,18 @@ if (cce_location(L)) @{
   P = ccpair_cons_node(L, Q, NULL);
 
   ...
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 @end deftypefun
 
-@c ------------------------------------------------------------------------
-
-@subsubheading Constructors with exception handlers initialisation
+@c page
+@node constructors pairs guarded
+@subsection Guarded pair constructors
 
 
 @deftypefun ccpair_t ccpair_cons_error_handler (cce_destination_t @var{L}, uintptr_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
-@deftypefunx ccpair_t ccpair_cons_cleanup_handler (cce_destination_t @var{L}, uintptr_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
+@deftypefunx ccpair_t ccpair_cons_clean_handler (cce_destination_t @var{L}, uintptr_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
 Like @cfunc{ccpair_cons}, but initialise an error or cleanup handler to release the memory of the
 pair; the memory will be released with @cfunc{ccpair_free}.  We can use these functions as follows:
 
@@ -628,19 +634,19 @@ cce_location_t  L[1];
 cce_handler_t   H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
-  ccpair_t  P = ccpair_cons_cleanup_handler(L, 1, NULL, H);
+  ccpair_t  P = ccpair_cons_clean_handler(L, 1, NULL, H);
 
   /* Do something with P here. */
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 @end deftypefun
 
 
 @deftypefun ccpair_t ccpair_cons_improper_error_handler (cce_destination_t @var{L}, uintptr_t @var{A}, uintptr_t @var{D}, cce_handler_t * @var{H})
-@deftypefunx ccpair_t ccpair_cons_improper_cleanup_handler (cce_destination_t @var{L}, uintptr_t @var{A}, uintptr_t @var{D}, cce_handler_t * @var{H})
+@deftypefunx ccpair_t ccpair_cons_improper_clean_handler (cce_destination_t @var{L}, uintptr_t @var{A}, uintptr_t @var{D}, cce_handler_t * @var{H})
 Like @cfunc{ccpair_cons_improper}, but initialise an error or cleanup handler to release the memory
 of the pair; the memory will be released with @cfunc{ccpair_free}.
 
@@ -650,18 +656,18 @@ ccpair_t        P;
 cce_handler_t   P_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
-  P = ccpair_cons_improper_cleanup_handler(L, 1, 2, P_H);
+  P = ccpair_cons_improper_clean_handler(L, 1, 2, P_H);
   ...
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 @end deftypefun
 
 
 @deftypefun ccpair_t ccpair_cons_node_error_handler (cce_destination_t @var{L}, ccpair_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
-@deftypefunx ccpair_t ccpair_cons_node_cleanup_handler (cce_destination_t @var{L}, ccpair_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
+@deftypefunx ccpair_t ccpair_cons_node_clean_handler (cce_destination_t @var{L}, ccpair_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
 Like @cfunc{ccpair_cons_node}, but initialise an error or cleanup handler to release the memory of
 the pair; the memory will be released with @cfunc{ccpair_free}.
 
@@ -670,15 +676,15 @@ cce_location_t  L[1]
 cce_handler_t   P_H[1], Q_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   ccpair_t      P, Q;
 
   Q = ccpair_cons_error_handler(L, 1, NULL, Q_H);
-  P = ccpair_cons_node_cleanup_handler(L, Q, NULL, P_H);
+  P = ccpair_cons_node_clean_handler(L, Q, NULL, P_H);
 
   ...
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 @end deftypefun
@@ -686,6 +692,16 @@ if (cce_location(L)) @{
 @c page
 @node constructors lists
 @section List constructors
+
+
+@menu
+* constructors lists plain::    Plain list constructors.
+* constructors lists guarded::  Guarded list constructors.
+@end menu
+
+@c page
+@node constructors lists plain
+@subsection Plain list constructors
 
 
 @deftypefun ccpair_t ccpair_list (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D})
@@ -704,8 +720,12 @@ If an error occurs while building the list: the pairs already allocated are rele
 already built are released using the destructor @var{D}.
 @end deftypefun
 
+@c page
+@node constructors lists guarded
+@subsection Guarded list constructors
 
-@deftypefun ccpair_t ccpair_list_cleanup_handler (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D}, ccpair_list_item_handler_t * @var{H})
+
+@deftypefun ccpair_t ccpair_list_clean_handler (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D}, ccpair_list_item_handler_t * @var{H})
 @deftypefunx ccpair_t ccpair_list_error_handler (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D}, ccpair_list_item_handler_t * @var{H})
 Like @cfunc{ccpair_list}, but, when successful, register the resulting list into the cleanup or
 error handler @var{H}.
@@ -772,18 +792,18 @@ ccpair_t                      P;
 ccpair_list_item_handler_t    P_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   P = ccpair_list(L, item_constructor, item_destructor);
-  ccpair_cleanup_handler_list_item_init(L, P_H, P,
+  ccpair_clean_handler_list_item_init(L, P_H, P,
      item_destructor);
   ...
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
 @noindent
-we can build the list using @cfunc{ccpair_list_cleanup_handler} with the following code:
+we can build the list using @cfunc{ccpair_list_clean_handler} with the following code:
 
 @example
 cce_location_t                L[1];
@@ -791,12 +811,12 @@ ccpair_t                      P;
 ccpair_list_item_handler_t    P_H[1];
 
 if (cce_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
-  P = ccpair_list_cleanup_handler(L, item_constructor,
+  P = ccpair_list_clean_handler(L, item_constructor,
      item_destructor, P_H);
   ...
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
@@ -1019,10 +1039,10 @@ cce_location_t  L[1];
 
 if (cce_location(L)) @{
   /* Handle errors here. */
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   /* Do something useful here. */
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
@@ -1093,10 +1113,10 @@ if (cce_location(L)) @{
       (ccpair_condition_not_enough_items_t *) cce_condition(L);
     do_something_with(C);
   @}
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   do_something(L);
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
@@ -1161,10 +1181,10 @@ if (cce_location(L)) @{
       (ccpair_condition_empty_list_t *) cce_condition(L);
     do_something_with(C);
   @}
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   do_something(L);
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
@@ -1229,10 +1249,10 @@ if (cce_location(L)) @{
       (ccpair_condition_circular_list_t *) cce_condition(L);
     do_something_with(C);
   @}
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   do_something(L);
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
@@ -1261,19 +1281,19 @@ cce_location_t  L[1];
 cce_handler_t   H[1];
 
 if (ccpair_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   ccpair_t P = ccpair_cons(1, NULL);
-  ccpair_cleanup_handler_pair_init(L, H, P);
+  ccpair_clean_handler_pair_init(L, H, P);
   /* Do something with P here. */
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
 The following symbols are defined in the header file @file{ccpair.h}.
 
 
-@deftypefun void ccpair_cleanup_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
+@deftypefun void ccpair_clean_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
 @deftypefunx void ccpair_error_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the memory allocated for the pair referenced by @var{P} using the function
@@ -1292,19 +1312,19 @@ cce_location_t  L[1];
 cce_handler_t   H[1];
 
 if (ccpair_location(L)) @{
-  cce_run_error_handlers_final(L);
+  cce_run_catch_handlers_final(L);
 @} else @{
   ccpair_t P = ccpair_cons(1, ccpair_cons(2, NULL));
-  ccpair_cleanup_handler_list_init(L, H, P);
+  ccpair_clean_handler_list_init(L, H, P);
   /* Do something with P here. */
-  cce_run_cleanup_handlers(L);
+  cce_run_body_handlers(L);
 @}
 @end example
 
 The following symbols are defined in the header file @file{ccpair.h}.
 
 
-@deftypefun void ccpair_cleanup_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
+@deftypefun void ccpair_clean_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
 @deftypefunx void ccpair_error_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the memory allocated for the list referenced by @var{P} using the function
@@ -1346,21 +1366,21 @@ main (void)
   ccpair_item_handler_t item_H[1];
 
   if (ccpair_location(L)) @{
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   @} else @{
     uintptr_t   item;
     ccpair_t    P;
 
     item = item_constructor(L);
-    ccpair_cleanup_handler_item_init(L, item_H, item,
+    ccpair_clean_handler_item_init(L, item_H, item,
        item_destructor);
 
     P = ccpair_cons(item, NULL);
-    ccpair_cleanup_handler_pair_init(L, pair_H, P);
+    ccpair_clean_handler_pair_init(L, pair_H, P);
 
     /* Do something with P here. */
-    cce_run_cleanup_handlers(L);
+    cce_run_body_handlers(L);
   @}
 @}
 @end example
@@ -1373,7 +1393,7 @@ Type of data structures used has exception handlers for items.
 @end deftp
 
 
-@deftypefun void ccpair_cleanup_handler_item_init (cce_location_t * @var{L}, ccpair_item_handler_t * @var{H}, uintptr_t @var{item}, ccpair_item_destructor_t * @var{D})
+@deftypefun void ccpair_clean_handler_item_init (cce_location_t * @var{L}, ccpair_item_handler_t * @var{H}, uintptr_t @var{item}, ccpair_item_destructor_t * @var{D})
 @deftypefunx void ccpair_error_handler_item_init (cce_location_t * @var{L}, ccpair_item_handler_t * @var{H}, uintptr_t @var{item}, ccpair_item_destructor_t * @var{D})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the resources associated to @var{item} using the supplied destructor function @var{D}.
@@ -1422,7 +1442,7 @@ main (void)
     ccpair_item_handler_t       item_H[1];
 
     if (ccpair_location(L)) @{
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
       exit(EXIT_FAILURE);
     @} else @{
       uintptr_t   item;
@@ -1433,7 +1453,7 @@ main (void)
 
       P = ccpair_cons(item, NULL);
 
-      cce_run_cleanup_handlers(L);
+      cce_run_body_handlers(L);
     @}
   @}
 
@@ -1444,12 +1464,12 @@ main (void)
     ccpair_pair_item_handler_t  pair_H[1];
 
     if (ccpair_location(L)) @{
-      cce_run_error_handlers_final(L);
+      cce_run_catch_handlers_final(L);
       exit(EXIT_FAILURE);
     @} else @{
-      ccpair_cleanup_handler_pair_item_init(L, pair_H, P);
+      ccpair_clean_handler_pair_item_init(L, pair_H, P);
       /* Do something with P here. */
-      cce_run_cleanup_handlers(L);
+      cce_run_body_handlers(L);
     @}
   @}
 @}
@@ -1463,7 +1483,7 @@ Type of data structures used has exception handlers for pairs with items.
 @end deftp
 
 
-@deftypefun void ccpair_cleanup_handler_pair_item_init (cce_location_t * @var{L}, ccpair_pair_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
+@deftypefun void ccpair_clean_handler_pair_item_init (cce_location_t * @var{L}, ccpair_pair_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
 @deftypefunx void ccpair_error_handler_pair_item_init (cce_location_t * @var{L}, ccpair_pair_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the pair @var{P} using @cfunc{ccpair_free}; it will also release the resources associated to
@@ -1513,7 +1533,7 @@ make_list_with_items (cce_destination_t upper_L)
   ccpair_t              head;
 
   if (ccpair_location(L)) @{
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     ccpair_t          P, Q;
     uintptr_t         item_P, item_Q;
@@ -1534,7 +1554,7 @@ make_list_with_items (cce_destination_t upper_L)
     /* The pair P is the head of the list. */
     head = P;
 
-    cce_run_cleanup_handlers(L);
+    cce_run_body_handlers(L);
   @}
 
   return head;
@@ -1549,14 +1569,14 @@ main (void)
   /* Now use the list and finally release both the list
      and the items. */
   if (ccpair_location(L)) @{
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   @} else @{
     ccpair_t    head = make_list_with_items(L);
-    ccpair_cleanup_handler_list_item_init(L, head_H, head,
+    ccpair_clean_handler_list_item_init(L, head_H, head,
        item_destructor);
     /* do something with HEAD here */
-    cce_run_cleanup_handlers(L);
+    cce_run_body_handlers(L);
   @}
 @}
 @end example
@@ -1579,7 +1599,7 @@ item_destructor (uintptr_t item)
 @}
 
 ccpair_t
-make_list_with_cleanup (cce_destination_t upper_L,
+make_list_with_clean (cce_destination_t upper_L,
                         ccpair_list_item_handler_t * head_H)
 /* Build the items and the list.  Upon exiting this block: we
    release the items and the second pair only if an error has
@@ -1590,7 +1610,7 @@ make_list_with_cleanup (cce_destination_t upper_L,
   ccpair_item_handler_t       item_P_H[1], item_Q_H[1];
 
   if (ccpair_location(L)) @{
-    cce_run_error_handlers_raise(L, upper_L);
+    cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     uintptr_t item_P = item_constructor(L, item_P_H);
     uintptr_t item_Q = item_constructor(L, item_Q_H);
@@ -1599,10 +1619,10 @@ make_list_with_cleanup (cce_destination_t upper_L,
 
     /* The pair P is the head of the list. */
     head = P;
-    cce_run_cleanup_handlers(L);
+    cce_run_body_handlers(L);
   @}
 
-  ccpair_cleanup_handler_list_item_init(upper_L, head_H, head,
+  ccpair_clean_handler_list_item_init(upper_L, head_H, head,
      item_destructor);
   return head;
 @}
@@ -1616,12 +1636,12 @@ main (void)
   /* Now use the list and finally release both the list
      and the items. */
   if (ccpair_location(L)) @{
-    cce_run_error_handlers_final(L);
+    cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   @} else @{
-    ccpair_t    head = make_list_with_cleanup(L, head_H);
+    ccpair_t    head = make_list_with_clean(L, head_H);
     /* do something with HEAD here */
-    cce_run_cleanup_handlers(L);
+    cce_run_body_handlers(L);
   @}
 @}
 @end example
@@ -1634,7 +1654,7 @@ Type of data structures used has exception handlers for lists with items.
 @end deftp
 
 
-@deftypefun void ccpair_cleanup_handler_list_item_init (cce_location_t * @var{L}, ccpair_list_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
+@deftypefun void ccpair_clean_handler_list_item_init (cce_location_t * @var{L}, ccpair_list_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
 @deftypefunx void ccpair_error_handler_list_item_init (cce_location_t * @var{L}, ccpair_list_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release every pair in the list @var{P} using @cfunc{ccpair_free}; it will also release the resources

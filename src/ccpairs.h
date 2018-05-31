@@ -91,10 +91,11 @@ extern "C" {
 
 
 /** --------------------------------------------------------------------
- ** Constants.
+ ** Macros.
  ** ----------------------------------------------------------------- */
 
-
+/* Pointer cast macro helper. */
+#define CCPAIR_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
 
 
 /** --------------------------------------------------------------------
@@ -104,17 +105,8 @@ extern "C" {
 typedef struct ccpair_stru_t		ccpair_stru_t;
 typedef ccpair_stru_t *			ccpair_t;
 
-typedef struct ccpair_allocator_t	ccpair_allocator_t;
-
-typedef ccpair_t ccpair_alloc_fun_t	(cce_location_t *L, ccpair_allocator_t const * allocator);
-typedef void     ccpair_free_fun_t	(ccpair_allocator_t const * allocator, ccpair_t P);
-
 typedef size_t				ccpair_idx_t;
 typedef size_t				ccpair_len_t;
-
-typedef struct ccpair_item_handler_t		ccpair_item_handler_t;
-typedef struct ccpair_pair_item_handler_t	ccpair_pair_item_handler_t;
-typedef struct ccpair_list_item_handler_t	ccpair_list_item_handler_t;
 
 typedef uintptr_t ccpair_item_constructor_t (cce_location_t * L, ccpair_idx_t idx);
 typedef void      ccpair_item_destructor_t  (uintptr_t item);
@@ -151,7 +143,7 @@ ccpair_decl void ccpair_library_init (void)
 
 
 /** --------------------------------------------------------------------
- ** Exceptional conditions.
+ ** Exceptional-condition object-types.
  ** ----------------------------------------------------------------- */
 
 struct ccpair_descriptor_base_t {
@@ -580,160 +572,204 @@ ccpair_map_forward (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
  ** Predefined exception handler: pair memory release.
  ** ----------------------------------------------------------------- */
 
-cce_decl void ccpair_clean_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+typedef struct ccpair_pair_clean_handler_t	ccpair_pair_clean_handler_t;
+typedef struct ccpair_pair_error_handler_t	ccpair_pair_error_handler_t;
+
+struct ccpair_pair_clean_handler_t {
+  cce_clean_handler_t	handler;
+};
+
+struct ccpair_pair_error_handler_t {
+  cce_error_handler_t	handler;
+};
+
+ccpair_decl void ccpair_pair_clean_handler_init (cce_location_t * L, ccpair_pair_clean_handler_t * H, ccpair_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-cce_decl void ccpair_error_handler_pair_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+ccpair_decl void ccpair_pair_error_handler_init (cce_location_t * L, ccpair_pair_error_handler_t * H, ccpair_t P)
   __attribute__((__nonnull__(1,2,3)));
+
+#define ccpair_pair_handler_init(L,P_H,P)				\
+  _Generic((P_H),							\
+	   ccpair_pair_error_handler_t *: ccpair_pair_error_handler_init, \
+	   ccpair_pair_clean_handler_t *: ccpair_pair_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: list memory release.
  ** ----------------------------------------------------------------- */
 
-cce_decl void ccpair_clean_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+typedef struct ccpair_list_clean_handler_t	ccpair_list_clean_handler_t;
+typedef struct ccpair_list_error_handler_t	ccpair_list_error_handler_t;
+
+struct ccpair_list_clean_handler_t {
+  cce_clean_handler_t	handler;
+};
+
+struct ccpair_list_error_handler_t {
+  cce_error_handler_t	handler;
+};
+
+ccpair_decl void ccpair_list_clean_handler_init (cce_location_t * L, ccpair_list_clean_handler_t * H, ccpair_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-cce_decl void ccpair_error_handler_list_init (cce_location_t * L, cce_handler_t * H, ccpair_t P)
+ccpair_decl void ccpair_list_error_handler_init (cce_location_t * L, ccpair_list_error_handler_t * H, ccpair_t P)
   __attribute__((__nonnull__(1,2,3)));
+
+#define ccpair_list_handler_init(L,P_H,P)				\
+  _Generic((P_H),							\
+	   ccpair_list_error_handler_t *: ccpair_list_error_handler_init, \
+	   ccpair_list_clean_handler_t *: ccpair_list_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: pair memory release with item destructor.
  ** ----------------------------------------------------------------- */
 
-struct ccpair_pair_item_handler_t {
-  cce_handler_t			handler;
+typedef struct ccpair_pair_item_clean_handler_t	ccpair_pair_item_clean_handler_t;
+typedef struct ccpair_pair_item_error_handler_t	ccpair_pair_item_error_handler_t;
+
+struct ccpair_pair_item_clean_handler_t {
+  ccpair_pair_clean_handler_t	handler;
   ccpair_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_clean_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H,
-							ccpair_t P, ccpair_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4)));
+struct ccpair_pair_item_error_handler_t {
+  ccpair_pair_error_handler_t	handler;
+  ccpair_item_destructor_t *	item_destructor;
+};
 
-ccpair_decl void ccpair_error_handler_pair_item_init (cce_location_t * L, ccpair_pair_item_handler_t * H,
+ccpair_decl void ccpair_pair_item_clean_handler_init (cce_location_t * L, ccpair_pair_item_clean_handler_t * H,
 						      ccpair_t P, ccpair_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
+
+ccpair_decl void ccpair_pair_item_error_handler_init (cce_location_t * L, ccpair_pair_item_error_handler_t * H,
+						      ccpair_t P, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+#define ccpair_pair_item_handler_init(L,P_H,P)				\
+  _Generic((P_H),							\
+	   ccpair_pair_item_error_handler_t *: ccpair_pair_item_error_handler_init, \
+	   ccpair_pair_item_clean_handler_t *: ccpair_pair_item_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: list memory release with item destructor.
  ** ----------------------------------------------------------------- */
 
-struct ccpair_list_item_handler_t {
-  cce_handler_t			handler;
+typedef struct ccpair_list_item_clean_handler_t	ccpair_list_item_clean_handler_t;
+typedef struct ccpair_list_item_error_handler_t	ccpair_list_item_error_handler_t;
+
+struct ccpair_list_item_clean_handler_t {
+  ccpair_list_clean_handler_t	handler;
   ccpair_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_clean_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H,
-							ccpair_t P, ccpair_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4)));
+struct ccpair_list_item_error_handler_t {
+  ccpair_list_error_handler_t	handler;
+  ccpair_item_destructor_t *	item_destructor;
+};
 
-ccpair_decl void ccpair_error_handler_list_item_init (cce_location_t * L, ccpair_list_item_handler_t * H,
+ccpair_decl void ccpair_list_item_clean_handler_init (cce_location_t * L, ccpair_list_item_clean_handler_t * H,
 						      ccpair_t P, ccpair_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
+
+ccpair_decl void ccpair_list_item_error_handler_init (cce_location_t * L, ccpair_list_item_error_handler_t * H,
+						      ccpair_t P, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4)));
+
+#define ccpair_list_item_handler_init(L,P_H,P)				\
+  _Generic((P_H),							\
+	   ccpair_list_item_error_handler_t *: ccpair_list_item_error_handler_init, \
+	   ccpair_list_item_clean_handler_t *: ccpair_list_item_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: item destructor.
  ** ----------------------------------------------------------------- */
 
-struct ccpair_item_handler_t {
-  cce_handler_t			handler;
+typedef struct ccpair_item_clean_handler_t	ccpair_item_clean_handler_t;
+typedef struct ccpair_item_error_handler_t	ccpair_item_error_handler_t;
+
+struct ccpair_item_clean_handler_t {
+  cce_clean_handler_t		handler;
   ccpair_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_clean_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H,
-						   uintptr_t item, ccpair_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,4)));
+struct ccpair_item_error_handler_t {
+  cce_error_handler_t		handler;
+  ccpair_item_destructor_t *	item_destructor;
+};
 
-ccpair_decl void ccpair_error_handler_item_init (cce_location_t * L, ccpair_item_handler_t * H,
+ccpair_decl void ccpair_item_clean_handler_init (cce_location_t * L, ccpair_item_clean_handler_t * H,
 						 uintptr_t item, ccpair_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,4)));
 
+ccpair_decl void ccpair_item_error_handler_init (cce_location_t * L, ccpair_item_error_handler_t * H,
+						 uintptr_t item, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,4)));
+
+#define ccpair_item_handler_init(L,P_H,P)				\
+  _Generic((P_H),							\
+	   ccpair_item_error_handler_t *: ccpair_item_error_handler_init, \
+	   ccpair_item_clean_handler_t *: ccpair_item_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
- ** Constructors with exception handlers initialisation.
+ ** Guarded constructors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_cons_error_handler (cce_location_t * L, uintptr_t A, ccpair_t D, cce_handler_t * H)
-{
-  ccpair_t	P = ccpair_cons(L, A, D);
-  ccpair_error_handler_pair_init(L, H, P);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_cons_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, uintptr_t A, ccpair_t D)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_cons_clean_handler (cce_location_t * L, uintptr_t A, ccpair_t D, cce_handler_t * H)
-{
-  ccpair_t	P = ccpair_cons(L, A, D);
-  ccpair_clean_handler_pair_init(L, H, P);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_cons_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, uintptr_t A, ccpair_t D)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+
+#define ccpair_cons_guarded(L,H,A,D)					\
+  _Generic((H),								\
+	   ccpair_pair_error_handler_t *: ccpair_cons_guarded_error,	\
+	   ccpair_pair_clean_handler_t *: ccpair_cons_guarded_clean)((L),(H),(A),(D))
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_cons_improper_error_handler (cce_location_t * L, uintptr_t A, uintptr_t D, cce_handler_t * H)
-{
-  ccpair_t	P = ccpair_cons_improper(L, A, D);
-  ccpair_error_handler_pair_init(L, H, P);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_cons_improper_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_cons_improper_clean_handler (cce_location_t * L, uintptr_t A, uintptr_t D, cce_handler_t * H)
-{
-  ccpair_t	P = ccpair_cons_improper(L, A, D);
-  ccpair_clean_handler_pair_init(L, H, P);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_cons_improper_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+
+#define ccpair_cons_improper_guarded(L,H,A,D)				\
+  _Generic((H),								\
+	   ccpair_pair_error_handler_t *: ccpair_cons_improper_guarded_error, \
+	   ccpair_pair_clean_handler_t *: ccpair_cons_improper_guarded_clean)((L),(H),(A),(D))
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_cons_node_error_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cce_handler_t * H)
-{
-  ccpair_t	P = ccpair_cons_node(L, A, D);
-  ccpair_error_handler_pair_init(L, H, P);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_cons_node_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, ccpair_t A, ccpair_t D)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-__attribute__((__always_inline__,__nonnull__(1,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_cons_node_clean_handler (cce_location_t * L, ccpair_t A, ccpair_t D, cce_handler_t * H)
-{
-  ccpair_t	P = ccpair_cons_node(L, A, D);
-  ccpair_clean_handler_pair_init(L, H, P);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_cons_node_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, ccpair_t A, ccpair_t D)
+  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+
+#define ccpair_cons_node_guarded(L,H,A,D)				\
+  _Generic((H),								\
+	   ccpair_pair_error_handler_t *: ccpair_cons_node_guarded_error, \
+	   ccpair_pair_clean_handler_t *: ccpair_cons_node_guarded_clean)((L),(H),(A),(D))
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2,3,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_list_error_handler (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D, ccpair_list_item_handler_t * H)
-{
-  ccpair_t	P = ccpair_list(L, C, D);
-  ccpair_error_handler_list_item_init(L, H, P, D);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_list_guarded_error (cce_location_t * L, ccpair_list_item_error_handler_t * H,
+						ccpair_item_constructor_t * C, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
 
-__attribute__((__always_inline__,__nonnull__(1,2,3,4),__returns_nonnull__))
-static inline ccpair_t
-ccpair_list_clean_handler (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D, ccpair_list_item_handler_t * H)
-{
-  ccpair_t	P = ccpair_list(L, C, D);
-  ccpair_clean_handler_list_item_init(L, H, P, D);
-  return P;
-}
+ccpair_decl ccpair_t ccpair_list_guarded_clean (cce_location_t * L, ccpair_list_item_clean_handler_t * H,
+						ccpair_item_constructor_t * C, ccpair_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
+
+#define ccpair_list_guarded(L,H,item_constructor,item_destructor)	\
+  _Generic((H),								\
+	   ccpair_list_item_error_handler_t *: ccpair_list_guarded_error,	\
+	   ccpair_list_item_clean_handler_t *: ccpair_list_guarded_clean)((L),(H),(item_constructor),(item_destructor))
 
 
 /** --------------------------------------------------------------------

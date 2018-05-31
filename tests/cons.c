@@ -47,20 +47,73 @@ void
 test_1_2 (cce_destination_t upper_L)
 /* Single pair allocation and release using the exception handler. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_clean_handler_pair_init(L, P_H, P);
+    ccpair_pair_clean_handler_init(L, P_H, P);
     {
       cctests_assert(L, NULL != P);
       cctests_assert(L, 1    == ccpair_car(P));
       cctests_assert(L, NULL == ccpair_cdr(P));
       cctests_assert(L, 0    == ccpair_cdr_value(P));
     }
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_1_3 (cce_destination_t upper_L)
+/* Single pair allocation and release using the guarded constructor. */
+{
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    ccpair_t	P = ccpair_cons_guarded(L, P_H, 1, NULL);
+    {
+      cctests_assert(L, NULL != P);
+      cctests_assert(L, 1    == ccpair_car(P));
+      cctests_assert(L, NULL == ccpair_cdr(P));
+      cctests_assert(L, 0    == ccpair_cdr_value(P));
+    }
+    cce_run_body_handlers(L);
+  }
+}
+
+void
+test_1_4 (cce_destination_t upper_L)
+/* Single pair allocation and release using the guarded constructor. */
+{
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
+
+  if (cce_location(L)) {
+    cce_run_catch_handlers_raise(L, upper_L);
+  } else {
+    cce_location_t		inner_L[1];
+    ccpair_pair_error_handler_t	inner_P_H[1];
+    ccpair_t			P;
+
+    if (cce_location(inner_L)) {
+      cce_run_catch_handlers_raise(inner_L, L);
+    } else {
+      P = ccpair_cons_guarded(L, inner_P_H, 1, NULL);
+      {
+	cctests_assert(L, NULL != P);
+	cctests_assert(L, 1    == ccpair_car(P));
+	cctests_assert(L, NULL == ccpair_cdr(P));
+	cctests_assert(L, 0    == ccpair_cdr_value(P));
+      }
+      cce_run_body_handlers(L);
+    }
+
+    ccpair_pair_clean_handler_init(L, P_H, P);
     cce_run_body_handlers(L);
   }
 }
@@ -75,18 +128,18 @@ test_2_1 (cce_destination_t upper_L)
 /* Chain  of  pairs.   The list:  1,  2,  3,  4,  5, NULL  allocated  in
    reverse. */
 {
-  cce_location_t	L[1];
-  ccpair_t		P[5];
-  cce_handler_t		P_H[5];
+  cce_location_t		L[1];
+  ccpair_t			P[5];
+  ccpair_pair_clean_handler_t	P_H[5];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    P[4] = ccpair_cons(L, 5, NULL); ccpair_clean_handler_pair_init(L, &(P_H[4]), P[4]);
-    P[3] = ccpair_cons(L, 4, P[4]); ccpair_clean_handler_pair_init(L, &(P_H[3]), P[3]);
-    P[2] = ccpair_cons(L, 3, P[3]); ccpair_clean_handler_pair_init(L, &(P_H[2]), P[2]);
-    P[1] = ccpair_cons(L, 2, P[2]); ccpair_clean_handler_pair_init(L, &(P_H[1]), P[1]);
-    P[0] = ccpair_cons(L, 1, P[1]); ccpair_clean_handler_pair_init(L, &(P_H[0]), P[0]);
+    P[4] = ccpair_cons(L, 5, NULL); ccpair_pair_clean_handler_init(L, &(P_H[4]), P[4]);
+    P[3] = ccpair_cons(L, 4, P[4]); ccpair_pair_clean_handler_init(L, &(P_H[3]), P[3]);
+    P[2] = ccpair_cons(L, 3, P[3]); ccpair_pair_clean_handler_init(L, &(P_H[2]), P[2]);
+    P[1] = ccpair_cons(L, 2, P[2]); ccpair_pair_clean_handler_init(L, &(P_H[1]), P[1]);
+    P[0] = ccpair_cons(L, 1, P[1]); ccpair_pair_clean_handler_init(L, &(P_H[0]), P[0]);
 
     {
       uintptr_t	i;
@@ -114,6 +167,8 @@ main (void)
     {
       cctests_run(test_1_1);
       cctests_run(test_1_2);
+      cctests_run(test_1_3);
+      cctests_run(test_1_4);
     }
     cctests_end_group();
 

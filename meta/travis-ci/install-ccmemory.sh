@@ -7,7 +7,7 @@
 # script is run from the top directory of the build tree.
 
 PROGNAME=install-ccmemory.sh
-VERSION=0.1.0-devel.3
+VERSION=0.2.0-devel.0
 STEM="ccmemory-${VERSION}"
 ARCHIVE="${STEM}.tar.gz"
 SOURCE_URI="https://github.com/marcomaggi/ccmemory/archive/v${VERSION}.tar.gz"

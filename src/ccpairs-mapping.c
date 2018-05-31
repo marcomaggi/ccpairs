@@ -44,8 +44,8 @@ ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t
   ccpair_t	R = NULL, Q = NULL;
 
   if (P) {
-    cce_location_t	L[1];
-    cce_handler_t	R_H[1];
+    cce_location_t		L[1];
+    ccpair_list_error_handler_t	R_H[1];
 
     if (cce_location(L)) {
       cce_run_catch_handlers_raise(L, upper_L);
@@ -54,7 +54,7 @@ ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t
 	 we can initialise the handler for R. */
       R = Q = ccpair_cons(L, fun(ccpair_car(P)), NULL);
       P = ccpair_cdr(P);
-      ccpair_error_handler_list_init(L, R_H, R);
+      ccpair_list_error_handler_init(L, R_H, R);
 
       for (; P; P = ccpair_cdr(P)) {
 	ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P)), NULL);

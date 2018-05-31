@@ -39,7 +39,7 @@ make_list_len (cce_destination_t upper_L, size_t len)
   if (len) {
     cce_location_t		L[1];
     ccpair_t			P[1+len];
-    cce_handler_t		P_H[len];
+    ccpair_pair_error_handler_t	P_H[len];
 
     for (size_t i=0; i<1+len; ++i) {
       P[i] = NULL;
@@ -59,7 +59,7 @@ make_list_len (cce_destination_t upper_L, size_t len)
 		  i, ccpair_car(P[i]),
 		  i, (void *)ccpair_cdr(P[i]) );
 	}
-	ccpair_error_handler_pair_init(L, &(P_H[i]), P[i]);
+	ccpair_pair_error_handler_init(L, &(P_H[i]), P[i]);
       }
       P[0] = ccpair_cons(L, 1, P[1]);
       if (0) {
@@ -130,14 +130,14 @@ void
 test_1_2 (cce_destination_t upper_L)
 /* One item list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_clean_handler_pair_init(L, P_H, P);
+    ccpair_pair_clean_handler_init(L, P_H, P);
     cctests_assert(L, 1 == ccpair_length(L, P));
     cce_run_body_handlers(L);
   }
@@ -147,14 +147,14 @@ void
 test_1_3 (cce_destination_t upper_L)
 /* Five items list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_list_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 5);
-    ccpair_clean_handler_list_init(L, P_H, P);
+    ccpair_list_clean_handler_init(L, P_H, P);
     if (0) { print_list(stderr, P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_length(L, P)); }
     cctests_assert(L, 5 == ccpair_length(L, P));
@@ -166,14 +166,14 @@ void
 test_1_4 (cce_destination_t upper_L)
 /* 1024 items list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_list_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 1024);
-    ccpair_clean_handler_list_init(L, P_H, P);
+    ccpair_list_clean_handler_init(L, P_H, P);
     if (0) { print_list(stderr, P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpair_length(L, P)); }
     cctests_assert(L, 1024 == ccpair_length(L, P));
@@ -289,14 +289,13 @@ void
 test_2_2 (cce_destination_t upper_L)
 /* Single pair list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_clean_handler_pair_init(L, P_H, P);
+    ccpair_t	P = ccpair_cons_guarded(L, P_H, 1, NULL);
     cctests_assert(L, false == ccpair_is_null(P));
     cce_run_body_handlers(L);
   }
@@ -321,14 +320,13 @@ void
 test_3_2 (cce_destination_t upper_L)
 /* Single pair list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_clean_handler_pair_init(L, P_H, P);
+    ccpair_t	P = ccpair_cons_guarded(L, P_H, 1, NULL);
     cctests_assert(L, false == ccpair_is_empty(P));
     cce_run_body_handlers(L);
   }
@@ -353,14 +351,13 @@ void
 test_4_2 (cce_destination_t upper_L)
 /* Single pair list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_clean_handler_pair_init(L, P_H, P);
+    ccpair_t	P = ccpair_cons_guarded(L, P_H, 1, NULL);
     cctests_assert(L, true == ccpair_is_last(P));
     cce_run_body_handlers(L);
   }
@@ -383,14 +380,13 @@ void
 test_5_2 (cce_destination_t upper_L)
 /* Linear one item list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_pair_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_cons(L, 1, NULL);
-    ccpair_clean_handler_pair_init(L, P_H, P);
+    ccpair_t	P = ccpair_cons_guarded(L, P_H, 1, NULL);
     cctests_assert(L, false == ccpair_is_circular(P));
     cce_run_body_handlers(L);
   }
@@ -401,13 +397,13 @@ test_5_3 (cce_destination_t upper_L)
 /* Linear five items list. */
 {
   cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  ccpair_list_clean_handler_t		P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 5);
-    ccpair_clean_handler_list_init(L, P_H, P);
+    ccpair_list_clean_handler_init(L, P_H, P);
     if (0) { print_spine_len(stderr, P, 5); }
     if (0) { fprintf(stderr, "%s: length=%lu\n", __func__, ccpair_length(L, P)); }
     if (0) { print_list_len(stderr, P, 5); }
@@ -421,14 +417,14 @@ void
 test_5_4 (cce_destination_t upper_L)
 /* Linear 1024 items list. */
 {
-  cce_location_t	L[1];
-  cce_handler_t		P_H[1];
+  cce_location_t		L[1];
+  ccpair_list_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpair_t	P = make_list_len(L, 1024);
-    ccpair_clean_handler_list_init(L, P_H, P);
+    ccpair_list_clean_handler_init(L, P_H, P);
     cctests_assert(L, false == ccpair_is_circular(P));
     cce_run_body_handlers(L);
   }
@@ -438,7 +434,7 @@ void
 test_5_5 (cce_destination_t upper_L)
 /* Circular list with one item. */
 {
-  cce_location_t	L[1];
+  cce_location_t		L[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
