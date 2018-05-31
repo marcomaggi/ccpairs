@@ -5,7 +5,8 @@
 
   Abstract
 
-
+	This is the public header file for CCPairs.  It must be included
+	in all the source files using the library's facilities.
 
   Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
@@ -102,26 +103,11 @@ extern "C" {
  ** Forward declarations.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpairs_stru_t		ccpairs_stru_t;
-typedef ccpairs_stru_t *			ccpairs_t;
-
 typedef size_t				ccpairs_idx_t;
 typedef size_t				ccpairs_len_t;
 
 typedef uintptr_t ccpairs_item_constructor_t (cce_location_t * L, ccpairs_idx_t idx);
 typedef void      ccpairs_item_destructor_t  (uintptr_t item);
-
-/* ------------------------------------------------------------------ */
-
-typedef struct ccpairs_descriptor_base_t			ccpairs_descriptor_base_t;
-typedef struct ccpairs_descriptor_not_enough_items_t	ccpairs_descriptor_not_enough_items_t;
-typedef struct ccpairs_descriptor_empty_list_t		ccpairs_descriptor_empty_list_t;
-typedef struct ccpairs_descriptor_circular_list_t	ccpairs_descriptor_circular_list_t;
-
-typedef struct ccpairs_condition_base_t			ccpairs_condition_base_t;
-typedef struct ccpairs_condition_not_enough_items_t	ccpairs_condition_not_enough_items_t;
-typedef struct ccpairs_condition_empty_list_t		ccpairs_condition_empty_list_t;
-typedef struct ccpairs_condition_circular_list_t		ccpairs_condition_circular_list_t;
 
 
 /** --------------------------------------------------------------------
@@ -129,9 +115,9 @@ typedef struct ccpairs_condition_circular_list_t		ccpairs_condition_circular_lis
  ** ----------------------------------------------------------------- */
 
 ccpairs_decl char const *ccpairs_version_string			(void);
-ccpairs_decl int		ccpairs_version_interface_current	(void);
-ccpairs_decl int		ccpairs_version_interface_revision	(void);
-ccpairs_decl int		ccpairs_version_interface_age		(void);
+ccpairs_decl int	ccpairs_version_interface_current	(void);
+ccpairs_decl int	ccpairs_version_interface_revision	(void);
+ccpairs_decl int	ccpairs_version_interface_age		(void);
 
 
 /** --------------------------------------------------------------------
@@ -145,6 +131,9 @@ ccpairs_decl void ccpairs_library_init (void)
 /** --------------------------------------------------------------------
  ** Exceptional-condition object-types.
  ** ----------------------------------------------------------------- */
+
+typedef struct ccpairs_descriptor_base_t	ccpairs_descriptor_base_t;
+typedef struct ccpairs_condition_base_t		ccpairs_condition_base_t;
 
 struct ccpairs_descriptor_base_t {
   cce_descriptor_t	descriptor;
@@ -164,6 +153,9 @@ ccpairs_condition_is_base (cce_condition_t const * C)
 }
 
 /* ------------------------------------------------------------------ */
+
+typedef struct ccpairs_descriptor_not_enough_items_t	ccpairs_descriptor_not_enough_items_t;
+typedef struct ccpairs_condition_not_enough_items_t	ccpairs_condition_not_enough_items_t;
 
 struct ccpairs_descriptor_not_enough_items_t {
   cce_descriptor_t	descriptor;
@@ -187,6 +179,9 @@ ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
 
 /* ------------------------------------------------------------------ */
 
+typedef struct ccpairs_descriptor_empty_list_t		ccpairs_descriptor_empty_list_t;
+typedef struct ccpairs_condition_empty_list_t		ccpairs_condition_empty_list_t;
+
 struct ccpairs_descriptor_empty_list_t {
   cce_descriptor_t	descriptor;
 };
@@ -208,6 +203,9 @@ ccpairs_condition_is_empty_list (cce_condition_t const * C)
 }
 
 /* ------------------------------------------------------------------ */
+
+typedef struct ccpairs_descriptor_circular_list_t	ccpairs_descriptor_circular_list_t;
+typedef struct ccpairs_condition_circular_list_t	ccpairs_condition_circular_list_t;
 
 struct ccpairs_descriptor_circular_list_t {
   cce_descriptor_t	descriptor;
@@ -233,6 +231,9 @@ ccpairs_condition_is_circular_list (cce_condition_t const * C)
 /** --------------------------------------------------------------------
  ** Pair structure.
  ** ----------------------------------------------------------------- */
+
+typedef struct ccpairs_stru_t		ccpairs_stru_t;
+typedef ccpairs_stru_t *		ccpairs_t;
 
 struct ccpairs_stru_t {
   uintptr_t	A;

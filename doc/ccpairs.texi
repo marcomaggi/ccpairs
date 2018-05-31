@@ -47,7 +47,7 @@
 @c ------------------------------------------------------------
 
 @set CCEXCEPTIONS_VERSION       0.8.0
-@set CCMEMORY_VERSION           0.1.0
+@set CCMEMORY_VERSION           0.2.0
 @set CCTESTS_VERSION            0.3.0
 
 @c ------------------------------------------------------------
@@ -149,6 +149,7 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * accessors::                   Accessing items in lists.
 * conditions::                  Exceptional condition objects.
 * handlers::                    Exceptional condition handlers.
+* utils::                       Utility definitions.
 
 Appendices
 
@@ -1661,6 +1662,47 @@ release every pair in the list @var{P} using @cfunc{ccpairs_free}; it will also 
 resources associated to the items, in the pairs' first words, using the supplied destructor function
 @var{D}.
 @end deftypefun
+
+@c page
+@node utils
+@chapter Utility definitions
+
+
+@defmac CCPAIRS_PC (@var{POINTER_TYPE}, @var{POINTER_NAME}, @var{EXPRESSION})
+Preprocessor macro used to define pointer variables initialised with a cast expression.  It expands
+to:
+
+@example
+POINTER_TYPE * POINTER_NAME = (POINTER_TYPE *) (EXPRESSION)
+@end example
+
+For example, the macro use:
+
+@example
+CCPAIRS_PC(ccpairs_descriptor_error_t, C, _C);
+@end example
+
+@noindent
+expands into:
+
+@example
+ccpairs_descriptor_error_t * C = \
+   (ccpairs_descriptor_error_t *) (_C);
+@end example
+@end defmac
+
+
+@defmac CCPAIRS_UNUSED
+Preprocessor macro that is meant to expand into an attribute declaration.  If the symbol
+@code{__GNUC__} is defined, the expansion is:
+
+@example
+__attribute__((__unused__))
+@end example
+
+@noindent
+otherwise the expansion is the empty string.
+@end defmac
 
 @c page
 @c ------------------------------------------------------------
