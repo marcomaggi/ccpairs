@@ -44,7 +44,7 @@ extern "C" {
    int unused_variable CCPAIRS_UNUSED;
 */
 #ifdef __GNUC__
-#  define CCPAIRS_UNUSED		__attribute__((unused))
+#  define CCPAIRS_UNUSED		__attribute__((__unused__))
 #else
 #  define CCPAIRS_UNUSED		/* empty */
 #endif
@@ -58,13 +58,13 @@ extern "C" {
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef BUILDING_DLL
 #    ifdef __GNUC__
-#      define ccpairs_decl		__attribute__((dllexport)) extern
+#      define ccpairs_decl		__attribute__((__dllexport__)) extern
 #    else
 #      define ccpairs_decl		__declspec(dllexport) extern
 #    endif
 #  else
 #    ifdef __GNUC__
-#      define ccpairs_decl		__attribute__((dllimport)) extern
+#      define ccpairs_decl		__attribute__((__dllimport__)) extern
 #    else
 #      define ccpairs_decl		__declspec(dllimport) extern
 #    endif
@@ -103,8 +103,8 @@ extern "C" {
  ** Forward declarations.
  ** ----------------------------------------------------------------- */
 
-typedef size_t				ccpairs_idx_t;
-typedef size_t				ccpairs_len_t;
+typedef size_t		ccpairs_idx_t;
+typedef size_t		ccpairs_len_t;
 
 typedef uintptr_t ccpairs_item_constructor_t (cce_location_t * L, ccpairs_idx_t idx);
 typedef void      ccpairs_item_destructor_t  (uintptr_t item);
