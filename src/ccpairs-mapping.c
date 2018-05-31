@@ -44,7 +44,7 @@ ccpairs_map_1_forward (cce_location_t * upper_L, ccpairs_map_fun_t * fun, ccpair
   ccpairs_t	R = NULL, Q = NULL;
 
   if (P) {
-    cce_location_t		L[1];
+    cce_location_t			L[1];
     ccpairs_list_error_handler_t	R_H[1];
 
     if (cce_location(L)) {
