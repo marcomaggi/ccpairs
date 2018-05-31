@@ -37,24 +37,24 @@
 
 __attribute__((nonnull(1,2)))
 static void
-ccpair_pair_handler_function (cce_condition_t const * C CCPAIR_UNUSED, cce_handler_t * H)
+ccpairs_pair_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_handler_t * H)
 {
   if (0) { fprintf(stderr, "%s: releasing pair %p\n", __func__, (void *)H->pointer); }
-  ccpair_free(H->pointer);
+  ccpairs_free(H->pointer);
 }
 
 void
-ccpair_pair_clean_handler_init (cce_location_t * L, ccpair_pair_clean_handler_t * H, ccpair_t P)
+ccpairs_pair_clean_handler_init (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
 {
-  H->handler.handler.function	= ccpair_pair_handler_function;
+  H->handler.handler.function	= ccpairs_pair_handler_function;
   H->handler.handler.pointer	= P;
   cce_register_clean_handler(L, &(H->handler));
 }
 
 void
-ccpair_pair_error_handler_init (cce_location_t * L, ccpair_pair_error_handler_t * H, ccpair_t P)
+ccpairs_pair_error_handler_init (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
 {
-  H->handler.handler.function	= ccpair_pair_handler_function;
+  H->handler.handler.function	= ccpairs_pair_handler_function;
   H->handler.handler.pointer	= P;
   cce_register_error_handler(L, &(H->handler));
 }
@@ -66,24 +66,24 @@ ccpair_pair_error_handler_init (cce_location_t * L, ccpair_pair_error_handler_t 
 
 __attribute__((nonnull(1,2)))
 static void
-ccpair_list_handler_function (cce_condition_t const * C CCPAIR_UNUSED, cce_handler_t * H)
+ccpairs_list_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_handler_t * H)
 {
   if (0) { fprintf(stderr, "%s: releasing pair %p\n", __func__, (void *)H->pointer); }
-  ccpair_free(H->pointer);
+  ccpairs_free(H->pointer);
 }
 
 void
-ccpair_list_clean_handler_init (cce_location_t * L, ccpair_list_clean_handler_t * H, ccpair_t P)
+ccpairs_list_clean_handler_init (cce_location_t * L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
 {
-  H->handler.handler.function	= ccpair_list_handler_function;
+  H->handler.handler.function	= ccpairs_list_handler_function;
   H->handler.handler.pointer	= P;
   cce_register_clean_handler(L, &(H->handler));
 }
 
 void
-ccpair_list_error_handler_init (cce_location_t * L, ccpair_list_error_handler_t * H, ccpair_t P)
+ccpairs_list_error_handler_init (cce_location_t * L, ccpairs_list_error_handler_t * H, ccpairs_t P)
 {
-  H->handler.handler.function	= ccpair_list_handler_function;
+  H->handler.handler.function	= ccpairs_list_handler_function;
   H->handler.handler.pointer	= P;
   cce_register_error_handler(L, &(H->handler));
 }
@@ -95,29 +95,29 @@ ccpair_list_error_handler_init (cce_location_t * L, ccpair_list_error_handler_t 
 
 __attribute__((nonnull(1,2)))
 static void
-ccpair_pair_item_handler_function (cce_condition_t const * C CCPAIR_UNUSED, cce_handler_t * _H)
+ccpairs_pair_item_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_handler_t * _H)
 {
-  CCPAIR_PC(ccpair_pair_item_clean_handler_t, H, _H);
-  ccpair_t	P = (ccpair_t) (H->handler.handler.handler.pointer);
+  CCPAIRS_PC(ccpairs_pair_item_clean_handler_t, H, _H);
+  ccpairs_t	P = (ccpairs_t) (H->handler.handler.handler.pointer);
 
   if (0) { fprintf(stderr, "%s: releasing pair %p with item destructor\n", __func__, (void *)P); }
-  H->item_destructor(ccpair_car(P));
-  ccpair_free(P);
+  H->item_destructor(ccpairs_car(P));
+  ccpairs_free(P);
 }
 
 void
-ccpair_pair_item_clean_handler_init (cce_location_t * L, ccpair_pair_item_clean_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_pair_item_clean_handler_init (cce_location_t * L, ccpairs_pair_item_clean_handler_t * H, ccpairs_t P, ccpairs_item_destructor_t * D)
 {
-  H->handler.handler.handler.function	= ccpair_pair_item_handler_function;
+  H->handler.handler.handler.function	= ccpairs_pair_item_handler_function;
   H->handler.handler.handler.pointer	= P;
   H->item_destructor			= D;
   cce_register_clean_handler(L, &(H->handler.handler));
 }
 
 void
-ccpair_pair_item_error_handler_init (cce_location_t * L, ccpair_pair_item_error_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_pair_item_error_handler_init (cce_location_t * L, ccpairs_pair_item_error_handler_t * H, ccpairs_t P, ccpairs_item_destructor_t * D)
 {
-  H->handler.handler.handler.function	= ccpair_pair_item_handler_function;
+  H->handler.handler.handler.function	= ccpairs_pair_item_handler_function;
   H->handler.handler.handler.pointer	= P;
   H->item_destructor			= D;
   cce_register_error_handler(L, &(H->handler.handler));
@@ -130,36 +130,36 @@ ccpair_pair_item_error_handler_init (cce_location_t * L, ccpair_pair_item_error_
 
 __attribute__((nonnull(1,2)))
 static void
-ccpair_list_item_handler_function (cce_condition_t const * C CCPAIR_UNUSED, cce_handler_t * _H)
+ccpairs_list_item_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_handler_t * _H)
 {
-  CCPAIR_PC(ccpair_list_item_clean_handler_t, H, _H);
-  ccpair_t	P = (ccpair_t) (H->handler.handler.handler.pointer);
+  CCPAIRS_PC(ccpairs_list_item_clean_handler_t, H, _H);
+  ccpairs_t	P = (ccpairs_t) (H->handler.handler.handler.pointer);
 
   if (0) { fprintf(stderr, "%s: releasing list %p with item destructor\n", __func__, (void *)P); }
 
   /* Notice that  this function is  *unable* to correctly  free circular
      lists. */
   while (P) {
-    ccpair_t	Q = P;
-    P = ccpair_cdr(P);
-    H->item_destructor(ccpair_car(Q));
-    ccpair_free(Q);
+    ccpairs_t	Q = P;
+    P = ccpairs_cdr(P);
+    H->item_destructor(ccpairs_car(Q));
+    ccpairs_free(Q);
   }
 }
 
 void
-ccpair_list_item_clean_handler_init (cce_location_t * L, ccpair_list_item_clean_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_list_item_clean_handler_init (cce_location_t * L, ccpairs_list_item_clean_handler_t * H, ccpairs_t P, ccpairs_item_destructor_t * D)
 {
-  H->handler.handler.handler.function	= ccpair_list_item_handler_function;
+  H->handler.handler.handler.function	= ccpairs_list_item_handler_function;
   H->handler.handler.handler.pointer	= P;
   H->item_destructor			= D;
   cce_register_clean_handler(L, &(H->handler.handler));
 }
 
 void
-ccpair_list_item_error_handler_init (cce_location_t * L, ccpair_list_item_error_handler_t * H, ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_list_item_error_handler_init (cce_location_t * L, ccpairs_list_item_error_handler_t * H, ccpairs_t P, ccpairs_item_destructor_t * D)
 {
-  H->handler.handler.handler.function	= ccpair_list_item_handler_function;
+  H->handler.handler.handler.function	= ccpairs_list_item_handler_function;
   H->handler.handler.handler.pointer	= P;
   H->item_destructor			= D;
   cce_register_error_handler(L, &(H->handler.handler));
@@ -172,9 +172,9 @@ ccpair_list_item_error_handler_init (cce_location_t * L, ccpair_list_item_error_
 
 __attribute__((nonnull(1,2)))
 static void
-ccpair_item_handler_function (cce_condition_t const * C CCPAIR_UNUSED, cce_handler_t * _H)
+ccpairs_item_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_handler_t * _H)
 {
-  CCPAIR_PC(ccpair_item_clean_handler_t, H, _H);
+  CCPAIRS_PC(ccpairs_item_clean_handler_t, H, _H);
   uintptr_t	item = (uintptr_t) (H->handler.handler.pointer);
 
   if (0) {
@@ -184,18 +184,18 @@ ccpair_item_handler_function (cce_condition_t const * C CCPAIR_UNUSED, cce_handl
 }
 
 void
-ccpair_item_clean_handler_init (cce_location_t * L, ccpair_item_clean_handler_t * H, uintptr_t item, ccpair_item_destructor_t * D)
+ccpairs_item_clean_handler_init (cce_location_t * L, ccpairs_item_clean_handler_t * H, uintptr_t item, ccpairs_item_destructor_t * D)
 {
-  H->handler.handler.function	= ccpair_item_handler_function;
+  H->handler.handler.function	= ccpairs_item_handler_function;
   H->handler.handler.pointer	= (void *) item;
   H->item_destructor		= D;
   cce_register_clean_handler(L, &(H->handler));
 }
 
 void
-ccpair_item_error_handler_init (cce_location_t * L, ccpair_item_error_handler_t * H, uintptr_t item, ccpair_item_destructor_t * D)
+ccpairs_item_error_handler_init (cce_location_t * L, ccpairs_item_error_handler_t * H, uintptr_t item, ccpairs_item_destructor_t * D)
 {
-  H->handler.handler.function	= ccpair_item_handler_function;
+  H->handler.handler.function	= ccpairs_item_handler_function;
   H->handler.handler.pointer	= (void *) item;
   H->item_destructor		= D;
   cce_register_error_handler(L, &(H->handler));

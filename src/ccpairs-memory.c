@@ -38,14 +38,14 @@
  ** Predefined memory allocator.
  ** ----------------------------------------------------------------- */
 
-ccmem_allocator_t const * ccpair_current_allocator;
+ccmem_allocator_t const * ccpairs_current_allocator;
 
 ccmem_allocator_t const *
-ccpair_register_allocator (ccmem_allocator_t const * new_allocator)
+ccpairs_register_allocator (ccmem_allocator_t const * new_allocator)
 {
-  ccmem_allocator_t const *	old_allocator = ccpair_current_allocator;
+  ccmem_allocator_t const *	old_allocator = ccpairs_current_allocator;
 
-  ccpair_current_allocator = new_allocator;
+  ccpairs_current_allocator = new_allocator;
   return old_allocator;
 }
 
@@ -54,30 +54,30 @@ ccpair_register_allocator (ccmem_allocator_t const * new_allocator)
  ** Memory functions.
  ** ----------------------------------------------------------------- */
 
-ccpair_t
-ccpair_alloc (cce_location_t * L)
+ccpairs_t
+ccpairs_alloc (cce_location_t * L)
 {
-  return ccmem_malloc(L, ccpair_current_allocator, sizeof(ccpair_t));
+  return ccmem_malloc(L, ccpairs_current_allocator, sizeof(ccpairs_t));
 }
 
 void
-ccpair_free (ccpair_t P)
+ccpairs_free (ccpairs_t P)
 {
   if (P) {
-    ccmem_free(ccpair_current_allocator, P);
+    ccmem_free(ccpairs_current_allocator, P);
   }
 }
 
 void
-ccpair_free_list (ccpair_t volatile P)
+ccpairs_free_list (ccpairs_t volatile P)
 /* Notice  that this  function is  *unable* to  correctly free  circular
    lists. */
 {
   while (P) {
-    ccpair_t	Q = P;
+    ccpairs_t	Q = P;
 
-    P = ccpair_cdr(P);
-    ccmem_free(ccpair_current_allocator, Q);
+    P = ccpairs_cdr(P);
+    ccmem_free(ccpairs_current_allocator, Q);
   }
 }
 

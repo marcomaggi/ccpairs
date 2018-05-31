@@ -59,14 +59,14 @@
  ** Type definitions.
  ** ----------------------------------------------------------------- */
 
-ccpair_private_decl ccmem_allocator_t const * ccpair_current_allocator;
+ccpairs_private_decl ccmem_allocator_t const * ccpairs_current_allocator;
 
 
 /** --------------------------------------------------------------------
  ** Function prototypes.
  ** ----------------------------------------------------------------- */
 
-ccpair_private_decl void ccpair_conditions_module_initialisation (void);
+ccpairs_private_decl void ccpairs_conditions_module_initialisation (void);
 
 
 /** --------------------------------------------------------------------

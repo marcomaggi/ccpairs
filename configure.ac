@@ -43,7 +43,7 @@ LT_INIT
 dnl page
 #### libraries interface version
 
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpair],1,0,0)
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpairs],1,0,0)
 
 dnl This is the version stored in the pkg-config data file.
 AC_SUBST([CCTEMPLATE_PKG_CONFIG_VERSION],[0.1])

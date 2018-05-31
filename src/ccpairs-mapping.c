@@ -38,26 +38,26 @@
  ** Mapping functions.
  ** ----------------------------------------------------------------- */
 
-ccpair_t
-ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t volatile P)
+ccpairs_t
+ccpairs_map_1_forward (cce_location_t * upper_L, ccpairs_map_fun_t * fun, ccpairs_t volatile P)
 {
-  ccpair_t	R = NULL, Q = NULL;
+  ccpairs_t	R = NULL, Q = NULL;
 
   if (P) {
     cce_location_t		L[1];
-    ccpair_list_error_handler_t	R_H[1];
+    ccpairs_list_error_handler_t	R_H[1];
 
     if (cce_location(L)) {
       cce_run_catch_handlers_raise(L, upper_L);
     } else {
       /* We perform the  first application outside of the  loop, so that
 	 we can initialise the handler for R. */
-      R = Q = ccpair_cons(L, fun(ccpair_car(P)), NULL);
-      P = ccpair_cdr(P);
-      ccpair_list_error_handler_init(L, R_H, R);
+      R = Q = ccpairs_cons(L, fun(ccpairs_car(P)), NULL);
+      P = ccpairs_cdr(P);
+      ccpairs_list_error_handler_init(L, R_H, R);
 
-      for (; P; P = ccpair_cdr(P)) {
-	ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P)), NULL);
+      for (; P; P = ccpairs_cdr(P)) {
+	ccpairs_t	T = ccpairs_cons(L, fun(ccpairs_car(P)), NULL);
 	/* Append  the  new  pair  to  the  tail  of  the  list  we  are
 	   building. */
 	Q->D = (uintptr_t) T;
@@ -72,13 +72,13 @@ ccpair_map_1_forward (cce_location_t * upper_L, ccpair_map_fun_t * fun, ccpair_t
   return R;
 }
 
-ccpair_t
-ccpair_map_2_forward (cce_location_t * L, ccpair_map_2_fun_t * fun, ccpair_t P1, ccpair_t P2)
+ccpairs_t
+ccpairs_map_2_forward (cce_location_t * L, ccpairs_map_2_fun_t * fun, ccpairs_t P1, ccpairs_t P2)
 {
-  ccpair_t	R = NULL,  Q = NULL;
+  ccpairs_t	R = NULL,  Q = NULL;
 
-  for (; P1 && P2; P1 = ccpair_cdr(P1), P2 = ccpair_cdr(P2)) {
-    ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P1), ccpair_car(P2)), NULL);
+  for (; P1 && P2; P1 = ccpairs_cdr(P1), P2 = ccpairs_cdr(P2)) {
+    ccpairs_t	T = ccpairs_cons(L, fun(ccpairs_car(P1), ccpairs_car(P2)), NULL);
     if (Q) {
       Q->D = (uintptr_t) T;
       Q    = T;
@@ -89,13 +89,13 @@ ccpair_map_2_forward (cce_location_t * L, ccpair_map_2_fun_t * fun, ccpair_t P1,
   return R;
 }
 
-ccpair_t
-ccpair_map_3_forward (cce_location_t * L, ccpair_map_3_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3)
+ccpairs_t
+ccpairs_map_3_forward (cce_location_t * L, ccpairs_map_3_fun_t * fun, ccpairs_t P1, ccpairs_t P2, ccpairs_t P3)
 {
-  ccpair_t	R = NULL,  Q = NULL;
+  ccpairs_t	R = NULL,  Q = NULL;
 
-  for (; P1 && P2 && P3; P1 = ccpair_cdr(P1), P2 = ccpair_cdr(P2), P3 = ccpair_cdr(P3)) {
-    ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P1), ccpair_car(P2), ccpair_car(P3)), NULL);
+  for (; P1 && P2 && P3; P1 = ccpairs_cdr(P1), P2 = ccpairs_cdr(P2), P3 = ccpairs_cdr(P3)) {
+    ccpairs_t	T = ccpairs_cons(L, fun(ccpairs_car(P1), ccpairs_car(P2), ccpairs_car(P3)), NULL);
     if (Q) {
       Q->D = (uintptr_t) T;
       Q    = T;
@@ -106,13 +106,13 @@ ccpair_map_3_forward (cce_location_t * L, ccpair_map_3_fun_t * fun, ccpair_t P1,
   return R;
 }
 
-ccpair_t
-ccpair_map_4_forward (cce_location_t * L, ccpair_map_4_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4)
+ccpairs_t
+ccpairs_map_4_forward (cce_location_t * L, ccpairs_map_4_fun_t * fun, ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4)
 {
-  ccpair_t	R = NULL,  Q = NULL;
+  ccpairs_t	R = NULL,  Q = NULL;
 
-  for (; P1 && P2 && P3 && P4; P1 = ccpair_cdr(P1), P2 = ccpair_cdr(P2), P3 = ccpair_cdr(P3), P4 = ccpair_cdr(P4)) {
-    ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P1), ccpair_car(P2), ccpair_car(P3), ccpair_car(P4)), NULL);
+  for (; P1 && P2 && P3 && P4; P1 = ccpairs_cdr(P1), P2 = ccpairs_cdr(P2), P3 = ccpairs_cdr(P3), P4 = ccpairs_cdr(P4)) {
+    ccpairs_t	T = ccpairs_cons(L, fun(ccpairs_car(P1), ccpairs_car(P2), ccpairs_car(P3), ccpairs_car(P4)), NULL);
     if (Q) {
       Q->D = (uintptr_t) T;
       Q    = T;
@@ -123,15 +123,15 @@ ccpair_map_4_forward (cce_location_t * L, ccpair_map_4_fun_t * fun, ccpair_t P1,
   return R;
 }
 
-ccpair_t
-ccpair_map_5_forward (cce_location_t * L, ccpair_map_5_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4, ccpair_t P5)
+ccpairs_t
+ccpairs_map_5_forward (cce_location_t * L, ccpairs_map_5_fun_t * fun, ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4, ccpairs_t P5)
 {
-  ccpair_t	R = NULL,  Q = NULL;
+  ccpairs_t	R = NULL,  Q = NULL;
 
   for (;
        P1 && P2 && P3 && P4 && P5;
-       P1 = ccpair_cdr(P1), P2 = ccpair_cdr(P2), P3 = ccpair_cdr(P3), P4 = ccpair_cdr(P4), P5 = ccpair_cdr(P5)) {
-    ccpair_t	T = ccpair_cons(L, fun(ccpair_car(P1), ccpair_car(P2), ccpair_car(P3), ccpair_car(P4), ccpair_car(P5)), NULL);
+       P1 = ccpairs_cdr(P1), P2 = ccpairs_cdr(P2), P3 = ccpairs_cdr(P3), P4 = ccpairs_cdr(P4), P5 = ccpairs_cdr(P5)) {
+    ccpairs_t	T = ccpairs_cons(L, fun(ccpairs_car(P1), ccpairs_car(P2), ccpairs_car(P3), ccpairs_car(P4), ccpairs_car(P5)), NULL);
     if (Q) {
       Q->D = (uintptr_t) T;
       Q    = T;

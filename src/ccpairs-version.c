@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -32,24 +32,24 @@
 
 
 const char *
-ccpair_version_string (void)
+ccpairs_version_string (void)
 {
-  return ccpair_VERSION_INTERFACE_STRING;
+  return ccpairs_VERSION_INTERFACE_STRING;
 }
 int
-ccpair_version_interface_current (void)
+ccpairs_version_interface_current (void)
 {
-  return ccpair_VERSION_INTERFACE_CURRENT;
+  return ccpairs_VERSION_INTERFACE_CURRENT;
 }
 int
-ccpair_version_interface_revision (void)
+ccpairs_version_interface_revision (void)
 {
-  return ccpair_VERSION_INTERFACE_REVISION;
+  return ccpairs_VERSION_INTERFACE_REVISION;
 }
 int
-ccpair_version_interface_age (void)
+ccpairs_version_interface_age (void)
 {
-  return ccpair_VERSION_INTERFACE_AGE;
+  return ccpairs_VERSION_INTERFACE_AGE;
 }
 
 /* end of file */

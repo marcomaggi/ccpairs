@@ -28,18 +28,18 @@
  ** ----------------------------------------------------------------- */
 
 __attribute__((__nonnull__(1)))
-void print_list (FILE * stream, ccpair_t P);
+void print_list (FILE * stream, ccpairs_t P);
 
 __attribute__((__nonnull__(1)))
-void print_list_len (FILE * stream, ccpair_t P, ccpair_idx_t idx);
+void print_list_len (FILE * stream, ccpairs_t P, ccpairs_idx_t idx);
 
-ccpair_t
+ccpairs_t
 make_list_len (cce_destination_t upper_L, size_t len)
 {
   if (len) {
     cce_location_t		L[1];
-    ccpair_t			P[1+len];
-    ccpair_pair_error_handler_t	P_H[len];
+    ccpairs_t			P[1+len];
+    ccpairs_pair_error_handler_t	P_H[len];
 
     for (size_t i=0; i<1+len; ++i) {
       P[i] = NULL;
@@ -52,18 +52,18 @@ make_list_len (cce_destination_t upper_L, size_t len)
       P[len] = NULL;
       for (size_t i = len-1; i > 0; --i) {
 	if (0) { fprintf(stderr, "%s: i=%lu len=%lu\n", __func__, i, len); }
-	P[i] = ccpair_cons_guarded(L, &(P_H[i]), 1+i, P[1+i]);
+	P[i] = ccpairs_cons_guarded(L, &(P_H[i]), 1+i, P[1+i]);
 	if (0) {
 	  fprintf(stderr, "%s: P[%lu]=%p, car(P[%lu])=%lu, cdr(P[%lu])=%p\n", __func__,
 		  i, (void *)(P[i]),
-		  i, ccpair_car(P[i]),
-		  i, (void *)ccpair_cdr(P[i]) );
+		  i, ccpairs_car(P[i]),
+		  i, (void *)ccpairs_cdr(P[i]) );
 	}
       }
-      P[0] = ccpair_cons(L, 1, P[1]);
+      P[0] = ccpairs_cons(L, 1, P[1]);
       if (0) {
 	fprintf(stderr, "%s: P[0]=%p, car(P[0])=%lu, cdr(P[0])=%p\n", __func__,
-		(void *)(P[0]), ccpair_car(P[0]), (void *)ccpair_cdr(P[0]));
+		(void *)(P[0]), ccpairs_car(P[0]), (void *)ccpairs_cdr(P[0]));
       }
       cce_run_body_handlers(L);
       if (0) { fprintf(stderr, "%s: returning P[0]=%p)\n", __func__, (void *)(P[0])); }
@@ -76,12 +76,12 @@ make_list_len (cce_destination_t upper_L, size_t len)
 }
 
 void
-print_list (FILE * stream, ccpair_t P)
+print_list (FILE * stream, ccpairs_t P)
 {
   fprintf(stream, "(");
-  for (; NULL != P; P = ccpair_cdr(P)) {
-    fprintf(stream, "%lu", ccpair_car(P));
-    if (! ccpair_is_last(P)) {
+  for (; NULL != P; P = ccpairs_cdr(P)) {
+    fprintf(stream, "%lu", ccpairs_car(P));
+    if (! ccpairs_is_last(P)) {
       fprintf(stream, " ");
     }
   }
@@ -89,12 +89,12 @@ print_list (FILE * stream, ccpair_t P)
 }
 
 void
-print_list_len (FILE * stream, ccpair_t P, ccpair_idx_t idx)
+print_list_len (FILE * stream, ccpairs_t P, ccpairs_idx_t idx)
 {
   fprintf(stream, "(");
-  for (ccpair_idx_t i = 0; P && (i < idx); P = ccpair_cdr(P), ++i) {
-    fprintf(stream, "%lu", ccpair_car(P));
-    if (! ccpair_is_last(P)) {
+  for (ccpairs_idx_t i = 0; P && (i < idx); P = ccpairs_cdr(P), ++i) {
+    fprintf(stream, "%lu", ccpairs_car(P));
+    if (! ccpairs_is_last(P)) {
       fprintf(stream, " ");
     }
   }
@@ -102,13 +102,13 @@ print_list_len (FILE * stream, ccpair_t P, ccpair_idx_t idx)
 }
 
 void
-print_spine_len (FILE * stream, ccpair_t P, ccpair_idx_t idx)
+print_spine_len (FILE * stream, ccpairs_t P, ccpairs_idx_t idx)
 {
-  for (ccpair_idx_t i = 0; (i < idx) && P; ++i, P = ccpair_cdr(P)) {
+  for (ccpairs_idx_t i = 0; (i < idx) && P; ++i, P = ccpairs_cdr(P)) {
     fprintf(stream, "P[%lu]=%p, car(P[%lu])=%lu, cdr(P[%lu])=%p\n",
 	    i, (void *)(P),
-	    i, ccpair_car(P),
-	    i, (void *)ccpair_cdr(P));
+	    i, ccpairs_car(P),
+	    i, (void *)ccpairs_cdr(P));
   }
 }
 
@@ -179,13 +179,13 @@ simple_item_destructor__noop (uintptr_t item)
 /* ------------------------------------------------------------------ */
 
 uintptr_t
-simple_item_constructor__break_immediately (cce_destination_t L, ccpair_idx_t idx CCPAIR_UNUSED)
+simple_item_constructor__break_immediately (cce_destination_t L, ccpairs_idx_t idx CCPAIRS_UNUSED)
 {
   cce_raise(L, cce_condition_new_break());
 }
 
 uintptr_t
-simple_item_constructor__one_integer_item (cce_destination_t L, ccpair_idx_t idx)
+simple_item_constructor__one_integer_item (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -201,7 +201,7 @@ simple_item_constructor__one_integer_item (cce_destination_t L, ccpair_idx_t idx
 }
 
 uintptr_t
-simple_item_constructor__three_integer_items (cce_destination_t L, ccpair_idx_t idx)
+simple_item_constructor__three_integer_items (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -221,7 +221,7 @@ simple_item_constructor__three_integer_items (cce_destination_t L, ccpair_idx_t 
 /* ------------------------------------------------------------------ */
 
 uintptr_t
-simple_item_constructor__exception_at_0 (cce_destination_t L, ccpair_idx_t idx)
+simple_item_constructor__exception_at_0 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -232,7 +232,7 @@ simple_item_constructor__exception_at_0 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-simple_item_constructor__exception_at_1 (cce_destination_t L, ccpair_idx_t idx)
+simple_item_constructor__exception_at_1 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -247,7 +247,7 @@ simple_item_constructor__exception_at_1 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-simple_item_constructor__exception_at_2 (cce_destination_t L, ccpair_idx_t idx)
+simple_item_constructor__exception_at_2 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -263,7 +263,7 @@ simple_item_constructor__exception_at_2 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-simple_item_constructor__exception_at_3 (cce_destination_t L, ccpair_idx_t idx)
+simple_item_constructor__exception_at_3 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -280,7 +280,7 @@ simple_item_constructor__exception_at_3 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-simple_item_constructor__exception_at_4 (cce_destination_t L, ccpair_idx_t idx)
+simple_item_constructor__exception_at_4 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -349,12 +349,12 @@ async_item_ref (uintptr_t item)
 }
 
 void
-print_data_list (FILE * stream, ccpair_t P)
+print_data_list (FILE * stream, ccpairs_t P)
 {
   fprintf(stream, "(");
-  for (; NULL != P; P = ccpair_cdr(P)) {
-    fprintf(stream, "%lu", async_item_ref(ccpair_car(P)));
-    if (! ccpair_is_last(P)) {
+  for (; NULL != P; P = ccpairs_cdr(P)) {
+    fprintf(stream, "%lu", async_item_ref(ccpairs_car(P)));
+    if (! ccpairs_is_last(P)) {
       fprintf(stream, " ");
     }
   }
@@ -364,13 +364,13 @@ print_data_list (FILE * stream, ccpair_t P)
 /* ------------------------------------------------------------------ */
 
 uintptr_t
-async_item_constructor__break_immediately (cce_destination_t L, ccpair_idx_t idx CCPAIR_UNUSED)
+async_item_constructor__break_immediately (cce_destination_t L, ccpairs_idx_t idx CCPAIRS_UNUSED)
 {
   cce_raise(L, cce_condition_new_break());
 }
 
 uintptr_t
-async_item_constructor__one_integer_item (cce_destination_t L, ccpair_idx_t idx)
+async_item_constructor__one_integer_item (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0: {
@@ -388,7 +388,7 @@ async_item_constructor__one_integer_item (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-async_item_constructor__three_integer_items (cce_destination_t L, ccpair_idx_t idx)
+async_item_constructor__three_integer_items (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -410,7 +410,7 @@ async_item_constructor__three_integer_items (cce_destination_t L, ccpair_idx_t i
 /* ------------------------------------------------------------------ */
 
 uintptr_t
-async_item_constructor__exception_at_0 (cce_destination_t L, ccpair_idx_t idx)
+async_item_constructor__exception_at_0 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -421,7 +421,7 @@ async_item_constructor__exception_at_0 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-async_item_constructor__exception_at_1 (cce_destination_t L, ccpair_idx_t idx)
+async_item_constructor__exception_at_1 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0: {
@@ -438,7 +438,7 @@ async_item_constructor__exception_at_1 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-async_item_constructor__exception_at_2 (cce_destination_t L, ccpair_idx_t idx)
+async_item_constructor__exception_at_2 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -456,7 +456,7 @@ async_item_constructor__exception_at_2 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-async_item_constructor__exception_at_3 (cce_destination_t L, ccpair_idx_t idx)
+async_item_constructor__exception_at_3 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -475,7 +475,7 @@ async_item_constructor__exception_at_3 (cce_destination_t L, ccpair_idx_t idx)
 }
 
 uintptr_t
-async_item_constructor__exception_at_4 (cce_destination_t L, ccpair_idx_t idx)
+async_item_constructor__exception_at_4 (cce_destination_t L, ccpairs_idx_t idx)
 {
   switch (idx) {
   case 0:
@@ -501,7 +501,7 @@ async_item_constructor__exception_at_4 (cce_destination_t L, ccpair_idx_t idx)
 
 void
 test_1_1 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  an empty  list.  The  item constructor
+/* Use "ccpairs_list()"  to build  an empty  list.  The  item constructor
    function must raise  a break exception immediately.  There  is a noop
    item destructor function. */
 {
@@ -510,8 +510,8 @@ test_1_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_list(L, simple_item_constructor__break_immediately, simple_item_destructor__noop);
-    cctests_assert(L, 0 == ccpair_length(L, P));
+    ccpairs_t	P = ccpairs_list(L, simple_item_constructor__break_immediately, simple_item_destructor__noop);
+    cctests_assert(L, 0 == ccpairs_length(L, P));
     if (0) { print_list(stderr, P); }
     cce_run_body_handlers(L);
   }
@@ -519,20 +519,20 @@ test_1_1 (cce_destination_t upper_L)
 
 void
 test_1_2 (cce_destination_t upper_L)
-/* Use "ccpair_list()" to  build a list of integers with  one item.  The
+/* Use "ccpairs_list()" to  build a list of integers with  one item.  The
    item constructor function must raise a break exception when the index
    operand is 1.  There is a noop item destructor function. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_guarded(L, P_H, simple_item_constructor__one_integer_item, simple_item_destructor__noop);
-    cctests_assert(L, 1 == ccpair_length(L, P));
-    cctests_assert(L, 0 == ccpair_car(P));
+    ccpairs_t	P = ccpairs_list_guarded(L, P_H, simple_item_constructor__one_integer_item, simple_item_destructor__noop);
+    cctests_assert(L, 1 == ccpairs_length(L, P));
+    cctests_assert(L, 0 == ccpairs_car(P));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_list(stderr, P); }
@@ -542,22 +542,22 @@ test_1_2 (cce_destination_t upper_L)
 
 void
 test_1_3 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
+/* Use "ccpairs_list()"  to build  a list of  integers with  three items.
    The item constructor  function must raise a break  exception when the
    index operand is 3.  There is a noop item destructor function. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_guarded(L, P_H, simple_item_constructor__three_integer_items, simple_item_destructor__noop);
-    cctests_assert(L, 3 == ccpair_length(L, P));
-    cctests_assert(L, 0 == ccpair_car(P));
-    cctests_assert(L, 1 == ccpair_ref(L, P, 1));
-    cctests_assert(L, 2 == ccpair_ref(L, P, 2));
+    ccpairs_t	P = ccpairs_list_guarded(L, P_H, simple_item_constructor__three_integer_items, simple_item_destructor__noop);
+    cctests_assert(L, 3 == ccpairs_length(L, P));
+    cctests_assert(L, 0 == ccpairs_car(P));
+    cctests_assert(L, 1 == ccpairs_ref(L, P, 1));
+    cctests_assert(L, 2 == ccpairs_ref(L, P, 2));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, true  == item_state_is_constructed(1));
     cctests_assert(L, true  == item_state_is_constructed(2));
@@ -569,7 +569,7 @@ test_1_3 (cce_destination_t upper_L)
 
 void
 test_1_4 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
+/* Use "ccpairs_list()"  to build  a list of  integers with  three items.
    The item  constructor function raises  a signal_1 exception  when the
    index operand is 0.  There is a noop item destructor function. */
 {
@@ -583,14 +583,14 @@ test_1_4 (cce_destination_t upper_L)
     }
   } else {
     item_state_init();
-    ccpair_list(L, simple_item_constructor__exception_at_0, simple_item_destructor__noop);
+    ccpairs_list(L, simple_item_constructor__exception_at_0, simple_item_destructor__noop);
     cce_raise(L, cctests_condition_new_failure());
   }
 }
 
 void
 test_1_5 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
+/* Use "ccpairs_list()"  to build  a list of  integers with  three items.
    The item  constructor function raises  a signal_1 exception  when the
    index operand is 1.  There is a noop item destructor function. */
 {
@@ -605,14 +605,14 @@ test_1_5 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
     item_state_init();
-    ccpair_list(L, simple_item_constructor__exception_at_1, simple_item_destructor__noop);
+    ccpairs_list(L, simple_item_constructor__exception_at_1, simple_item_destructor__noop);
     cce_raise(L, cctests_condition_new_failure());
   }
 }
 
 void
 test_1_6 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
+/* Use "ccpairs_list()"  to build  a list of  integers with  three items.
    The item  constructor function raises  a signal_1 exception  when the
    index operand is 2.  There is a noop item destructor function. */
 {
@@ -628,14 +628,14 @@ test_1_6 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(1));
   } else {
     item_state_init();
-    ccpair_list(L, simple_item_constructor__exception_at_2, simple_item_destructor__noop);
+    ccpairs_list(L, simple_item_constructor__exception_at_2, simple_item_destructor__noop);
     cce_raise(L, cctests_condition_new_failure());
   }
 }
 
 void
 test_1_7 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
+/* Use "ccpairs_list()"  to build  a list of  integers with  three items.
    The item  constructor function raises  a signal_1 exception  when the
    index operand is 3.  There is a noop item destructor function. */
 {
@@ -652,7 +652,7 @@ test_1_7 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(2));
   } else {
     item_state_init();
-    ccpair_list(L, simple_item_constructor__exception_at_3, simple_item_destructor__noop);
+    ccpairs_list(L, simple_item_constructor__exception_at_3, simple_item_destructor__noop);
     cctests_raise_unreachable(L);
   }
 }
@@ -664,7 +664,7 @@ test_1_7 (cce_destination_t upper_L)
 
 void
 test_2_1 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  an empty  list.  The  item constructor
+/* Use "ccpairs_list()"  to build  an empty  list.  The  item constructor
    function must raise  a break exception immediately.  There  is a noop
    item destructor function. */
 {
@@ -673,8 +673,8 @@ test_2_1 (cce_destination_t upper_L)
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_list(L, async_item_constructor__break_immediately, async_item_destructor);
-    cctests_assert(L, 0 == ccpair_length(L, P));
+    ccpairs_t	P = ccpairs_list(L, async_item_constructor__break_immediately, async_item_destructor);
+    cctests_assert(L, 0 == ccpairs_length(L, P));
     if (0) { print_data_list(stderr, P); }
     cce_run_body_handlers(L);
   }
@@ -682,20 +682,20 @@ test_2_1 (cce_destination_t upper_L)
 
 void
 test_2_2 (cce_destination_t upper_L)
-/* Use "ccpair_list()" to  build a list of integers with  one item.  The
+/* Use "ccpairs_list()" to  build a list of integers with  one item.  The
    item constructor function must raise a break exception when the index
    operand is 1. */
 {
   cce_location_t		L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_guarded(L, P_H, async_item_constructor__one_integer_item, async_item_destructor);
-    cctests_assert(L, 1 == ccpair_length(L, P));
-    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
+    ccpairs_t	P = ccpairs_list_guarded(L, P_H, async_item_constructor__one_integer_item, async_item_destructor);
+    cctests_assert(L, 1 == ccpairs_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpairs_car(P)));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
@@ -706,22 +706,22 @@ test_2_2 (cce_destination_t upper_L)
 
 void
 test_2_3 (cce_destination_t upper_L)
-/* Use "ccpair_list()"  to build  a list of  integers with  three items.
+/* Use "ccpairs_list()"  to build  a list of  integers with  three items.
    The item constructor  function must raise a break  exception when the
    index operand is 3. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_guarded(L, P_H, async_item_constructor__three_integer_items, async_item_destructor);
-    cctests_assert(L, 3 == ccpair_length(L, P));
-    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
-    cctests_assert(L, 1 == async_item_ref(ccpair_ref(L, P, 1)));
-    cctests_assert(L, 2 == async_item_ref(ccpair_ref(L, P, 2)));
+    ccpairs_t	P = ccpairs_list_guarded(L, P_H, async_item_constructor__three_integer_items, async_item_destructor);
+    cctests_assert(L, 3 == ccpairs_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpairs_car(P)));
+    cctests_assert(L, 1 == async_item_ref(ccpairs_ref(L, P, 1)));
+    cctests_assert(L, 2 == async_item_ref(ccpairs_ref(L, P, 2)));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, true  == item_state_is_constructed(1));
     cctests_assert(L, true  == item_state_is_constructed(2));
@@ -736,7 +736,7 @@ test_2_3 (cce_destination_t upper_L)
 
 void
 test_2_4 (cce_destination_t upper_L)
-/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+/* Use  "ccpairs_list()"  to   build  a  list  of   integers.   The  item
    constructor  function  raises a  signal_1  exception  when the  index
    operand is 0. */
 {
@@ -750,14 +750,14 @@ test_2_4 (cce_destination_t upper_L)
     }
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_0, async_item_destructor);
+    ccpairs_list(L, async_item_constructor__exception_at_0, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_2_5 (cce_destination_t upper_L)
-/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+/* Use  "ccpairs_list()"  to   build  a  list  of   integers.   The  item
    constructor  function  raises a  signal_1  exception  when the  index
    operand is 1. */
 {
@@ -772,14 +772,14 @@ test_2_5 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_1, async_item_destructor);
+    ccpairs_list(L, async_item_constructor__exception_at_1, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_2_6 (cce_destination_t upper_L)
-/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+/* Use  "ccpairs_list()"  to   build  a  list  of   integers.   The  item
    constructor  function  raises a  signal_1  exception  when the  index
    operand is 2. */
 {
@@ -795,14 +795,14 @@ test_2_6 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(1));
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_2, async_item_destructor);
+    ccpairs_list(L, async_item_constructor__exception_at_2, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_2_7 (cce_destination_t upper_L)
-/* Use  "ccpair_list()"  to   build  a  list  of   integers.   The  item
+/* Use  "ccpairs_list()"  to   build  a  list  of   integers.   The  item
    constructor  function  raises a  signal_1  exception  when the  index
    operand is 3. */
 {
@@ -819,7 +819,7 @@ test_2_7 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(2));
   } else {
     item_state_init();
-    ccpair_list(L, async_item_constructor__exception_at_3, async_item_destructor);
+    ccpairs_list(L, async_item_constructor__exception_at_3, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
@@ -831,18 +831,18 @@ test_2_7 (cce_destination_t upper_L)
 
 void
 test_3_1 (cce_destination_t upper_L)
-/* Use "ccpair_list_guarded_clean()" to build an empty list.  The item
+/* Use "ccpairs_list_guarded_clean()" to build an empty list.  The item
    constructor function must raise a break exception immediately.  There
    is a noop item destructor function. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    ccpair_t	P = ccpair_list_guarded_clean(L, P_H, async_item_constructor__break_immediately, async_item_destructor);
-    cctests_assert(L, 0 == ccpair_length(L, P));
+    ccpairs_t	P = ccpairs_list_guarded_clean(L, P_H, async_item_constructor__break_immediately, async_item_destructor);
+    cctests_assert(L, 0 == ccpairs_length(L, P));
     if (0) { print_data_list(stderr, P); }
     cce_run_body_handlers(L);
   }
@@ -850,20 +850,20 @@ test_3_1 (cce_destination_t upper_L)
 
 void
 test_3_2 (cce_destination_t upper_L)
-/* Use "ccpair_list_guarded_clean()"  to build  a list of  "data_t" with
+/* Use "ccpairs_list_guarded_clean()"  to build  a list of  "data_t" with
    one item.  The item constructor function must raise a break exception
    when the index operand is 1. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_guarded(L, P_H, async_item_constructor__one_integer_item, async_item_destructor);
-    cctests_assert(L, 1 == ccpair_length(L, P));
-    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
+    ccpairs_t	P = ccpairs_list_guarded(L, P_H, async_item_constructor__one_integer_item, async_item_destructor);
+    cctests_assert(L, 1 == ccpairs_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpairs_car(P)));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, false == item_state_is_constructed(1));
     if (0) { print_data_list(stderr, P); }
@@ -874,22 +874,22 @@ test_3_2 (cce_destination_t upper_L)
 
 void
 test_3_3 (cce_destination_t upper_L)
-/* Use "ccpair_list_guarded_clean()"  to build  a list of  "data_t" with
+/* Use "ccpairs_list_guarded_clean()"  to build  a list of  "data_t" with
    three  items.   The item  constructor  function  must raise  a  break
    exception when the index operand is 3. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     item_state_init();
-    ccpair_t	P = ccpair_list_guarded(L, P_H, async_item_constructor__three_integer_items, async_item_destructor);
-    cctests_assert(L, 3 == ccpair_length(L, P));
-    cctests_assert(L, 0 == async_item_ref(ccpair_car(P)));
-    cctests_assert(L, 1 == async_item_ref(ccpair_ref(L, P, 1)));
-    cctests_assert(L, 2 == async_item_ref(ccpair_ref(L, P, 2)));
+    ccpairs_t	P = ccpairs_list_guarded(L, P_H, async_item_constructor__three_integer_items, async_item_destructor);
+    cctests_assert(L, 3 == ccpairs_length(L, P));
+    cctests_assert(L, 0 == async_item_ref(ccpairs_car(P)));
+    cctests_assert(L, 1 == async_item_ref(ccpairs_ref(L, P, 1)));
+    cctests_assert(L, 2 == async_item_ref(ccpairs_ref(L, P, 2)));
     cctests_assert(L, true  == item_state_is_constructed(0));
     cctests_assert(L, true  == item_state_is_constructed(1));
     cctests_assert(L, true  == item_state_is_constructed(2));
@@ -904,12 +904,12 @@ test_3_3 (cce_destination_t upper_L)
 
 void
 test_3_4 (cce_destination_t upper_L)
-/* Use "ccpair_list_guarded_clean_()" to build  a list of "data_t".  The
+/* Use "ccpairs_list_guarded_clean_()" to build  a list of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 0. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -919,19 +919,19 @@ test_3_4 (cce_destination_t upper_L)
     }
   } else {
     item_state_init();
-    ccpair_list_guarded(L, P_H, async_item_constructor__exception_at_0, async_item_destructor);
+    ccpairs_list_guarded(L, P_H, async_item_constructor__exception_at_0, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_3_5 (cce_destination_t upper_L)
-/* Use "ccpair_list_guarded_clean()"  to build a list  of "data_t".  The
+/* Use "ccpairs_list_guarded_clean()"  to build a list  of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 1. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -942,19 +942,19 @@ test_3_5 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(0));
   } else {
     item_state_init();
-    ccpair_list_guarded(L, P_H, async_item_constructor__exception_at_1, async_item_destructor);
+    ccpairs_list_guarded(L, P_H, async_item_constructor__exception_at_1, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_3_6 (cce_destination_t upper_L)
-/* Use "ccpair_list_guarded_clean()"  to build a list  of "data_t".  The
+/* Use "ccpairs_list_guarded_clean()"  to build a list  of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 2. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -966,19 +966,19 @@ test_3_6 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(1));
   } else {
     item_state_init();
-    ccpair_list_guarded(L, P_H, async_item_constructor__exception_at_2, async_item_destructor);
+    ccpairs_list_guarded(L, P_H, async_item_constructor__exception_at_2, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
 
 void
 test_3_7 (cce_destination_t upper_L)
-/* Use "ccpair_list_guarded_clean()"  to build a list  of "data_t".  The
+/* Use "ccpairs_list_guarded_clean()"  to build a list  of "data_t".  The
    item constructor function raises a  signal_1 exception when the index
    operand is 3. */
 {
   cce_location_t			L[1];
-  ccpair_list_item_clean_handler_t	P_H[1];
+  ccpairs_list_item_clean_handler_t	P_H[1];
 
   if (cce_location(L)) {
     if (cctests_condition_is_signal_1(cce_condition(L))) {
@@ -991,7 +991,7 @@ test_3_7 (cce_destination_t upper_L)
     cctests_assert(upper_L, true == item_state_is_destructed(2));
   } else {
     item_state_init();
-    ccpair_list_guarded(L, P_H, async_item_constructor__exception_at_3, async_item_destructor);
+    ccpairs_list_guarded(L, P_H, async_item_constructor__exception_at_3, async_item_destructor);
     cctests_raise_unreachable(L);
   }
 }
@@ -1000,7 +1000,7 @@ test_3_7 (cce_destination_t upper_L)
 int
 main (void)
 {
-  ccpair_library_init();
+  ccpairs_library_init();
 
   cctests_init("constructors");
   {

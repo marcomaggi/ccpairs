@@ -177,14 +177,14 @@ The library targets @posix{} platforms.  The library depends on the packages: CC
 version @value{CCEXCEPTIONS_VERSION}; CCMemory, at least version @value{CCMEMORY_VERSION}.
 
 @value{PACKAGE} installs the single header file @file{ccpairs.h}.  All the function names in the
-@api{} are prefixed with @code{ccpair_}; all the preprocessor symbol names are prefixed with
-@code{CCPAIR_}; all the type names are prefixed with @code{ccpair_} and suffixed with @code{_t}.
+@api{} are prefixed with @code{ccpairs_}; all the preprocessor symbol names are prefixed with
+@code{CCPAIRS_}; all the type names are prefixed with @code{ccpairs_} and suffixed with @code{_t}.
 
 The library's @api{} uses both @code{inline} functions and preprocessor macros to integrate some
 common operations at the call site.
 
 Notice that, before using the library, we need to call the global initialisation function
-@cfunc{ccpair_library_init}.
+@cfunc{ccpairs_library_init}.
 
 @strong{IMPORTANT} To use the library we must enable the @posix{} features when including the
 standard header files; so either we include @file{ccpair.h} as first header, or we include the
@@ -382,7 +382,7 @@ pointer @cnull{}.
 @chapter Library initialisation
 
 
-@deftypefun void ccpair_library_init (void)
+@deftypefun void ccpairs_library_init (void)
 Initialise the internal structures of the library.  It is fine to call this function multiple times.
 
 @quotation
@@ -401,23 +401,23 @@ explanation of interface numbers as managed by @gnu{} Libtool @xref{Libtool vers
 Libtool's versioning system, libtool, Shared library support for @gnu{}}.
 
 
-@deftypefun {const char *} ccpair_version_string (void)
+@deftypefun {const char *} ccpairs_version_string (void)
 Return a pointer to a statically allocated @asciiz{} string representing the interface version
 number.
 @end deftypefun
 
 
-@deftypefun int ccpair_version_interface_current (void)
+@deftypefun int ccpairs_version_interface_current (void)
 Return an integer representing the library interface current number.
 @end deftypefun
 
 
-@deftypefun int ccpair_version_interface_revision (void)
+@deftypefun int ccpairs_version_interface_revision (void)
 Return an integer representing the library interface current revision number.
 @end deftypefun
 
 
-@deftypefun int ccpair_version_interface_age (void)
+@deftypefun int ccpairs_version_interface_age (void)
 Return an integer representing the library interface current age.
 @end deftypefun
 
@@ -426,12 +426,12 @@ Return an integer representing the library interface current age.
 @chapter Some type definitions
 
 
-@deftp {Integer Type} ccpair_idx_t
+@deftp {Integer Type} ccpairs_idx_t
 Type of indexes used to reference pairs and items in lists.  It is an alias for @objtype{size_t}.
 @end deftp
 
 
-@deftp {Integer Type} ccpair_len_t
+@deftp {Integer Type} ccpairs_len_t
 Type of integers used to represent list lengths.  It is an alias for @objtype{size_t}.
 @end deftp
 
@@ -462,35 +462,35 @@ where both @var{A} and @var{D} are pointers; this picture represents the layout 
 items.  Pairs are meant to be allocated on the heap, using a custom memory allocator.
 
 
-@deftp {Struct Typedef} ccpair_stru_t
+@deftp {Struct Typedef} ccpairs_stru_t
 Structure type representing a pair.  It is composed of two machine words.  From the point of view of
 client code: @strong{pairs are immutable}.
 @end deftp
 
 
-@deftp {Pointer Typedef} ccpair_t
-Pointer type representing a pointer to @objtype{ccpair_stru_t}.
+@deftp {Pointer Typedef} ccpairs_t
+Pointer type representing a pointer to @objtype{ccpairs_stru_t}.
 @end deftp
 
 
-@deftypefun uintptr_t ccpair_car (ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_car (ccpairs_t @var{P})
 Return the first value in the pair as unsigned integer.  The first value in a pair is called an
 @dfn{item}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_cdr (ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_cdr (ccpairs_t @var{P})
 Return the second value in the pair as pointer to pair.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_car_pair (ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_car_pair (ccpairs_t @var{P})
 Return the first value in the pair as pointer to pair.  This function is useful when the pair is a
 node in a tree.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_cdr_value (ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_cdr_value (ccpairs_t @var{P})
 Return the second value in the pair as unsigned integer.
 @end deftypefun
 
@@ -503,7 +503,7 @@ Return the second value in the pair as unsigned integer.
 standard allocator @code{ccmem_standard_allocator}; @ccmemoryref{std, The standard allocator}.
 
 
-@deftypefun {ccmem_allocator_t const *} ccpair_register_allocator (ccmem_allocator_t const * @var{allocator})
+@deftypefun {ccmem_allocator_t const *} ccpairs_register_allocator (ccmem_allocator_t const * @var{allocator})
 Register a new custom allocator and return a pointer to the previous one.
 @end deftypefun
 
@@ -511,21 +511,21 @@ Register a new custom allocator and return a pointer to the previous one.
 All the following functions use the currently selected pair allocator.
 
 
-@deftypefun ccpair_t ccpair_alloc (cce_location_t * @var{L})
+@deftypefun ccpairs_t ccpairs_alloc (cce_location_t * @var{L})
 Allocate a new pair structure and return a pointer to it.  If successful: return a pointer to the
 new structure (this function never returns @cnull{}); otherwise raise an exception performing a
 non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun void ccpair_free (ccpair_t @var{P})
-Release the memory previously allocated for a pair with @cfunc{ccpair_alloc}.  If @var{P} is
+@deftypefun void ccpairs_free (ccpairs_t @var{P})
+Release the memory previously allocated for a pair with @cfunc{ccpairs_alloc}.  If @var{P} is
 @cnull{}: nothing happens.
 @end deftypefun
 
 
-@deftypefun void ccpair_free_list (ccpair_t @var{P})
-Release the memory previously allocated for a list of pairs with @cfunc{ccpair_alloc}.  If @var{P}
+@deftypefun void ccpairs_free_list (ccpairs_t @var{P})
+Release the memory previously allocated for a list of pairs with @cfunc{ccpairs_alloc}.  If @var{P}
 is @cnull{}: nothing happens.
 
 @quotation
@@ -558,7 +558,7 @@ is @cnull{}: nothing happens.
 @subsection Plain pair constructors
 
 
-@deftypefun ccpair_t ccpair_cons (cce_location_t * @var{L}, uintptr_t @var{A}, ccpair_t @var{D})
+@deftypefun ccpairs_t ccpairs_cons (cce_location_t * @var{L}, uintptr_t @var{A}, ccpairs_t @var{D})
 Allocate a new pair using the currently selected memory allocator; initialise the first value with
 @var{A} and the second value with @var{D}.  If successful: return a pointer to the new structure
 (this function never returns @cnull{}); otherwise raise an exception performing a non--local exit to
@@ -566,12 +566,12 @@ Allocate a new pair using the currently selected memory allocator; initialise th
 
 @example
 cce_location_t  L[1]
-ccpair_t        P;
+ccpairs_t        P;
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  P = ccpair_cons(L, 1, NULL);
+  P = ccpairs_cons(L, 1, NULL);
   ...
   cce_run_body_handlers(L);
 @}
@@ -579,17 +579,17 @@ if (cce_location(L)) @{
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_cons_improper (cce_location_t * @var{L}, uintptr_t @var{A}, uintptr_t @var{D})
-Like @cfunc{ccpair_cons} but accept a @code{uintptr_t} as second argument.
+@deftypefun ccpairs_t ccpairs_cons_improper (cce_location_t * @var{L}, uintptr_t @var{A}, uintptr_t @var{D})
+Like @cfunc{ccpairs_cons} but accept a @code{uintptr_t} as second argument.
 
 @example
 cce_location_t  L[1]
-ccpair_t        P;
+ccpairs_t        P;
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  P = ccpair_cons_improper(L, 1, 2);
+  P = ccpairs_cons_improper(L, 1, 2);
   ...
   cce_run_body_handlers(L);
 @}
@@ -597,21 +597,21 @@ if (cce_location(L)) @{
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_cons_node (cce_location_t * @var{L}, ccpair_t @var{A}, ccpair_t @var{D})
-Like @cfunc{ccpair_cons} but accept a @code{ccpair_t} as first argument.
+@deftypefun ccpairs_t ccpairs_cons_node (cce_location_t * @var{L}, ccpairs_t @var{A}, ccpairs_t @var{D})
+Like @cfunc{ccpairs_cons} but accept a @code{ccpairs_t} as first argument.
 
 @example
 cce_location_t  L[1]
-ccpair_t        P, Q;
+ccpairs_t        P, Q;
 cce_handler_t   P_H[1], Q_H[1];
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  Q = ccpair_cons_node(L, 1, NULL);
+  Q = ccpairs_cons_node(L, 1, NULL);
   cce_error_handler_pair_init(L, Q_H, Q);
 
-  P = ccpair_cons_node(L, Q, NULL);
+  P = ccpairs_cons_node(L, Q, NULL);
 
   ...
   cce_run_body_handlers(L);
@@ -624,10 +624,10 @@ if (cce_location(L)) @{
 @subsection Guarded pair constructors
 
 
-@deftypefun ccpair_t ccpair_cons_error_handler (cce_destination_t @var{L}, uintptr_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
-@deftypefunx ccpair_t ccpair_cons_clean_handler (cce_destination_t @var{L}, uintptr_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
-Like @cfunc{ccpair_cons}, but initialise an error or cleanup handler to release the memory of the
-pair; the memory will be released with @cfunc{ccpair_free}.  We can use these functions as follows:
+@deftypefun ccpairs_t ccpairs_cons_error_handler (cce_destination_t @var{L}, uintptr_t @var{A}, ccpairs_t @var{D}, cce_handler_t * @var{H})
+@deftypefunx ccpairs_t ccpairs_cons_clean_handler (cce_destination_t @var{L}, uintptr_t @var{A}, ccpairs_t @var{D}, cce_handler_t * @var{H})
+Like @cfunc{ccpairs_cons}, but initialise an error or cleanup handler to release the memory of the
+pair; the memory will be released with @cfunc{ccpairs_free}.  We can use these functions as follows:
 
 @example
 cce_location_t  L[1];
@@ -636,7 +636,7 @@ cce_handler_t   H[1];
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  ccpair_t  P = ccpair_cons_clean_handler(L, 1, NULL, H);
+  ccpairs_t  P = ccpairs_cons_clean_handler(L, 1, NULL, H);
 
   /* Do something with P here. */
   cce_run_body_handlers(L);
@@ -645,20 +645,20 @@ if (cce_location(L)) @{
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_cons_improper_error_handler (cce_destination_t @var{L}, uintptr_t @var{A}, uintptr_t @var{D}, cce_handler_t * @var{H})
-@deftypefunx ccpair_t ccpair_cons_improper_clean_handler (cce_destination_t @var{L}, uintptr_t @var{A}, uintptr_t @var{D}, cce_handler_t * @var{H})
-Like @cfunc{ccpair_cons_improper}, but initialise an error or cleanup handler to release the memory
-of the pair; the memory will be released with @cfunc{ccpair_free}.
+@deftypefun ccpairs_t ccpairs_cons_improper_error_handler (cce_destination_t @var{L}, uintptr_t @var{A}, uintptr_t @var{D}, cce_handler_t * @var{H})
+@deftypefunx ccpairs_t ccpairs_cons_improper_clean_handler (cce_destination_t @var{L}, uintptr_t @var{A}, uintptr_t @var{D}, cce_handler_t * @var{H})
+Like @cfunc{ccpairs_cons_improper}, but initialise an error or cleanup handler to release the memory
+of the pair; the memory will be released with @cfunc{ccpairs_free}.
 
 @example
 cce_location_t  L[1]
-ccpair_t        P;
+ccpairs_t        P;
 cce_handler_t   P_H[1];
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  P = ccpair_cons_improper_clean_handler(L, 1, 2, P_H);
+  P = ccpairs_cons_improper_clean_handler(L, 1, 2, P_H);
   ...
   cce_run_body_handlers(L);
 @}
@@ -666,10 +666,10 @@ if (cce_location(L)) @{
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_cons_node_error_handler (cce_destination_t @var{L}, ccpair_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
-@deftypefunx ccpair_t ccpair_cons_node_clean_handler (cce_destination_t @var{L}, ccpair_t @var{A}, ccpair_t @var{D}, cce_handler_t * @var{H})
-Like @cfunc{ccpair_cons_node}, but initialise an error or cleanup handler to release the memory of
-the pair; the memory will be released with @cfunc{ccpair_free}.
+@deftypefun ccpairs_t ccpairs_cons_node_error_handler (cce_destination_t @var{L}, ccpairs_t @var{A}, ccpairs_t @var{D}, cce_handler_t * @var{H})
+@deftypefunx ccpairs_t ccpairs_cons_node_clean_handler (cce_destination_t @var{L}, ccpairs_t @var{A}, ccpairs_t @var{D}, cce_handler_t * @var{H})
+Like @cfunc{ccpairs_cons_node}, but initialise an error or cleanup handler to release the memory of
+the pair; the memory will be released with @cfunc{ccpairs_free}.
 
 @example
 cce_location_t  L[1]
@@ -678,10 +678,10 @@ cce_handler_t   P_H[1], Q_H[1];
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  ccpair_t      P, Q;
+  ccpairs_t      P, Q;
 
-  Q = ccpair_cons_error_handler(L, 1, NULL, Q_H);
-  P = ccpair_cons_node_clean_handler(L, Q, NULL, P_H);
+  Q = ccpairs_cons_error_handler(L, 1, NULL, Q_H);
+  P = ccpairs_cons_node_clean_handler(L, Q, NULL, P_H);
 
   ...
   cce_run_body_handlers(L);
@@ -704,7 +704,7 @@ if (cce_location(L)) @{
 @subsection Plain list constructors
 
 
-@deftypefun ccpair_t ccpair_list (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D})
+@deftypefun ccpairs_t ccpairs_list (cce_destination_t @var{L}, ccpairs_item_constructor_t * @var{C}, ccpairs_item_destructor_t * @var{D})
 Build a new list filling it with items and return a pointer to the first pair.  If an error occurs:
 raise an exception by performing a non--local exit to @var{L}.
 
@@ -725,9 +725,9 @@ already built are released using the destructor @var{D}.
 @subsection Guarded list constructors
 
 
-@deftypefun ccpair_t ccpair_list_clean_handler (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D}, ccpair_list_item_handler_t * @var{H})
-@deftypefunx ccpair_t ccpair_list_error_handler (cce_destination_t @var{L}, ccpair_item_constructor_t * @var{C}, ccpair_item_destructor_t * @var{D}, ccpair_list_item_handler_t * @var{H})
-Like @cfunc{ccpair_list}, but, when successful, register the resulting list into the cleanup or
+@deftypefun ccpairs_t ccpairs_list_clean_handler (cce_destination_t @var{L}, ccpairs_item_constructor_t * @var{C}, ccpairs_item_destructor_t * @var{D}, ccpairs_list_item_handler_t * @var{H})
+@deftypefunx ccpairs_t ccpairs_list_error_handler (cce_destination_t @var{L}, ccpairs_item_constructor_t * @var{C}, ccpairs_item_destructor_t * @var{D}, ccpairs_list_item_handler_t * @var{H})
+Like @cfunc{ccpairs_list}, but, when successful, register the resulting list into the cleanup or
 error handler @var{H}.
 @end deftypefun
 
@@ -737,11 +737,11 @@ item payload:
 
 @example
 typedef struct data_t @{
-  ccpair_idx_t  N;
+  ccpairs_idx_t  N;
 @} data_t;
 
 data_t *
-data_constructor (cce_destination_t L, ccpair_idx_t N)
+data_constructor (cce_destination_t L, ccpairs_idx_t N)
 @{
   data_t * item = cce_sys_malloc(sizeof(data_t));
   item->N = N;
@@ -756,12 +756,12 @@ data_destructor (data_t * data)
 @end example
 
 @noindent
-we can put @math{3} such data values into a list built with @cfunc{ccpair_list} using the following
+we can put @math{3} such data values into a list built with @cfunc{ccpairs_list} using the following
 constructor and destructor:
 
 @example
 uintptr_t
-item_constructor (cce_destination_t L, ccpair_idx_t idx)
+item_constructor (cce_destination_t L, ccpairs_idx_t idx)
 @{
   switch (idx) @{
   case 0:
@@ -784,18 +784,18 @@ item_destructor (uintptr_t item)
 @end example
 
 @noindent
-we can build the list using @cfunc{ccpair_list} with the following code:
+we can build the list using @cfunc{ccpairs_list} with the following code:
 
 @example
 cce_location_t                L[1];
-ccpair_t                      P;
-ccpair_list_item_handler_t    P_H[1];
+ccpairs_t                      P;
+ccpairs_list_item_handler_t    P_H[1];
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  P = ccpair_list(L, item_constructor, item_destructor);
-  ccpair_clean_handler_list_item_init(L, P_H, P,
+  P = ccpairs_list(L, item_constructor, item_destructor);
+  ccpairs_clean_handler_list_item_init(L, P_H, P,
      item_destructor);
   ...
   cce_run_body_handlers(L);
@@ -803,17 +803,17 @@ if (cce_location(L)) @{
 @end example
 
 @noindent
-we can build the list using @cfunc{ccpair_list_clean_handler} with the following code:
+we can build the list using @cfunc{ccpairs_list_clean_handler} with the following code:
 
 @example
 cce_location_t                L[1];
-ccpair_t                      P;
-ccpair_list_item_handler_t    P_H[1];
+ccpairs_t                      P;
+ccpairs_list_item_handler_t    P_H[1];
 
 if (cce_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  P = ccpair_list_clean_handler(L, item_constructor,
+  P = ccpairs_list_clean_handler(L, item_constructor,
      item_destructor, P_H);
   ...
   cce_run_body_handlers(L);
@@ -825,26 +825,26 @@ if (cce_location(L)) @{
 @chapter Inspecting lists
 
 
-@deftypefun ccpair_len_t ccpair_length (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_len_t ccpairs_length (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the number of pairs in the list beginning with @var{P}.  If @var{P} is @cnull{}: return zero.
 If the operand is a circular list: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun bool ccpair_is_empty (ccpair_t @var{P})
-@deftypefunx bool ccpair_is_null (ccpair_t @var{P})
+@deftypefun bool ccpairs_is_empty (ccpairs_t @var{P})
+@deftypefunx bool ccpairs_is_null (ccpairs_t @var{P})
 Return @ctrue{} if @var{P} represents the empty list, that is: if @var{P} is @cnull{}.  Otherwise
 return @cfalse{}.
 @end deftypefun
 
 
-@deftypefun bool ccpair_is_last (ccpair_t @var{P})
+@deftypefun bool ccpairs_is_last (ccpairs_t @var{P})
 Return @ctrue{} if @var{P} is the last pair in its list, that is: if @var{P} is not @cnull{} and the
 second item in @var{P} is @cnull{}.  Otherwise return @cfalse{}.
 @end deftypefun
 
 
-@deftypefun bool ccpair_is_circular (ccpair_t @var{P})
+@deftypefun bool ccpairs_is_circular (ccpairs_t @var{P})
 Return @ctrue{} if the list referenced by @var{P} is circular; otherwise return @cfalse{}.
 @end deftypefun
 
@@ -863,14 +863,14 @@ Return @ctrue{} if the list referenced by @var{P} is circular; otherwise return 
 @section Accessing list pairs
 
 
-@deftypefun ccpair_t ccpair_ref_pair (cce_location_t @var{L}, ccpair_t @var{P}, ccpair_idx_t @var{idx})
+@deftypefun ccpairs_t ccpairs_ref_pair (cce_location_t @var{L}, ccpairs_t @var{P}, ccpairs_idx_t @var{idx})
 Return a pointer to the pair at the zero--based index @var{idx} in the list whose first pair is
 @var{P}.  If the list length is less than or equal to @var{idx}: raise an exception by performing a
 non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_last_pair (cce_location_t * @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_last_pair (cce_location_t * @var{L}, ccpairs_t @var{P})
 Return a pointer to the last pair in the list @var{P}.  If @var{P} is @cnull{}: raise an exception
 by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -880,62 +880,62 @@ by performing a non--local exit to @var{L}.
 @subsubheading Numbered accessors
 
 
-@deftypefun ccpair_t ccpair_first_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_first_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the first pair in the list whose first pair is @var{P} (that is: return @var{P} itself).  If
 the list is empty (that is: @var{P} is @cnull{}): raise an exception by performing a non--local exit
 to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_second_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_second_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the second pair in the list whose first pair is @var{P}.  If the list has less than two
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_third_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_third_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the third pair in the list whose first pair is @var{P}.  If the list has less than three
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_fourth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_fourth_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the fourth pair in the list whose first pair is @var{P}.  If the list has less than four
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_fifth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_fifth_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the fifth pair in the list whose first pair is @var{P}.  If the list has less than five
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_sixth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_sixth_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the sixth pair in the list whose first pair is @var{P}.  If the list has less than six pairs:
 raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_seventh_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_seventh_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the seventh pair in the list whose first pair is @var{P}.  If the list has less than seven
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_eighth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_eighth_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the eighth pair in the list whose first pair is @var{P}.  If the list has less than eigth
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_nineth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_nineth_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the nineth pair in the list whose first pair is @var{P}.  If the list has less than nine
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun ccpair_t ccpair_tenth_pair (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun ccpairs_t ccpairs_tenth_pair (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the tenth pair in the list whose first pair is @var{P}.  If the list has less than ten pairs:
 raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -945,14 +945,14 @@ raise an exception by performing a non--local exit to @var{L}.
 @section Accessing list items
 
 
-@deftypefun uintptr_t ccpair_ref (cce_location_t @var{L}, ccpair_t @var{P}, ccpair_idx_t @var{idx})
+@deftypefun uintptr_t ccpairs_ref (cce_location_t @var{L}, ccpairs_t @var{P}, ccpairs_idx_t @var{idx})
 Return the item at the zero--based index @var{idx} in the list whose first pair is @var{P}.  If the
 list length is less than or equal to @var{idx}: raise an exception by performing a non--local exit
 to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_pair (cce_location_t * @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_pair (cce_location_t * @var{L}, ccpairs_t @var{P})
 Return the item of the last pair in the list @var{P}.  If @var{P} is @cnull{}: raise an exception by
 performing a non--local exit to @var{L}.
 @end deftypefun
@@ -962,61 +962,61 @@ performing a non--local exit to @var{L}.
 @subsubheading Numbered accessors
 
 
-@deftypefun uintptr_t ccpair_first (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_first (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the first item in the list whose first pair is @var{P}.  If the list is empty (that is:
 @var{P} is @cnull{}): raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_second (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_second (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the second item in the list whose first pair is @var{P}.  If the list has less than two
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_third (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_third (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the third item in the list whose first pair is @var{P}.  If the list has less than three
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_fourth (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_fourth (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the fourth item in the list whose first pair is @var{P}.  If the list has less than four
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_fifth (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_fifth (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the fifth item in the list whose first pair is @var{P}.  If the list has less than five
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_sixth (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_sixth (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the sixth item in the list whose first pair is @var{P}.  If the list has less than six pairs:
 raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_seventh (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_seventh (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the seventh item in the list whose first pair is @var{P}.  If the list has less than seven
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_eighth (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_eighth (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the eighth item in the list whose first pair is @var{P}.  If the list has less than eigth
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_nineth (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_nineth (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the nineth item in the list whose first pair is @var{P}.  If the list has less than nine
 pairs: raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
 
 
-@deftypefun uintptr_t ccpair_tenth (cce_location_t @var{L}, ccpair_t @var{P})
+@deftypefun uintptr_t ccpairs_tenth (cce_location_t @var{L}, ccpairs_t @var{P})
 Return the tenth item in the list whose first pair is @var{P}.  If the list has less than ten pairs:
 raise an exception by performing a non--local exit to @var{L}.
 @end deftypefun
@@ -1061,7 +1061,7 @@ if (cce_location(L)) @{
 @cindex Exceptional conditions, not enough items in list
 
 
-@deftp {Struct Typedef} ccpair_descriptor_not_enough_items_t
+@deftp {Struct Typedef} ccpairs_descriptor_not_enough_items_t
 Type of data structure representing the exceptional--condition descriptor for the error: not enough
 items in list.  It has the following public fields:
 
@@ -1075,7 +1075,7 @@ The parent of this type descriptor is the one referenced by @code{cce_descriptor
 @end deftp
 
 
-@deftp {Struct Typedef} ccpair_condition_not_enough_items_t
+@deftp {Struct Typedef} ccpairs_condition_not_enough_items_t
 Type of data structure representing the exceptional--condition object for the error: not enough
 items in list.  It has the following public fields:
 
@@ -1086,18 +1086,18 @@ The condition object's base values.
 @end deftp
 
 
-@deftypevr {Dynamic Constant} {const ccpair_descriptor_not_enough_items_t * const} ccpair_descriptor_not_enough_items
+@deftypevr {Dynamic Constant} {const ccpairs_descriptor_not_enough_items_t * const} ccpairs_descriptor_not_enough_items
 Pointer to a statically allocated exceptional condition descriptor.
 @end deftypevr
 
 
-@deftypefun {cce_condition_t const *} ccpair_condition_new_not_enough_items (void)
+@deftypefun {cce_condition_t const *} ccpairs_condition_new_not_enough_items (void)
 Return a pointer to exceptional condition object.
 @end deftypefun
 
 
-@deftypefun bool ccpair_condition_is_not_enough_items (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} if of type @code{ccpair_descriptor_not_enough_items}; otherwise return
+@deftypefun bool ccpairs_condition_is_not_enough_items (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} if of type @code{ccpairs_descriptor_not_enough_items}; otherwise return
 @cfalse{}.
 @end deftypefun
 
@@ -1108,9 +1108,9 @@ To catch this exceptional condition we can do:
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
-  if (ccpair_condition_is_not_enough_items(cce_condition(L))) @{
-    ccpair_condition_not_enough_items_t * C = \
-      (ccpair_condition_not_enough_items_t *) cce_condition(L);
+  if (ccpairs_condition_is_not_enough_items(cce_condition(L))) @{
+    ccpairs_condition_not_enough_items_t * C = \
+      (ccpairs_condition_not_enough_items_t *) cce_condition(L);
     do_something_with(C);
   @}
   cce_run_catch_handlers_final(L);
@@ -1129,7 +1129,7 @@ if (cce_location(L)) @{
 @cindex Exceptional conditions, Invalid empty list as operand
 
 
-@deftp {Struct Typedef} ccpair_descriptor_empty_list_t
+@deftp {Struct Typedef} ccpairs_descriptor_empty_list_t
 Type of data structure representing the exceptional--condition descriptor for the error: invalid
 empty list as operand.  It has the following public fields:
 
@@ -1139,11 +1139,11 @@ The condition descriptor's base values.
 @end table
 
 The parent of this type descriptor is the one referenced by
-@code{ccpair_descriptor_not_enough_items}.
+@code{ccpairs_descriptor_not_enough_items}.
 @end deftp
 
 
-@deftp {Struct Typedef} ccpair_condition_empty_list_t
+@deftp {Struct Typedef} ccpairs_condition_empty_list_t
 Type of data structure representing the exceptional--condition object for the error: invalid empty
 list as operand.  It has the following public fields:
 
@@ -1154,18 +1154,18 @@ The condition object's base values.
 @end deftp
 
 
-@deftypevr {Dynamic Constant} {const ccpair_descriptor_empty_list_t * const} ccpair_descriptor_empty_list
+@deftypevr {Dynamic Constant} {const ccpairs_descriptor_empty_list_t * const} ccpairs_descriptor_empty_list
 Pointer to a statically allocated exceptional condition descriptor.
 @end deftypevr
 
 
-@deftypefun {cce_condition_t const *} ccpair_condition_new_empty_list (void)
+@deftypefun {cce_condition_t const *} ccpairs_condition_new_empty_list (void)
 Return a pointer to exceptional condition object.
 @end deftypefun
 
 
-@deftypefun bool ccpair_condition_is_empty_list (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} if of type @code{ccpair_descriptor_empty_list}; otherwise return
+@deftypefun bool ccpairs_condition_is_empty_list (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} if of type @code{ccpairs_descriptor_empty_list}; otherwise return
 @cfalse{}.
 @end deftypefun
 
@@ -1176,9 +1176,9 @@ To catch this exceptional condition we can do:
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
-  if (ccpair_condition_is_empty_list(cce_condition(L))) @{
-    ccpair_condition_empty_list_t * C = \
-      (ccpair_condition_empty_list_t *) cce_condition(L);
+  if (ccpairs_condition_is_empty_list(cce_condition(L))) @{
+    ccpairs_condition_empty_list_t * C = \
+      (ccpairs_condition_empty_list_t *) cce_condition(L);
     do_something_with(C);
   @}
   cce_run_catch_handlers_final(L);
@@ -1197,7 +1197,7 @@ if (cce_location(L)) @{
 @cindex Exceptional conditions, Invalid circular list as operand
 
 
-@deftp {Struct Typedef} ccpair_descriptor_circular_list_t
+@deftp {Struct Typedef} ccpairs_descriptor_circular_list_t
 Type of data structure representing the exceptional--condition descriptor for the error: invalid
 circular list as operand.  It has the following public fields:
 
@@ -1211,7 +1211,7 @@ The parent of this type descriptor is the one referenced by @code{cce_descriptor
 @end deftp
 
 
-@deftp {Struct Typedef} ccpair_condition_circular_list_t
+@deftp {Struct Typedef} ccpairs_condition_circular_list_t
 Type of data structure representing the exceptional--condition object for the error: invalid
 circular list as operand.  It has the following public fields:
 
@@ -1222,18 +1222,18 @@ The condition object's base values.
 @end deftp
 
 
-@deftypevr {Dynamic Constant} {const ccpair_descriptor_circular_list_t * const} ccpair_descriptor_circular_list
+@deftypevr {Dynamic Constant} {const ccpairs_descriptor_circular_list_t * const} ccpairs_descriptor_circular_list
 Pointer to a statically allocated exceptional condition descriptor.
 @end deftypevr
 
 
-@deftypefun {cce_condition_t const *} ccpair_condition_new_circular_list (void)
+@deftypefun {cce_condition_t const *} ccpairs_condition_new_circular_list (void)
 Return a pointer to exceptional condition object.
 @end deftypefun
 
 
-@deftypefun bool ccpair_condition_is_circular_list (cce_condition_t const * @var{C})
-Return @ctrue{} if @var{C} if of type @code{ccpair_descriptor_circular_list}; otherwise return
+@deftypefun bool ccpairs_condition_is_circular_list (cce_condition_t const * @var{C})
+Return @ctrue{} if @var{C} if of type @code{ccpairs_descriptor_circular_list}; otherwise return
 @cfalse{}.
 @end deftypefun
 
@@ -1244,9 +1244,9 @@ To catch this exceptional condition we can do:
 cce_location_t        L[1];
 
 if (cce_location(L)) @{
-  if (ccpair_condition_is_circular_list(cce_condition(L))) @{
-    ccpair_condition_circular_list_t * C = \
-      (ccpair_condition_circular_list_t *) cce_condition(L);
+  if (ccpairs_condition_is_circular_list(cce_condition(L))) @{
+    ccpairs_condition_circular_list_t * C = \
+      (ccpairs_condition_circular_list_t *) cce_condition(L);
     do_something_with(C);
   @}
   cce_run_catch_handlers_final(L);
@@ -1274,17 +1274,17 @@ if (cce_location(L)) @{
 @section Handler for pair release
 
 
-We can handle pairs that must be released with the function @cfunc{ccpair_free} as follows:
+We can handle pairs that must be released with the function @cfunc{ccpairs_free} as follows:
 
 @example
 cce_location_t  L[1];
 cce_handler_t   H[1];
 
-if (ccpair_location(L)) @{
+if (ccpairs_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  ccpair_t P = ccpair_cons(1, NULL);
-  ccpair_clean_handler_pair_init(L, H, P);
+  ccpairs_t P = ccpairs_cons(1, NULL);
+  ccpairs_clean_handler_pair_init(L, H, P);
   /* Do something with P here. */
   cce_run_body_handlers(L);
 @}
@@ -1293,11 +1293,11 @@ if (ccpair_location(L)) @{
 The following symbols are defined in the header file @file{ccpair.h}.
 
 
-@deftypefun void ccpair_clean_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
-@deftypefunx void ccpair_error_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
+@deftypefun void ccpairs_clean_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
+@deftypefunx void ccpairs_error_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the memory allocated for the pair referenced by @var{P} using the function
-@cfunc{ccpair_free}.
+@cfunc{ccpairs_free}.
 @end deftypefun
 
 @c page
@@ -1305,17 +1305,17 @@ release the memory allocated for the pair referenced by @var{P} using the functi
 @section Handler for list release
 
 
-We can handle lists that must be released with the function @cfunc{ccpair_free_list} as follows:
+We can handle lists that must be released with the function @cfunc{ccpairs_free_list} as follows:
 
 @example
 cce_location_t  L[1];
 cce_handler_t   H[1];
 
-if (ccpair_location(L)) @{
+if (ccpairs_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  ccpair_t P = ccpair_cons(1, ccpair_cons(2, NULL));
-  ccpair_clean_handler_list_init(L, H, P);
+  ccpairs_t P = ccpairs_cons(1, ccpairs_cons(2, NULL));
+  ccpairs_clean_handler_list_init(L, H, P);
   /* Do something with P here. */
   cce_run_body_handlers(L);
 @}
@@ -1324,11 +1324,11 @@ if (ccpair_location(L)) @{
 The following symbols are defined in the header file @file{ccpair.h}.
 
 
-@deftypefun void ccpair_clean_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
-@deftypefunx void ccpair_error_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpair_t @var{P})
+@deftypefun void ccpairs_clean_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
+@deftypefunx void ccpairs_error_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the memory allocated for the list referenced by @var{P} using the function
-@cfunc{ccpair_free_list}.
+@cfunc{ccpairs_free_list}.
 @end deftypefun
 
 @c page
@@ -1363,21 +1363,21 @@ main (void)
 @{
   cce_location_t        L[1];
   cce_handler_t         pair_H[1];
-  ccpair_item_handler_t item_H[1];
+  ccpairs_item_handler_t item_H[1];
 
-  if (ccpair_location(L)) @{
+  if (ccpairs_location(L)) @{
     cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   @} else @{
     uintptr_t   item;
-    ccpair_t    P;
+    ccpairs_t    P;
 
     item = item_constructor(L);
-    ccpair_clean_handler_item_init(L, item_H, item,
+    ccpairs_clean_handler_item_init(L, item_H, item,
        item_destructor);
 
-    P = ccpair_cons(item, NULL);
-    ccpair_clean_handler_pair_init(L, pair_H, P);
+    P = ccpairs_cons(item, NULL);
+    ccpairs_clean_handler_pair_init(L, pair_H, P);
 
     /* Do something with P here. */
     cce_run_body_handlers(L);
@@ -1388,13 +1388,13 @@ main (void)
 The following symbols are defined in the header file @file{ccpair.h}.
 
 
-@deftp {Struct Typedef} ccpair_item_handler_t
+@deftp {Struct Typedef} ccpairs_item_handler_t
 Type of data structures used has exception handlers for items.
 @end deftp
 
 
-@deftypefun void ccpair_clean_handler_item_init (cce_location_t * @var{L}, ccpair_item_handler_t * @var{H}, uintptr_t @var{item}, ccpair_item_destructor_t * @var{D})
-@deftypefunx void ccpair_error_handler_item_init (cce_location_t * @var{L}, ccpair_item_handler_t * @var{H}, uintptr_t @var{item}, ccpair_item_destructor_t * @var{D})
+@deftypefun void ccpairs_clean_handler_item_init (cce_location_t * @var{L}, ccpairs_item_handler_t * @var{H}, uintptr_t @var{item}, ccpairs_item_destructor_t * @var{D})
+@deftypefunx void ccpairs_error_handler_item_init (cce_location_t * @var{L}, ccpairs_item_handler_t * @var{H}, uintptr_t @var{item}, ccpairs_item_destructor_t * @var{D})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
 release the resources associated to @var{item} using the supplied destructor function @var{D}.
 @end deftypefun
@@ -1432,26 +1432,26 @@ item_destructor (uintptr_t item)
 void
 main (void)
 @{
-  ccpair_t              P;
+  ccpairs_t              P;
 
   /* Build the item and the pair.  Upon exiting this block: we
      release the item only if an error has occurred. */
   @{
     cce_location_t              L[1];
     cce_handler_t               pair_H[1];
-    ccpair_item_handler_t       item_H[1];
+    ccpairs_item_handler_t       item_H[1];
 
-    if (ccpair_location(L)) @{
+    if (ccpairs_location(L)) @{
       cce_run_catch_handlers_final(L);
       exit(EXIT_FAILURE);
     @} else @{
       uintptr_t   item;
 
       item = item_constructor(L);
-      ccpair_error_handler_item_init(L, item_H, item,
+      ccpairs_error_handler_item_init(L, item_H, item,
          item_destructor);
 
-      P = ccpair_cons(item, NULL);
+      P = ccpairs_cons(item, NULL);
 
       cce_run_body_handlers(L);
     @}
@@ -1461,13 +1461,13 @@ main (void)
      and the item. */
   @{
     cce_location_t              L[1];
-    ccpair_pair_item_handler_t  pair_H[1];
+    ccpairs_pair_item_handler_t  pair_H[1];
 
-    if (ccpair_location(L)) @{
+    if (ccpairs_location(L)) @{
       cce_run_catch_handlers_final(L);
       exit(EXIT_FAILURE);
     @} else @{
-      ccpair_clean_handler_pair_item_init(L, pair_H, P);
+      ccpairs_clean_handler_pair_item_init(L, pair_H, P);
       /* Do something with P here. */
       cce_run_body_handlers(L);
     @}
@@ -1478,15 +1478,15 @@ main (void)
 The following symbols are defined in the header file @file{ccpair.h}.
 
 
-@deftp {Struct Typedef} ccpair_pair_item_handler_t
+@deftp {Struct Typedef} ccpairs_pair_item_handler_t
 Type of data structures used has exception handlers for pairs with items.
 @end deftp
 
 
-@deftypefun void ccpair_clean_handler_pair_item_init (cce_location_t * @var{L}, ccpair_pair_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
-@deftypefunx void ccpair_error_handler_pair_item_init (cce_location_t * @var{L}, ccpair_pair_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
+@deftypefun void ccpairs_clean_handler_pair_item_init (cce_location_t * @var{L}, ccpairs_pair_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
+@deftypefunx void ccpairs_error_handler_pair_item_init (cce_location_t * @var{L}, ccpairs_pair_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the pair @var{P} using @cfunc{ccpair_free}; it will also release the resources associated to
+release the pair @var{P} using @cfunc{ccpairs_free}; it will also release the resources associated to
 the item, in the pair's first word, using the supplied destructor function @var{D}.
 @end deftypefun
 
@@ -1521,7 +1521,7 @@ item_destructor (uintptr_t item)
   /* Release an item. */
 @}
 
-ccpair_t
+ccpairs_t
 make_list_with_items (cce_destination_t upper_L)
 /* Build the items and the list.  Upon exiting this block: we
    release the items and the second pair only if an error has
@@ -1529,27 +1529,27 @@ make_list_with_items (cce_destination_t upper_L)
 @{
   cce_location_t        L[1];
   cce_handler_t         P_H[1], Q_H[1];
-  ccpair_item_handler_t item_P_H[1], item_Q_H[1];
-  ccpair_t              head;
+  ccpairs_item_handler_t item_P_H[1], item_Q_H[1];
+  ccpairs_t              head;
 
-  if (ccpair_location(L)) @{
+  if (ccpairs_location(L)) @{
     cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
-    ccpair_t          P, Q;
+    ccpairs_t          P, Q;
     uintptr_t         item_P, item_Q;
 
     item_P = item_constructor(L);
-    ccpair_error_handler_item_init(L, item_P_H, item_P,
+    ccpairs_error_handler_item_init(L, item_P_H, item_P,
        item_destructor);
 
     item_Q = item_constructor(L);
-    ccpair_error_handler_item_init(L, item_Q_H, item_Q,
+    ccpairs_error_handler_item_init(L, item_Q_H, item_Q,
        item_destructor);
 
-    Q = ccpair_cons(item_Q, NULL);
-    ccpair_error_handler_pair_init(L, Q_H, Q);
+    Q = ccpairs_cons(item_Q, NULL);
+    ccpairs_error_handler_pair_init(L, Q_H, Q);
 
-    P = ccpair_cons(item_P, Q);
+    P = ccpairs_cons(item_P, Q);
 
     /* The pair P is the head of the list. */
     head = P;
@@ -1564,16 +1564,16 @@ void
 main (void)
 @{
   cce_location_t              L[1];
-  ccpair_list_item_handler_t  head_H[1];
+  ccpairs_list_item_handler_t  head_H[1];
 
   /* Now use the list and finally release both the list
      and the items. */
-  if (ccpair_location(L)) @{
+  if (ccpairs_location(L)) @{
     cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   @} else @{
-    ccpair_t    head = make_list_with_items(L);
-    ccpair_clean_handler_list_item_init(L, head_H, head,
+    ccpairs_t    head = make_list_with_items(L);
+    ccpairs_clean_handler_list_item_init(L, head_H, head,
        item_destructor);
     /* do something with HEAD here */
     cce_run_body_handlers(L);
@@ -1585,10 +1585,10 @@ Here is the same example written with constructors that know about handlers:
 
 @example
 uintptr_t
-item_constructor (cce_destination_t L, ccpair_item_handler_t * H)
+item_constructor (cce_destination_t L, ccpairs_item_handler_t * H)
 @{
   uintptr_t     item = make_item(L);
-  ccpair_error_handler_item_init(L, H, item, item_destructor);
+  ccpairs_error_handler_item_init(L, H, item, item_destructor);
   return item;
 @}
 
@@ -1598,31 +1598,31 @@ item_destructor (uintptr_t item)
   /* Release an item. */
 @}
 
-ccpair_t
+ccpairs_t
 make_list_with_clean (cce_destination_t upper_L,
-                        ccpair_list_item_handler_t * head_H)
+                        ccpairs_list_item_handler_t * head_H)
 /* Build the items and the list.  Upon exiting this block: we
    release the items and the second pair only if an error has
    occurred. */
 @{
   cce_location_t              L[1];
   cce_handler_t               P_H[1], Q_H[1];
-  ccpair_item_handler_t       item_P_H[1], item_Q_H[1];
+  ccpairs_item_handler_t       item_P_H[1], item_Q_H[1];
 
-  if (ccpair_location(L)) @{
+  if (ccpairs_location(L)) @{
     cce_run_catch_handlers_raise(L, upper_L);
   @} else @{
     uintptr_t item_P = item_constructor(L, item_P_H);
     uintptr_t item_Q = item_constructor(L, item_Q_H);
-    ccpair_t  Q = ccpair_cons_error_handler(item_Q, NULL, Q_H);
-    ccpair_t  P = ccpair_cons(item_P, Q);
+    ccpairs_t  Q = ccpairs_cons_error_handler(item_Q, NULL, Q_H);
+    ccpairs_t  P = ccpairs_cons(item_P, Q);
 
     /* The pair P is the head of the list. */
     head = P;
     cce_run_body_handlers(L);
   @}
 
-  ccpair_clean_handler_list_item_init(upper_L, head_H, head,
+  ccpairs_clean_handler_list_item_init(upper_L, head_H, head,
      item_destructor);
   return head;
 @}
@@ -1631,15 +1631,15 @@ void
 main (void)
 @{
   cce_location_t              L[1];
-  ccpair_list_item_handler_t  head_H[1];
+  ccpairs_list_item_handler_t  head_H[1];
 
   /* Now use the list and finally release both the list
      and the items. */
-  if (ccpair_location(L)) @{
+  if (ccpairs_location(L)) @{
     cce_run_catch_handlers_final(L);
     exit(EXIT_FAILURE);
   @} else @{
-    ccpair_t    head = make_list_with_clean(L, head_H);
+    ccpairs_t    head = make_list_with_clean(L, head_H);
     /* do something with HEAD here */
     cce_run_body_handlers(L);
   @}
@@ -1649,16 +1649,17 @@ main (void)
 The following symbols are defined in the header file @file{ccpair.h}.
 
 
-@deftp {Struct Typedef} ccpair_list_item_handler_t
+@deftp {Struct Typedef} ccpairs_list_item_handler_t
 Type of data structures used has exception handlers for lists with items.
 @end deftp
 
 
-@deftypefun void ccpair_clean_handler_list_item_init (cce_location_t * @var{L}, ccpair_list_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
-@deftypefunx void ccpair_error_handler_list_item_init (cce_location_t * @var{L}, ccpair_list_item_handler_t * @var{H}, ccpair_t @var{P}, ccpair_item_destructor_t * @var{D})
+@deftypefun void ccpairs_clean_handler_list_item_init (cce_location_t * @var{L}, ccpairs_list_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
+@deftypefunx void ccpairs_error_handler_list_item_init (cce_location_t * @var{L}, ccpairs_list_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
 Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release every pair in the list @var{P} using @cfunc{ccpair_free}; it will also release the resources
-associated to the items, in the pairs' first words, using the supplied destructor function @var{D}.
+release every pair in the list @var{P} using @cfunc{ccpairs_free}; it will also release the
+resources associated to the items, in the pairs' first words, using the supplied destructor function
+@var{D}.
 @end deftypefun
 
 @c page

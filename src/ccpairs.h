@@ -23,8 +23,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CCPAIR_H
-#define CCPAIR_H 1
+#ifndef CCPAIRS_H
+#define CCPAIRS_H 1
 
 
 /** --------------------------------------------------------------------
@@ -35,17 +35,17 @@
 extern "C" {
 #endif
 
-/* The  macro  CCPAIR_UNUSED  indicates  that a  function,  function
-   argument or variable may potentially be unused. Usage examples:
+/* The macro CCPAIRS_UNUSED indicates that a function, function argument
+   or variable may potentially be unused. Usage examples:
 
-   static int unused_function (char arg) CCPAIR_UNUSED;
-   int foo (char unused_argument CCPAIR_UNUSED);
-   int unused_variable CCPAIR_UNUSED;
+   static int unused_function (char arg) CCPAIRS_UNUSED;
+   int foo (char unused_argument CCPAIRS_UNUSED);
+   int unused_variable CCPAIRS_UNUSED;
 */
 #ifdef __GNUC__
-#  define CCPAIR_UNUSED		__attribute__((unused))
+#  define CCPAIRS_UNUSED		__attribute__((unused))
 #else
-#  define CCPAIR_UNUSED		/* empty */
+#  define CCPAIRS_UNUSED		/* empty */
 #endif
 
 #ifndef __GNUC__
@@ -57,25 +57,25 @@ extern "C" {
 #if defined _WIN32 || defined __CYGWIN__
 #  ifdef BUILDING_DLL
 #    ifdef __GNUC__
-#      define ccpair_decl		__attribute__((dllexport)) extern
+#      define ccpairs_decl		__attribute__((dllexport)) extern
 #    else
-#      define ccpair_decl		__declspec(dllexport) extern
+#      define ccpairs_decl		__declspec(dllexport) extern
 #    endif
 #  else
 #    ifdef __GNUC__
-#      define ccpair_decl		__attribute__((dllimport)) extern
+#      define ccpairs_decl		__attribute__((dllimport)) extern
 #    else
-#      define ccpair_decl		__declspec(dllimport) extern
+#      define ccpairs_decl		__declspec(dllimport) extern
 #    endif
 #  endif
-#  define ccpair_private_decl	extern
+#  define ccpairs_private_decl	extern
 #else
 #  if __GNUC__ >= 4
-#    define ccpair_decl		__attribute__((visibility ("default"))) extern
-#    define ccpair_private_decl	__attribute__((visibility ("hidden")))  extern
+#    define ccpairs_decl		__attribute__((visibility ("default"))) extern
+#    define ccpairs_private_decl	__attribute__((visibility ("hidden")))  extern
 #  else
-#    define ccpair_decl		extern
-#    define ccpair_private_decl	extern
+#    define ccpairs_decl		extern
+#    define ccpairs_private_decl	extern
 #  endif
 #endif
 
@@ -95,50 +95,50 @@ extern "C" {
  ** ----------------------------------------------------------------- */
 
 /* Pointer cast macro helper. */
-#define CCPAIR_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
+#define CCPAIRS_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
 
 
 /** --------------------------------------------------------------------
  ** Forward declarations.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpair_stru_t		ccpair_stru_t;
-typedef ccpair_stru_t *			ccpair_t;
+typedef struct ccpairs_stru_t		ccpairs_stru_t;
+typedef ccpairs_stru_t *			ccpairs_t;
 
-typedef size_t				ccpair_idx_t;
-typedef size_t				ccpair_len_t;
+typedef size_t				ccpairs_idx_t;
+typedef size_t				ccpairs_len_t;
 
-typedef uintptr_t ccpair_item_constructor_t (cce_location_t * L, ccpair_idx_t idx);
-typedef void      ccpair_item_destructor_t  (uintptr_t item);
+typedef uintptr_t ccpairs_item_constructor_t (cce_location_t * L, ccpairs_idx_t idx);
+typedef void      ccpairs_item_destructor_t  (uintptr_t item);
 
 /* ------------------------------------------------------------------ */
 
-typedef struct ccpair_descriptor_base_t			ccpair_descriptor_base_t;
-typedef struct ccpair_descriptor_not_enough_items_t	ccpair_descriptor_not_enough_items_t;
-typedef struct ccpair_descriptor_empty_list_t		ccpair_descriptor_empty_list_t;
-typedef struct ccpair_descriptor_circular_list_t	ccpair_descriptor_circular_list_t;
+typedef struct ccpairs_descriptor_base_t			ccpairs_descriptor_base_t;
+typedef struct ccpairs_descriptor_not_enough_items_t	ccpairs_descriptor_not_enough_items_t;
+typedef struct ccpairs_descriptor_empty_list_t		ccpairs_descriptor_empty_list_t;
+typedef struct ccpairs_descriptor_circular_list_t	ccpairs_descriptor_circular_list_t;
 
-typedef struct ccpair_condition_base_t			ccpair_condition_base_t;
-typedef struct ccpair_condition_not_enough_items_t	ccpair_condition_not_enough_items_t;
-typedef struct ccpair_condition_empty_list_t		ccpair_condition_empty_list_t;
-typedef struct ccpair_condition_circular_list_t		ccpair_condition_circular_list_t;
+typedef struct ccpairs_condition_base_t			ccpairs_condition_base_t;
+typedef struct ccpairs_condition_not_enough_items_t	ccpairs_condition_not_enough_items_t;
+typedef struct ccpairs_condition_empty_list_t		ccpairs_condition_empty_list_t;
+typedef struct ccpairs_condition_circular_list_t		ccpairs_condition_circular_list_t;
 
 
 /** --------------------------------------------------------------------
  ** Version functions.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl char const *ccpair_version_string			(void);
-ccpair_decl int		ccpair_version_interface_current	(void);
-ccpair_decl int		ccpair_version_interface_revision	(void);
-ccpair_decl int		ccpair_version_interface_age		(void);
+ccpairs_decl char const *ccpairs_version_string			(void);
+ccpairs_decl int		ccpairs_version_interface_current	(void);
+ccpairs_decl int		ccpairs_version_interface_revision	(void);
+ccpairs_decl int		ccpairs_version_interface_age		(void);
 
 
 /** --------------------------------------------------------------------
  ** Initialisation functions.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl void ccpair_library_init (void)
+ccpairs_decl void ccpairs_library_init (void)
   __attribute__((__constructor__));
 
 
@@ -146,87 +146,87 @@ ccpair_decl void ccpair_library_init (void)
  ** Exceptional-condition object-types.
  ** ----------------------------------------------------------------- */
 
-struct ccpair_descriptor_base_t {
+struct ccpairs_descriptor_base_t {
   cce_descriptor_t	descriptor;
 };
 
-struct ccpair_condition_base_t {
+struct ccpairs_condition_base_t {
   cce_condition_t	condition;
 };
 
-ccpair_decl const ccpair_descriptor_base_t * const ccpair_descriptor_base;
+ccpairs_decl const ccpairs_descriptor_base_t * const ccpairs_descriptor_base;
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
-ccpair_condition_is_base (cce_condition_t const * C)
+ccpairs_condition_is_base (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpair_descriptor_base->descriptor));
+  return cce_is_condition(C, &(ccpairs_descriptor_base->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
 
-struct ccpair_descriptor_not_enough_items_t {
+struct ccpairs_descriptor_not_enough_items_t {
   cce_descriptor_t	descriptor;
 };
 
-struct ccpair_condition_not_enough_items_t {
-  ccpair_condition_base_t	base;
+struct ccpairs_condition_not_enough_items_t {
+  ccpairs_condition_base_t	base;
 };
 
-ccpair_decl const ccpair_descriptor_not_enough_items_t * const ccpair_descriptor_not_enough_items;
+ccpairs_decl const ccpairs_descriptor_not_enough_items_t * const ccpairs_descriptor_not_enough_items;
 
-ccpair_decl cce_condition_t const * ccpair_condition_new_not_enough_items (void)
+ccpairs_decl cce_condition_t const * ccpairs_condition_new_not_enough_items (void)
   __attribute__((__leaf__,__pure__));
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
-ccpair_condition_is_not_enough_items (cce_condition_t const * C)
+ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpair_descriptor_not_enough_items->descriptor));
+  return cce_is_condition(C, &(ccpairs_descriptor_not_enough_items->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
 
-struct ccpair_descriptor_empty_list_t {
+struct ccpairs_descriptor_empty_list_t {
   cce_descriptor_t	descriptor;
 };
 
-struct ccpair_condition_empty_list_t {
-  ccpair_condition_base_t	base;
+struct ccpairs_condition_empty_list_t {
+  ccpairs_condition_base_t	base;
 };
 
-ccpair_decl const ccpair_descriptor_empty_list_t * const ccpair_descriptor_empty_list;
+ccpairs_decl const ccpairs_descriptor_empty_list_t * const ccpairs_descriptor_empty_list;
 
-ccpair_decl cce_condition_t const * ccpair_condition_new_empty_list (void)
+ccpairs_decl cce_condition_t const * ccpairs_condition_new_empty_list (void)
   __attribute__((__leaf__,__pure__));
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
-ccpair_condition_is_empty_list (cce_condition_t const * C)
+ccpairs_condition_is_empty_list (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpair_descriptor_empty_list->descriptor));
+  return cce_is_condition(C, &(ccpairs_descriptor_empty_list->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
 
-struct ccpair_descriptor_circular_list_t {
+struct ccpairs_descriptor_circular_list_t {
   cce_descriptor_t	descriptor;
 };
 
-struct ccpair_condition_circular_list_t {
-  ccpair_condition_base_t	base;
+struct ccpairs_condition_circular_list_t {
+  ccpairs_condition_base_t	base;
 };
 
-ccpair_decl const ccpair_descriptor_circular_list_t * const ccpair_descriptor_circular_list;
+ccpairs_decl const ccpairs_descriptor_circular_list_t * const ccpairs_descriptor_circular_list;
 
-ccpair_decl cce_condition_t const * ccpair_condition_new_circular_list (void)
+ccpairs_decl cce_condition_t const * ccpairs_condition_new_circular_list (void)
   __attribute__((__leaf__,__pure__));
 
 __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
-ccpair_condition_is_circular_list (cce_condition_t const * C)
+ccpairs_condition_is_circular_list (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpair_descriptor_circular_list->descriptor));
+  return cce_is_condition(C, &(ccpairs_descriptor_circular_list->descriptor));
 }
 
 
@@ -234,35 +234,35 @@ ccpair_condition_is_circular_list (cce_condition_t const * C)
  ** Pair structure.
  ** ----------------------------------------------------------------- */
 
-struct ccpair_stru_t {
+struct ccpairs_stru_t {
   uintptr_t	A;
   uintptr_t 	D;
 };
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_car (ccpair_t P)
+ccpairs_car (ccpairs_t P)
 {
   return P->A;
 }
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_cdr (ccpair_t P)
+static inline ccpairs_t
+ccpairs_cdr (ccpairs_t P)
 {
-  return (ccpair_t)(P->D);
+  return (ccpairs_t)(P->D);
 }
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_car_pair (ccpair_t P)
+static inline ccpairs_t
+ccpairs_car_pair (ccpairs_t P)
 {
-  return (ccpair_t)(P->A);
+  return (ccpairs_t)(P->A);
 }
 
 __attribute__((__always_inline__,__pure__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_cdr_value (ccpair_t P)
+ccpairs_cdr_value (ccpairs_t P)
 {
   return P->D;
 }
@@ -272,15 +272,15 @@ ccpair_cdr_value (ccpair_t P)
  ** Memory allocation.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl ccmem_allocator_t const * ccpair_register_allocator (ccmem_allocator_t const * allocator)
+ccpairs_decl ccmem_allocator_t const * ccpairs_register_allocator (ccmem_allocator_t const * allocator)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-ccpair_decl ccpair_t	ccpair_alloc (cce_location_t * L)
+ccpairs_decl ccpairs_t	ccpairs_alloc (cce_location_t * L)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-ccpair_decl void	ccpair_free   (ccpair_t P);
+ccpairs_decl void	ccpairs_free   (ccpairs_t P);
 
-ccpair_decl void	ccpair_free_list (ccpair_t P);
+ccpairs_decl void	ccpairs_free_list (ccpairs_t P);
 
 
 /** --------------------------------------------------------------------
@@ -288,32 +288,32 @@ ccpair_decl void	ccpair_free_list (ccpair_t P);
  ** ----------------------------------------------------------------- */
 
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
-static inline ccpair_t
-ccpair_cons (cce_location_t * L, uintptr_t A, ccpair_t D)
+static inline ccpairs_t
+ccpairs_cons (cce_location_t * L, uintptr_t A, ccpairs_t D)
 {
-  ccpair_t	P = ccpair_alloc(L);
+  ccpairs_t	P = ccpairs_alloc(L);
   P->A = A;
   P->D = (uintptr_t)D;
   return P;
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_cons_improper (cce_location_t * L, uintptr_t A, uintptr_t D)
+static inline ccpairs_t
+ccpairs_cons_improper (cce_location_t * L, uintptr_t A, uintptr_t D)
 {
-  return ccpair_cons(L, A, (ccpair_t)D);
+  return ccpairs_cons(L, A, (ccpairs_t)D);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_cons_node (cce_location_t * L, ccpair_t A, ccpair_t D)
+static inline ccpairs_t
+ccpairs_cons_node (cce_location_t * L, ccpairs_t A, ccpairs_t D)
 {
-  return ccpair_cons(L, (uintptr_t)A, D);
+  return ccpairs_cons(L, (uintptr_t)A, D);
 }
 
 /* ------------------------------------------------------------------ */
 
-ccpair_decl ccpair_t ccpair_list (cce_location_t * L, ccpair_item_constructor_t * C, ccpair_item_destructor_t * D)
+ccpairs_decl ccpairs_t ccpairs_list (cce_location_t * L, ccpairs_item_constructor_t * C, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3)));
 
 
@@ -323,29 +323,29 @@ ccpair_decl ccpair_t ccpair_list (cce_location_t * L, ccpair_item_constructor_t 
 
 __attribute__((__always_inline__,__const__))
 static inline bool
-ccpair_is_empty (ccpair_t P)
+ccpairs_is_empty (ccpairs_t P)
 {
   return (NULL == P)? true : false;
 }
 
 __attribute__((__always_inline__,__const__))
 static inline bool
-ccpair_is_null (ccpair_t P)
+ccpairs_is_null (ccpairs_t P)
 {
   return (NULL == P)? true : false;
 }
 
-ccpair_decl ccpair_len_t ccpair_length (cce_location_t * L, ccpair_t P)
+ccpairs_decl ccpairs_len_t ccpairs_length (cce_location_t * L, ccpairs_t P)
   __attribute__((__nonnull__(1)));
 
 __attribute__((__always_inline__,__pure__))
 static inline bool
-ccpair_is_last (ccpair_t P)
+ccpairs_is_last (ccpairs_t P)
 {
-  return (P && (NULL == ccpair_cdr(P)))? true : false;
+  return (P && (NULL == ccpairs_cdr(P)))? true : false;
 }
 
-ccpair_decl bool ccpair_is_circular (ccpair_t P)
+ccpairs_decl bool ccpairs_is_circular (ccpairs_t P)
   __attribute__((__leaf__,__pure__));
 
 
@@ -353,82 +353,82 @@ ccpair_decl bool ccpair_is_circular (ccpair_t P)
  ** Pair accessors.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl ccpair_t ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx_t idx)
+ccpairs_decl ccpairs_t ccpairs_ref_pair (cce_location_t * L, ccpairs_t P, ccpairs_idx_t idx)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-ccpair_decl ccpair_t ccpair_last_pair (cce_location_t * L, ccpair_t P)
+ccpairs_decl ccpairs_t ccpairs_last_pair (cce_location_t * L, ccpairs_t P)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_first_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_first_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 0);
+  return ccpairs_ref_pair(L, P, 0);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_second_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_second_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 1);
+  return ccpairs_ref_pair(L, P, 1);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_third_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_third_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 2);
+  return ccpairs_ref_pair(L, P, 2);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_fourth_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_fourth_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 3);
+  return ccpairs_ref_pair(L, P, 3);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_fifth_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_fifth_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 4);
+  return ccpairs_ref_pair(L, P, 4);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_sixth_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_sixth_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 5);
+  return ccpairs_ref_pair(L, P, 5);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_seventh_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_seventh_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 6);
+  return ccpairs_ref_pair(L, P, 6);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_eighth_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_eighth_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 7);
+  return ccpairs_ref_pair(L, P, 7);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_nineth_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_nineth_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 8);
+  return ccpairs_ref_pair(L, P, 8);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_tenth_pair (cce_location_t * L, ccpair_t P)
+static inline ccpairs_t
+ccpairs_tenth_pair (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref_pair(L, P, 9);
+  return ccpairs_ref_pair(L, P, 9);
 }
 
 
@@ -438,88 +438,88 @@ ccpair_tenth_pair (cce_location_t * L, ccpair_t P)
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_ref (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
+ccpairs_ref (cce_location_t * L, ccpairs_t P, ccpairs_idx_t const idx)
 {
-  return ccpair_car(ccpair_ref_pair(L, P, idx));
+  return ccpairs_car(ccpairs_ref_pair(L, P, idx));
 }
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline uintptr_t
-ccpair_last (cce_location_t * L, ccpair_t P)
+ccpairs_last (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_car(ccpair_last_pair(L, P));
+  return ccpairs_car(ccpairs_last_pair(L, P));
 }
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_first (cce_location_t * L, ccpair_t P)
+ccpairs_first (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 0);
+  return ccpairs_ref(L, P, 0);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_second (cce_location_t * L, ccpair_t P)
+ccpairs_second (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 1);
+  return ccpairs_ref(L, P, 1);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_third (cce_location_t * L, ccpair_t P)
+ccpairs_third (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 2);
+  return ccpairs_ref(L, P, 2);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_fourth (cce_location_t * L, ccpair_t P)
+ccpairs_fourth (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 3);
+  return ccpairs_ref(L, P, 3);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_fifth (cce_location_t * L, ccpair_t P)
+ccpairs_fifth (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 4);
+  return ccpairs_ref(L, P, 4);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_sixth (cce_location_t * L, ccpair_t P)
+ccpairs_sixth (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 5);
+  return ccpairs_ref(L, P, 5);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_seventh (cce_location_t * L, ccpair_t P)
+ccpairs_seventh (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 6);
+  return ccpairs_ref(L, P, 6);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_eighth (cce_location_t * L, ccpair_t P)
+ccpairs_eighth (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 7);
+  return ccpairs_ref(L, P, 7);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_nineth (cce_location_t * L, ccpair_t P)
+ccpairs_nineth (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 8);
+  return ccpairs_ref(L, P, 8);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpair_tenth (cce_location_t * L, ccpair_t P)
+ccpairs_tenth (cce_location_t * L, ccpairs_t P)
 {
-  return ccpair_ref(L, P, 9);
+  return ccpairs_ref(L, P, 9);
 }
 
 
@@ -527,44 +527,44 @@ ccpair_tenth (cce_location_t * L, ccpair_t P)
  ** Mapping and folding functions.
  ** ----------------------------------------------------------------- */
 
-typedef uintptr_t ccpair_map_fun_t   (uintptr_t item);
-typedef uintptr_t ccpair_map_1_fun_t (uintptr_t item);
-typedef uintptr_t ccpair_map_2_fun_t (uintptr_t item1, uintptr_t item2);
-typedef uintptr_t ccpair_map_3_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3);
-typedef uintptr_t ccpair_map_4_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3, uintptr_t item4);
-typedef uintptr_t ccpair_map_5_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3, uintptr_t item4, uintptr_t item5);
+typedef uintptr_t ccpairs_map_fun_t   (uintptr_t item);
+typedef uintptr_t ccpairs_map_1_fun_t (uintptr_t item);
+typedef uintptr_t ccpairs_map_2_fun_t (uintptr_t item1, uintptr_t item2);
+typedef uintptr_t ccpairs_map_3_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3);
+typedef uintptr_t ccpairs_map_4_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3, uintptr_t item4);
+typedef uintptr_t ccpairs_map_5_fun_t (uintptr_t item1, uintptr_t item2, uintptr_t item3, uintptr_t item4, uintptr_t item5);
 
 /* ------------------------------------------------------------------ */
 
-ccpair_decl ccpair_t ccpair_map_1_forward (cce_location_t * L, ccpair_map_1_fun_t * fun, ccpair_t P1)
+ccpairs_decl ccpairs_t ccpairs_map_1_forward (cce_location_t * L, ccpairs_map_1_fun_t * fun, ccpairs_t P1)
   __attribute__((__nonnull__(1)));
 
-ccpair_decl ccpair_t ccpair_map_2_forward (cce_location_t * L, ccpair_map_2_fun_t * fun, ccpair_t P1, ccpair_t P2)
+ccpairs_decl ccpairs_t ccpairs_map_2_forward (cce_location_t * L, ccpairs_map_2_fun_t * fun, ccpairs_t P1, ccpairs_t P2)
   __attribute__((__nonnull__(1)));
 
-ccpair_decl ccpair_t ccpair_map_3_forward (cce_location_t * L, ccpair_map_3_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3)
+ccpairs_decl ccpairs_t ccpairs_map_3_forward (cce_location_t * L, ccpairs_map_3_fun_t * fun, ccpairs_t P1, ccpairs_t P2, ccpairs_t P3)
   __attribute__((__nonnull__(1)));
 
-ccpair_decl ccpair_t ccpair_map_4_forward (cce_location_t * L, ccpair_map_4_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4)
+ccpairs_decl ccpairs_t ccpairs_map_4_forward (cce_location_t * L, ccpairs_map_4_fun_t * fun, ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4)
   __attribute__((__nonnull__(1)));
 
-ccpair_decl ccpair_t ccpair_map_5_forward (cce_location_t * L, ccpair_map_5_fun_t * fun, ccpair_t P1, ccpair_t P2, ccpair_t P3, ccpair_t P4, ccpair_t P5)
+ccpairs_decl ccpairs_t ccpairs_map_5_forward (cce_location_t * L, ccpairs_map_5_fun_t * fun, ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4, ccpairs_t P5)
   __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_map (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
+static inline ccpairs_t
+ccpairs_map (cce_location_t * L, ccpairs_map_fun_t * fun, ccpairs_t P)
 {
-  return ccpair_map_1_forward(L, fun, P);
+  return ccpairs_map_1_forward(L, fun, P);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
-static inline ccpair_t
-ccpair_map_forward (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
+static inline ccpairs_t
+ccpairs_map_forward (cce_location_t * L, ccpairs_map_fun_t * fun, ccpairs_t P)
 {
-  return ccpair_map_1_forward(L, fun, P);
+  return ccpairs_map_1_forward(L, fun, P);
 }
 
 
@@ -572,204 +572,204 @@ ccpair_map_forward (cce_location_t * L, ccpair_map_fun_t * fun, ccpair_t P)
  ** Predefined exception handler: pair memory release.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpair_pair_clean_handler_t	ccpair_pair_clean_handler_t;
-typedef struct ccpair_pair_error_handler_t	ccpair_pair_error_handler_t;
+typedef struct ccpairs_pair_clean_handler_t	ccpairs_pair_clean_handler_t;
+typedef struct ccpairs_pair_error_handler_t	ccpairs_pair_error_handler_t;
 
-struct ccpair_pair_clean_handler_t {
+struct ccpairs_pair_clean_handler_t {
   cce_clean_handler_t	handler;
 };
 
-struct ccpair_pair_error_handler_t {
+struct ccpairs_pair_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpair_decl void ccpair_pair_clean_handler_init (cce_location_t * L, ccpair_pair_clean_handler_t * H, ccpair_t P)
+ccpairs_decl void ccpairs_pair_clean_handler_init (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-ccpair_decl void ccpair_pair_error_handler_init (cce_location_t * L, ccpair_pair_error_handler_t * H, ccpair_t P)
+ccpairs_decl void ccpairs_pair_error_handler_init (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-#define ccpair_pair_handler_init(L,P_H,P)				\
+#define ccpairs_pair_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpair_pair_error_handler_t *: ccpair_pair_error_handler_init, \
-	   ccpair_pair_clean_handler_t *: ccpair_pair_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_pair_error_handler_t *: ccpairs_pair_error_handler_init, \
+	   ccpairs_pair_clean_handler_t *: ccpairs_pair_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: list memory release.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpair_list_clean_handler_t	ccpair_list_clean_handler_t;
-typedef struct ccpair_list_error_handler_t	ccpair_list_error_handler_t;
+typedef struct ccpairs_list_clean_handler_t	ccpairs_list_clean_handler_t;
+typedef struct ccpairs_list_error_handler_t	ccpairs_list_error_handler_t;
 
-struct ccpair_list_clean_handler_t {
+struct ccpairs_list_clean_handler_t {
   cce_clean_handler_t	handler;
 };
 
-struct ccpair_list_error_handler_t {
+struct ccpairs_list_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpair_decl void ccpair_list_clean_handler_init (cce_location_t * L, ccpair_list_clean_handler_t * H, ccpair_t P)
+ccpairs_decl void ccpairs_list_clean_handler_init (cce_location_t * L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-ccpair_decl void ccpair_list_error_handler_init (cce_location_t * L, ccpair_list_error_handler_t * H, ccpair_t P)
+ccpairs_decl void ccpairs_list_error_handler_init (cce_location_t * L, ccpairs_list_error_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-#define ccpair_list_handler_init(L,P_H,P)				\
+#define ccpairs_list_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpair_list_error_handler_t *: ccpair_list_error_handler_init, \
-	   ccpair_list_clean_handler_t *: ccpair_list_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_list_error_handler_t *: ccpairs_list_error_handler_init, \
+	   ccpairs_list_clean_handler_t *: ccpairs_list_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: pair memory release with item destructor.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpair_pair_item_clean_handler_t	ccpair_pair_item_clean_handler_t;
-typedef struct ccpair_pair_item_error_handler_t	ccpair_pair_item_error_handler_t;
+typedef struct ccpairs_pair_item_clean_handler_t	ccpairs_pair_item_clean_handler_t;
+typedef struct ccpairs_pair_item_error_handler_t	ccpairs_pair_item_error_handler_t;
 
-struct ccpair_pair_item_clean_handler_t {
-  ccpair_pair_clean_handler_t	handler;
-  ccpair_item_destructor_t *	item_destructor;
+struct ccpairs_pair_item_clean_handler_t {
+  ccpairs_pair_clean_handler_t	handler;
+  ccpairs_item_destructor_t *	item_destructor;
 };
 
-struct ccpair_pair_item_error_handler_t {
-  ccpair_pair_error_handler_t	handler;
-  ccpair_item_destructor_t *	item_destructor;
+struct ccpairs_pair_item_error_handler_t {
+  ccpairs_pair_error_handler_t	handler;
+  ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_pair_item_clean_handler_init (cce_location_t * L, ccpair_pair_item_clean_handler_t * H,
-						      ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_decl void ccpairs_pair_item_clean_handler_init (cce_location_t * L, ccpairs_pair_item_clean_handler_t * H,
+						      ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-ccpair_decl void ccpair_pair_item_error_handler_init (cce_location_t * L, ccpair_pair_item_error_handler_t * H,
-						      ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_decl void ccpairs_pair_item_error_handler_init (cce_location_t * L, ccpairs_pair_item_error_handler_t * H,
+						      ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-#define ccpair_pair_item_handler_init(L,P_H,P)				\
+#define ccpairs_pair_item_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpair_pair_item_error_handler_t *: ccpair_pair_item_error_handler_init, \
-	   ccpair_pair_item_clean_handler_t *: ccpair_pair_item_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_pair_item_error_handler_t *: ccpairs_pair_item_error_handler_init, \
+	   ccpairs_pair_item_clean_handler_t *: ccpairs_pair_item_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: list memory release with item destructor.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpair_list_item_clean_handler_t	ccpair_list_item_clean_handler_t;
-typedef struct ccpair_list_item_error_handler_t	ccpair_list_item_error_handler_t;
+typedef struct ccpairs_list_item_clean_handler_t	ccpairs_list_item_clean_handler_t;
+typedef struct ccpairs_list_item_error_handler_t	ccpairs_list_item_error_handler_t;
 
-struct ccpair_list_item_clean_handler_t {
-  ccpair_list_clean_handler_t	handler;
-  ccpair_item_destructor_t *	item_destructor;
+struct ccpairs_list_item_clean_handler_t {
+  ccpairs_list_clean_handler_t	handler;
+  ccpairs_item_destructor_t *	item_destructor;
 };
 
-struct ccpair_list_item_error_handler_t {
-  ccpair_list_error_handler_t	handler;
-  ccpair_item_destructor_t *	item_destructor;
+struct ccpairs_list_item_error_handler_t {
+  ccpairs_list_error_handler_t	handler;
+  ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_list_item_clean_handler_init (cce_location_t * L, ccpair_list_item_clean_handler_t * H,
-						      ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_decl void ccpairs_list_item_clean_handler_init (cce_location_t * L, ccpairs_list_item_clean_handler_t * H,
+						      ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-ccpair_decl void ccpair_list_item_error_handler_init (cce_location_t * L, ccpair_list_item_error_handler_t * H,
-						      ccpair_t P, ccpair_item_destructor_t * D)
+ccpairs_decl void ccpairs_list_item_error_handler_init (cce_location_t * L, ccpairs_list_item_error_handler_t * H,
+						      ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-#define ccpair_list_item_handler_init(L,P_H,P)				\
+#define ccpairs_list_item_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpair_list_item_error_handler_t *: ccpair_list_item_error_handler_init, \
-	   ccpair_list_item_clean_handler_t *: ccpair_list_item_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_list_item_error_handler_t *: ccpairs_list_item_error_handler_init, \
+	   ccpairs_list_item_clean_handler_t *: ccpairs_list_item_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Predefined exception handler: item destructor.
  ** ----------------------------------------------------------------- */
 
-typedef struct ccpair_item_clean_handler_t	ccpair_item_clean_handler_t;
-typedef struct ccpair_item_error_handler_t	ccpair_item_error_handler_t;
+typedef struct ccpairs_item_clean_handler_t	ccpairs_item_clean_handler_t;
+typedef struct ccpairs_item_error_handler_t	ccpairs_item_error_handler_t;
 
-struct ccpair_item_clean_handler_t {
+struct ccpairs_item_clean_handler_t {
   cce_clean_handler_t		handler;
-  ccpair_item_destructor_t *	item_destructor;
+  ccpairs_item_destructor_t *	item_destructor;
 };
 
-struct ccpair_item_error_handler_t {
+struct ccpairs_item_error_handler_t {
   cce_error_handler_t		handler;
-  ccpair_item_destructor_t *	item_destructor;
+  ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpair_decl void ccpair_item_clean_handler_init (cce_location_t * L, ccpair_item_clean_handler_t * H,
-						 uintptr_t item, ccpair_item_destructor_t * D)
+ccpairs_decl void ccpairs_item_clean_handler_init (cce_location_t * L, ccpairs_item_clean_handler_t * H,
+						 uintptr_t item, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,4)));
 
-ccpair_decl void ccpair_item_error_handler_init (cce_location_t * L, ccpair_item_error_handler_t * H,
-						 uintptr_t item, ccpair_item_destructor_t * D)
+ccpairs_decl void ccpairs_item_error_handler_init (cce_location_t * L, ccpairs_item_error_handler_t * H,
+						 uintptr_t item, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,4)));
 
-#define ccpair_item_handler_init(L,P_H,P)				\
+#define ccpairs_item_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpair_item_error_handler_t *: ccpair_item_error_handler_init, \
-	   ccpair_item_clean_handler_t *: ccpair_item_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_item_error_handler_t *: ccpairs_item_error_handler_init, \
+	   ccpairs_item_clean_handler_t *: ccpairs_item_clean_handler_init)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
  ** Guarded constructors.
  ** ----------------------------------------------------------------- */
 
-ccpair_decl ccpair_t ccpair_cons_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, uintptr_t A, ccpair_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, uintptr_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-ccpair_decl ccpair_t ccpair_cons_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, uintptr_t A, ccpair_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, uintptr_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-#define ccpair_cons_guarded(L,H,A,D)					\
+#define ccpairs_cons_guarded(L,H,A,D)					\
   _Generic((H),								\
-	   ccpair_pair_error_handler_t *: ccpair_cons_guarded_error,	\
-	   ccpair_pair_clean_handler_t *: ccpair_cons_guarded_clean)((L),(H),(A),(D))
+	   ccpairs_pair_error_handler_t *: ccpairs_cons_guarded_error,	\
+	   ccpairs_pair_clean_handler_t *: ccpairs_cons_guarded_clean)((L),(H),(A),(D))
 
 /* ------------------------------------------------------------------ */
 
-ccpair_decl ccpair_t ccpair_cons_improper_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-ccpair_decl ccpair_t ccpair_cons_improper_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-#define ccpair_cons_improper_guarded(L,H,A,D)				\
+#define ccpairs_cons_improper_guarded(L,H,A,D)				\
   _Generic((H),								\
-	   ccpair_pair_error_handler_t *: ccpair_cons_improper_guarded_error, \
-	   ccpair_pair_clean_handler_t *: ccpair_cons_improper_guarded_clean)((L),(H),(A),(D))
+	   ccpairs_pair_error_handler_t *: ccpairs_cons_improper_guarded_error, \
+	   ccpairs_pair_clean_handler_t *: ccpairs_cons_improper_guarded_clean)((L),(H),(A),(D))
 
 /* ------------------------------------------------------------------ */
 
-ccpair_decl ccpair_t ccpair_cons_node_guarded_error (cce_location_t * L, ccpair_pair_error_handler_t * H, ccpair_t A, ccpair_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-ccpair_decl ccpair_t ccpair_cons_node_guarded_clean (cce_location_t * L, ccpair_pair_clean_handler_t * H, ccpair_t A, ccpair_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-#define ccpair_cons_node_guarded(L,H,A,D)				\
+#define ccpairs_cons_node_guarded(L,H,A,D)				\
   _Generic((H),								\
-	   ccpair_pair_error_handler_t *: ccpair_cons_node_guarded_error, \
-	   ccpair_pair_clean_handler_t *: ccpair_cons_node_guarded_clean)((L),(H),(A),(D))
+	   ccpairs_pair_error_handler_t *: ccpairs_cons_node_guarded_error, \
+	   ccpairs_pair_clean_handler_t *: ccpairs_cons_node_guarded_clean)((L),(H),(A),(D))
 
 /* ------------------------------------------------------------------ */
 
-ccpair_decl ccpair_t ccpair_list_guarded_error (cce_location_t * L, ccpair_list_item_error_handler_t * H,
-						ccpair_item_constructor_t * C, ccpair_item_destructor_t * D)
+ccpairs_decl ccpairs_t ccpairs_list_guarded_error (cce_location_t * L, ccpairs_list_item_error_handler_t * H,
+						ccpairs_item_constructor_t * C, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
 
-ccpair_decl ccpair_t ccpair_list_guarded_clean (cce_location_t * L, ccpair_list_item_clean_handler_t * H,
-						ccpair_item_constructor_t * C, ccpair_item_destructor_t * D)
+ccpairs_decl ccpairs_t ccpairs_list_guarded_clean (cce_location_t * L, ccpairs_list_item_clean_handler_t * H,
+						ccpairs_item_constructor_t * C, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
 
-#define ccpair_list_guarded(L,H,item_constructor,item_destructor)	\
+#define ccpairs_list_guarded(L,H,item_constructor,item_destructor)	\
   _Generic((H),								\
-	   ccpair_list_item_error_handler_t *: ccpair_list_guarded_error,	\
-	   ccpair_list_item_clean_handler_t *: ccpair_list_guarded_clean)((L),(H),(item_constructor),(item_destructor))
+	   ccpairs_list_item_error_handler_t *: ccpairs_list_guarded_error,	\
+	   ccpairs_list_item_clean_handler_t *: ccpairs_list_guarded_clean)((L),(H),(item_constructor),(item_destructor))
 
 
 /** --------------------------------------------------------------------
@@ -780,6 +780,6 @@ ccpair_decl ccpair_t ccpair_list_guarded_clean (cce_location_t * L, ccpair_list_
 } // extern "C"
 #endif
 
-#endif /* CCPAIR_H */
+#endif /* CCPAIRS_H */
 
 /* end of file */

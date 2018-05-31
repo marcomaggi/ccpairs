@@ -27,9 +27,9 @@ doc_ccpairs_TEXINFOS	= \
 #page
 #### libraries
 
-ccpairs_CURRENT		= @ccpair_VERSION_INTERFACE_CURRENT@
-ccpairs_REVISION	= @ccpair_VERSION_INTERFACE_REVISION@
-ccpairs_AGE		= @ccpair_VERSION_INTERFACE_AGE@
+ccpairs_CURRENT		= @ccpairs_VERSION_INTERFACE_CURRENT@
+ccpairs_REVISION	= @ccpairs_VERSION_INTERFACE_REVISION@
+ccpairs_AGE		= @ccpairs_VERSION_INTERFACE_AGE@
 
 include_HEADERS		= src/ccpairs.h
 

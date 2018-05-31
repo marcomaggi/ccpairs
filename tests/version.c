@@ -17,15 +17,15 @@
 #include <stdlib.h>
 
 int
-main (int argc CCPAIR_UNUSED, const char *const argv[] CCPAIR_UNUSED)
+main (int argc CCPAIRS_UNUSED, const char *const argv[] CCPAIRS_UNUSED)
 {
-  ccpair_library_init();
+  ccpairs_library_init();
 
-  printf("version number string: %s\n", ccpair_version_string());
+  printf("version number string: %s\n", ccpairs_version_string());
   printf("libtool version number: %d:%d:%d\n",
-	 ccpair_version_interface_current(),
-	 ccpair_version_interface_revision(),
-	 ccpair_version_interface_age());
+	 ccpairs_version_interface_current(),
+	 ccpairs_version_interface_revision(),
+	 ccpairs_version_interface_age());
   exit(EXIT_SUCCESS);
 }
 

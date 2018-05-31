@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -38,37 +38,37 @@
  ** Pair accessors.
  ** ----------------------------------------------------------------- */
 
-ccpair_t
-ccpair_ref_pair (cce_location_t * L, ccpair_t P, ccpair_idx_t const idx)
+ccpairs_t
+ccpairs_ref_pair (cce_location_t * L, ccpairs_t P, ccpairs_idx_t const idx)
 {
   if (P) {
-    for (ccpair_idx_t i = 0; ; ++i) {
+    for (ccpairs_idx_t i = 0; ; ++i) {
       if (P) {
 	if (idx > i) {
-	  P = ccpair_cdr(P);
+	  P = ccpairs_cdr(P);
 	} else {
 	  return P;
 	}
       } else {
-	cce_raise(L, ccpair_condition_new_not_enough_items());
+	cce_raise(L, ccpairs_condition_new_not_enough_items());
       }
     }
   } else {
-    cce_raise(L, ccpair_condition_new_empty_list());
+    cce_raise(L, ccpairs_condition_new_empty_list());
   }
 }
 
-ccpair_t
-ccpair_last_pair (cce_location_t * L, ccpair_t P)
+ccpairs_t
+ccpairs_last_pair (cce_location_t * L, ccpairs_t P)
 {
   if (0) { fprintf(stderr, "%s: enter, P=%p\n", __func__, (void *)P); }
-  for (; P; P = ccpair_cdr(P)) {
+  for (; P; P = ccpairs_cdr(P)) {
     if (0) { fprintf(stderr, "%s: check is last P=%p\n", __func__, (void *)P); }
-    if (ccpair_is_last(P)) {
+    if (ccpairs_is_last(P)) {
       return P;
     }
   }
-  cce_raise(L, ccpair_condition_new_empty_list());
+  cce_raise(L, ccpairs_condition_new_empty_list());
 }
 
 

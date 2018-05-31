@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you  can redistribute it and/or modify it under
   the terms of the GNU Lesser General Public License as published by the
@@ -34,17 +34,17 @@
 
 
 size_t
-ccpair_length (cce_location_t * L, ccpair_t hare)
+ccpairs_length (cce_location_t * L, ccpairs_t hare)
 {
   size_t	len = 0;
 
   if (hare) {
-    ccpair_t	turtle = hare;
+    ccpairs_t	turtle = hare;
 
     /* Hare only step. */
     {
       if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
-      hare = ccpair_cdr(hare);
+      hare = ccpairs_cdr(hare);
       ++len;
     }
     while (hare) {
@@ -52,23 +52,23 @@ ccpair_length (cce_location_t * L, ccpair_t hare)
       /* Hare and turtle step. */
       {
 	if (hare != turtle) {
-	  turtle = ccpair_cdr(turtle);
-	  hare   = ccpair_cdr(hare);
+	  turtle = ccpairs_cdr(turtle);
+	  hare   = ccpairs_cdr(hare);
 	  ++len;
 	} else {
 	  /* This is a circular list. */
-	  cce_raise(L, ccpair_condition_new_circular_list());
+	  cce_raise(L, ccpairs_condition_new_circular_list());
 	}
       }
       if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
       /* Hare only step. */
       if (hare) {
 	if (hare != turtle) {
-	  hare = ccpair_cdr(hare);
+	  hare = ccpairs_cdr(hare);
 	  ++len;
 	} else {
 	  /* This is a circular list. */
-	  cce_raise(L, ccpair_condition_new_circular_list());
+	  cce_raise(L, ccpairs_condition_new_circular_list());
 	}
       }
     }
@@ -78,22 +78,22 @@ ccpair_length (cce_location_t * L, ccpair_t hare)
 
 
 bool
-ccpair_is_circular (ccpair_t hare)
+ccpairs_is_circular (ccpairs_t hare)
 {
   if (hare) {
-    ccpair_t	turtle = hare;
+    ccpairs_t	turtle = hare;
 
     /* Hare only step. */
     {
-      hare = ccpair_cdr(hare);
+      hare = ccpairs_cdr(hare);
     }
     while (hare) {
       /* Hare and turtle step. */
       {
 	if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
 	if (hare != turtle) {
-	  turtle = ccpair_cdr(turtle);
-	  hare   = ccpair_cdr(hare);
+	  turtle = ccpairs_cdr(turtle);
+	  hare   = ccpairs_cdr(hare);
 	} else {
 	  /* This is a circular list. */
 	  return true;
@@ -103,7 +103,7 @@ ccpair_is_circular (ccpair_t hare)
       if (hare) {
 	if (0) { fprintf(stderr, "%s: hare=%p, turtle=%p\n", __func__, (void *)hare, (void *)turtle); }
 	if (hare != turtle) {
-	  hare = ccpair_cdr(hare);
+	  hare = ccpairs_cdr(hare);
 	} else {
 	  /* This is a circular list. */
 	  return true;
