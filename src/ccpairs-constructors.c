@@ -59,7 +59,7 @@ ccpairs_list (cce_destination_t upper_L, ccpairs_item_constructor_t * C, ccpairs
     } else {
       if (0) { fprintf(stderr, "%s: doing item 0\n", __func__); }
       first_item = C(L, 0);
-      ccpairs_item_error_handler_init(L, first_item_H, first_item, D);
+      ccpairs_init_item_error_handler(L, first_item_H, first_item, D);
       head = ccpairs_cons(L, first_item, NULL);
       cce_run_body_handlers(L);
     }
@@ -83,7 +83,7 @@ ccpairs_list (cce_destination_t upper_L, ccpairs_item_constructor_t * C, ccpairs
     } else {
       ccpairs_t		prev = head;
 
-      ccpairs_list_item_error_handler_init(L, head_H, head, D);
+      ccpairs_init_list_item_error_handler(L, head_H, head, D);
 
       for (ccpairs_idx_t idx=1;; ++idx) {
 	if (0) { fprintf(stderr, "%s: doing item %lu\n", __func__, idx); }
@@ -106,7 +106,7 @@ ccpairs_t
 ccpairs_cons_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, uintptr_t A, ccpairs_t D)
 {
   ccpairs_t	P = ccpairs_cons(L, A, D);
-  ccpairs_pair_error_handler_init(L, H, P);
+  ccpairs_init_pair_error_handler(L, H, P);
   return P;
 }
 
@@ -114,7 +114,7 @@ ccpairs_t
 ccpairs_cons_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, uintptr_t A, ccpairs_t D)
 {
   ccpairs_t	P = ccpairs_cons(L, A, D);
-  ccpairs_pair_clean_handler_init(L, H, P);
+  ccpairs_init_pair_clean_handler(L, H, P);
   return P;
 }
 
@@ -124,7 +124,7 @@ ccpairs_t
 ccpairs_cons_improper_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
 {
   ccpairs_t	P = ccpairs_cons_improper(L, A, D);
-  ccpairs_pair_error_handler_init(L, H, P);
+  ccpairs_init_pair_error_handler(L, H, P);
   return P;
 }
 
@@ -132,7 +132,7 @@ ccpairs_t
 ccpairs_cons_improper_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
 {
   ccpairs_t	P = ccpairs_cons_improper(L, A, D);
-  ccpairs_pair_clean_handler_init(L, H, P);
+  ccpairs_init_pair_clean_handler(L, H, P);
   return P;
 }
 
@@ -142,7 +142,7 @@ ccpairs_t
 ccpairs_cons_node_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t A, ccpairs_t D)
 {
   ccpairs_t	P = ccpairs_cons_node(L, A, D);
-  ccpairs_pair_error_handler_init(L, H, P);
+  ccpairs_init_pair_error_handler(L, H, P);
   return P;
 }
 
@@ -150,7 +150,7 @@ ccpairs_t
 ccpairs_cons_node_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t A, ccpairs_t D)
 {
   ccpairs_t	P = ccpairs_cons_node(L, A, D);
-  ccpairs_pair_clean_handler_init(L, H, P);
+  ccpairs_init_pair_clean_handler(L, H, P);
   return P;
 }
 
@@ -162,7 +162,7 @@ ccpairs_list_guarded_error (cce_location_t * L, ccpairs_list_item_error_handler_
 			   ccpairs_item_destructor_t  * item_destructor)
 {
   ccpairs_t	P = ccpairs_list(L, item_constructor, item_destructor);
-  ccpairs_list_item_error_handler_init(L, H, P, item_destructor);
+  ccpairs_init_list_item_error_handler(L, H, P, item_destructor);
   return P;
 }
 
@@ -172,7 +172,7 @@ ccpairs_list_guarded_clean (cce_location_t * L, ccpairs_list_item_clean_handler_
 			   ccpairs_item_destructor_t  * item_destructor)
 {
   ccpairs_t	P = ccpairs_list(L, item_constructor, item_destructor);
-  ccpairs_list_item_clean_handler_init(L, H, P, item_destructor);
+  ccpairs_init_list_item_clean_handler(L, H, P, item_destructor);
   return P;
 }
 

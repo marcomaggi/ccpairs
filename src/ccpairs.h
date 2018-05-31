@@ -583,16 +583,16 @@ struct ccpairs_pair_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpairs_decl void ccpairs_pair_clean_handler_init (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_pair_clean_handler (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-ccpairs_decl void ccpairs_pair_error_handler_init (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_pair_error_handler (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
 #define ccpairs_pair_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpairs_pair_error_handler_t *: ccpairs_pair_error_handler_init, \
-	   ccpairs_pair_clean_handler_t *: ccpairs_pair_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_pair_error_handler_t *: ccpairs_init_pair_error_handler, \
+	   ccpairs_pair_clean_handler_t *: ccpairs_init_pair_clean_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
@@ -610,16 +610,16 @@ struct ccpairs_list_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpairs_decl void ccpairs_list_clean_handler_init (cce_location_t * L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_list_clean_handler (cce_location_t * L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-ccpairs_decl void ccpairs_list_error_handler_init (cce_location_t * L, ccpairs_list_error_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_list_error_handler (cce_location_t * L, ccpairs_list_error_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
 #define ccpairs_list_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpairs_list_error_handler_t *: ccpairs_list_error_handler_init, \
-	   ccpairs_list_clean_handler_t *: ccpairs_list_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_list_error_handler_t *: ccpairs_init_list_error_handler, \
+	   ccpairs_list_clean_handler_t *: ccpairs_init_list_clean_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
@@ -639,18 +639,18 @@ struct ccpairs_pair_item_error_handler_t {
   ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpairs_decl void ccpairs_pair_item_clean_handler_init (cce_location_t * L, ccpairs_pair_item_clean_handler_t * H,
-						      ccpairs_t P, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_pair_item_clean_handler (cce_location_t * L, ccpairs_pair_item_clean_handler_t * H,
+							ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-ccpairs_decl void ccpairs_pair_item_error_handler_init (cce_location_t * L, ccpairs_pair_item_error_handler_t * H,
-						      ccpairs_t P, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_pair_item_error_handler (cce_location_t * L, ccpairs_pair_item_error_handler_t * H,
+							ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
 #define ccpairs_pair_item_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpairs_pair_item_error_handler_t *: ccpairs_pair_item_error_handler_init, \
-	   ccpairs_pair_item_clean_handler_t *: ccpairs_pair_item_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_pair_item_error_handler_t *: ccpairs_init_pair_item_error_handler, \
+	   ccpairs_pair_item_clean_handler_t *: ccpairs_inite_pair_item_clean_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
@@ -670,18 +670,18 @@ struct ccpairs_list_item_error_handler_t {
   ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpairs_decl void ccpairs_list_item_clean_handler_init (cce_location_t * L, ccpairs_list_item_clean_handler_t * H,
+ccpairs_decl void ccpairs_init_list_item_clean_handler (cce_location_t * L, ccpairs_list_item_clean_handler_t * H,
 						      ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-ccpairs_decl void ccpairs_list_item_error_handler_init (cce_location_t * L, ccpairs_list_item_error_handler_t * H,
+ccpairs_decl void ccpairs_init_list_item_error_handler (cce_location_t * L, ccpairs_list_item_error_handler_t * H,
 						      ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
 #define ccpairs_list_item_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpairs_list_item_error_handler_t *: ccpairs_list_item_error_handler_init, \
-	   ccpairs_list_item_clean_handler_t *: ccpairs_list_item_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_list_item_error_handler_t *: ccpairs_init_list_item_error_handler, \
+	   ccpairs_list_item_clean_handler_t *: ccpairs_init_list_item_clean_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
@@ -701,18 +701,18 @@ struct ccpairs_item_error_handler_t {
   ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpairs_decl void ccpairs_item_clean_handler_init (cce_location_t * L, ccpairs_item_clean_handler_t * H,
-						 uintptr_t item, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_item_clean_handler (cce_location_t * L, ccpairs_item_clean_handler_t * H,
+						   uintptr_t item, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,4)));
 
-ccpairs_decl void ccpairs_item_error_handler_init (cce_location_t * L, ccpairs_item_error_handler_t * H,
-						 uintptr_t item, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_item_error_handler (cce_location_t * L, ccpairs_item_error_handler_t * H,
+						   uintptr_t item, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,4)));
 
 #define ccpairs_item_handler_init(L,P_H,P)				\
   _Generic((P_H),							\
-	   ccpairs_item_error_handler_t *: ccpairs_item_error_handler_init, \
-	   ccpairs_item_clean_handler_t *: ccpairs_item_clean_handler_init)((L),(P_H),(P))
+	   ccpairs_item_error_handler_t *: ccpairs_init_item_error_handler, \
+	   ccpairs_item_clean_handler_t *: ccpairs_init_item_clean_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------

@@ -54,7 +54,7 @@ ccpairs_map_1_forward (cce_location_t * upper_L, ccpairs_map_fun_t * fun, ccpair
 	 we can initialise the handler for R. */
       R = Q = ccpairs_cons(L, fun(ccpairs_car(P)), NULL);
       P = ccpairs_cdr(P);
-      ccpairs_list_error_handler_init(L, R_H, R);
+      ccpairs_init_list_error_handler(L, R_H, R);
 
       for (; P; P = ccpairs_cdr(P)) {
 	ccpairs_t	T = ccpairs_cons(L, fun(ccpairs_car(P)), NULL);
