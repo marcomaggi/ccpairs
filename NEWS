@@ -6,6 +6,8 @@
 Revision 0.1.0-devel.1
 ----------------------
 
+* Updated packaging infrastructure.
+
 * Changed library prefix from "ccpair_" to "ccpairs_".
 
 * Updated to CCExceptions v0.8.0-devel.3.

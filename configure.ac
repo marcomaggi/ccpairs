@@ -2,12 +2,14 @@ dnl @configure_input@
 dnl
 
 AC_PREREQ([2.69])
-AC_INIT([CCPairs],[0.1.0-devel.1],
+MMUX_PKG_VERSIONS([0],[1],[0],[devel.1])
+AC_INIT([CCPairs],[MMUX_PACKAGE_VERSION],
   [marco.maggi-ipsu@poste.it],
   [ccpairs],[http://marcomaggi.github.com/ccpairs])
-dnl This is the revision number of this configure.ac
+MMUX_INIT
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpairs],1,0,0)
 AC_REVISION([0.1])
-AC_COPYRIGHT([Copyright (c) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+AC_COPYRIGHT([Copyright (c) 2017-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
 This program is free software: you  can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +30,7 @@ AC_CONFIG_AUX_DIR([meta/autotools])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-AM_INIT_AUTOMAKE([foreign dist-xz no-dist-gzip subdir-objects])
+AM_INIT_AUTOMAKE([foreign subdir-objects])
 AM_MAINTAINER_MODE
 
 AM_PROG_AR
@@ -41,24 +43,12 @@ LT_PREREQ([2.4])
 LT_INIT
 
 dnl page
-#### libraries interface version
-
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpairs],1,0,0)
-
-dnl This is the version stored in the pkg-config data file.
-AC_SUBST([CCTEMPLATE_PKG_CONFIG_VERSION],[0.1])
-
-AS_VAR_SET([SLACKSTUFF_PACKAGE_VERSION],[0.1d0.1])
-AC_SUBST([SLACKSTUFF_PACKAGE_VERSION])
-
-dnl page
 #### basic system inspection
 
 MMUX_CHECK_TARGET_OS
 
 AC_LANG([C])
 MMUX_LANG_C11
-AC_SUBST(AX_CFLAGS)
 
 AM_PROG_AS
 AM_PROG_CC_C_O
@@ -80,9 +70,16 @@ dnl page
 MMUX_CHECK_PKG_CONFIG_MACROS
 PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.8.0])
 PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.2.0])
+#PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.2.0])
 PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.3.0],,[AC_MSG_WARN([package CCTests not found])])
 
 AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
+
+MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccexceptions],[ccexceptions.h])
+#MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccexceptions],[ccnames.h])
+MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccmemory],[ccmemory.h])
+#MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccstructs],[ccstructs.h])
+MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([cctests],[cctests.h])
 
 AC_CACHE_SAVE
 
@@ -92,12 +89,8 @@ dnl page
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile]
    [meta/scripts/ccpairs.pc]
-   [meta/slackstuff/config]
    [meta/slackware/slack-desc])
+MMUX_OUTPUT
 AC_OUTPUT
 
 ### end of file
-# Local Variables:
-# mode: autoconf
-# page-delimiter: "^dnl page"
-# End:
