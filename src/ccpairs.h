@@ -8,7 +8,7 @@
 	This is the public header file for CCPairs.  It must be included
 	in all the source files using the library's facilities.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is  free software: you can redistribute  it and/or modify
   it  under the  terms  of  the GNU  Lesser  General  Public License  as
@@ -149,7 +149,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 ccpairs_condition_is_base (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpairs_descriptor_base->descriptor));
+  return cce_condition_is(C, &(ccpairs_descriptor_base->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -174,7 +174,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpairs_descriptor_not_enough_items->descriptor));
+  return cce_condition_is(C, &(ccpairs_descriptor_not_enough_items->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -199,7 +199,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 ccpairs_condition_is_empty_list (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpairs_descriptor_empty_list->descriptor));
+  return cce_condition_is(C, &(ccpairs_descriptor_empty_list->descriptor));
 }
 
 /* ------------------------------------------------------------------ */
@@ -224,7 +224,7 @@ __attribute__((__pure__,__nonnull__(1),__always_inline__))
 static inline bool
 ccpairs_condition_is_circular_list (cce_condition_t const * C)
 {
-  return cce_is_condition(C, &(ccpairs_descriptor_circular_list->descriptor));
+  return cce_condition_is(C, &(ccpairs_descriptor_circular_list->descriptor));
 }
 
 
