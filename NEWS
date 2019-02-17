@@ -12,7 +12,9 @@ Revision 0.1.0-devel.1
 
 * Updated to CCExceptions v0.8.0-devel.3.
 
-* Updated to CCMemory v0.2.0-devel.0.
+* Updated to CCMemory 0.2.1.
+
+* Added dependency from CCStructs v0.2.0.
 
 * Total review of exception handlers.
 

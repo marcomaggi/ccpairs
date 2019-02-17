@@ -5,12 +5,11 @@ AUTOMAKE_OPTIONS	= foreign
 EXTRA_DIST		= INSTALL			\
 			  meta/slackware/slack-desc.in
 dist_doc_DATA		= README COPYING
-AM_CFLAGS		= $(MMUX_CFLAGS) -I$(srcdir)/src
+AM_CPPFLAGS		= -I$(srcdir)/src
+AM_CFLAGS		= $(MMUX_CFLAGS)
 
 ## --------------------------------------------------------------------
 
-EXTRA_DIST		+= meta/scripts/ccpairs.pc.in
-pkgconfigdir		= $(libdir)/pkgconfig
 nodist_pkgconfig_DATA	= meta/scripts/ccpairs.pc
 
 
@@ -36,9 +35,10 @@ ccpairs_AGE		= @ccpairs_VERSION_INTERFACE_AGE@
 include_HEADERS		= src/ccpairs.h
 
 lib_LTLIBRARIES		= libccpairs.la
-libccpairs_la_CPPFLAGS	= $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
+libccpairs_la_CPPFLAGS	= $(AM_CPPFLAGS)
+libccpairs_la_CFLAGS	= $(AM_CPPFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
 libccpairs_la_LDFLAGS	= -version-info $(ccpairs_CURRENT):$(ccpairs_REVISION):$(ccpairs_AGE) \
-			  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS)
+			  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCSTRUCTS_LIBS)
 libccpairs_la_SOURCES	= \
 	src/ccpairs.h				\
 	src/ccpairs-internals.h			\
@@ -67,29 +67,34 @@ if MMUX_TESTING_ENABLED
 TESTS				= $(check_PROGRAMS)
 endif
 
-ccpairs_tests_cppflags		= -I$(srcdir)/src \
-	$(CCEXCEPTIONS_FLAGS) $(CCMEMORY_CFLAGS) $(CCTESTS_CFLAGS)
-ccpairs_tests_ldadd		= libccpairs.la \
-	$(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCTESTS_LIBS)
+ccpairs_tests_cppflags		= $(AM_CPPFLAGS)
+ccpairs_tests_cflags		= $(AM_CFLAGS) $(CCEXCEPTIONS_FLAGS) $(CCMEMORY_CFLAGS) $(CCSTRUCTS_CFLAGS) $(CCTESTS_CFLAGS)
+ccpairs_tests_ldadd		= libccpairs.la $(CCTESTS_LIBS)
 
 ## --------------------------------------------------------------------
 
 tests_version_CPPFLAGS		= $(ccpairs_tests_cppflags)
+tests_version_CFLAGS		= $(ccpairs_tests_cflags)
 tests_version_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_cons_CPPFLAGS		= $(ccpairs_tests_cppflags)
+tests_cons_CFLAGS		= $(ccpairs_tests_cflags)
 tests_cons_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_inspection_CPPFLAGS	= $(ccpairs_tests_cppflags)
+tests_inspection_CFLAGS		= $(ccpairs_tests_cflags)
 tests_inspection_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_accessors_CPPFLAGS	= $(ccpairs_tests_cppflags)
+tests_accessors_CFLAGS		= $(ccpairs_tests_cflags)
 tests_accessors_LDADD		= $(ccpairs_tests_ldadd)
 
 tests_constructors_CPPFLAGS	= $(ccpairs_tests_cppflags)
+tests_constructors_CFLAGS	= $(ccpairs_tests_cflags)
 tests_constructors_LDADD	= $(ccpairs_tests_ldadd)
 
 tests_mapping_CPPFLAGS		= $(ccpairs_tests_cppflags)
+tests_mapping_CFLAGS		= $(ccpairs_tests_cflags)
 tests_mapping_LDADD		= $(ccpairs_tests_ldadd)
 
 ## --------------------------------------------------------------------

@@ -1,5 +1,5 @@
-dnl @configure_input@
-dnl
+# @configure_input@
+#
 
 AC_PREREQ([2.69])
 MMUX_PKG_VERSIONS([0],[1],[0],[devel.1])
@@ -18,11 +18,11 @@ your option) any later version.
 
 This program  is distributed  in the  hope that it  will be  useful, but
 WITHOUT   ANY   WARRANTY;  without   even   the   implied  warranty   of
-MERCHANTABILITY  or  FITNESS FOR  A  PARTICULAR  PURPOSE.  See  the  GNU
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
 General Public License for more details.
 
-You should have received a copy  of the GNU General Public License along
-with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ])
 AC_CONFIG_SRCDIR([src/])
 AC_CONFIG_MACRO_DIR([meta/autotools])
@@ -42,10 +42,11 @@ AC_PROG_MKDIR_P
 LT_PREREQ([2.4])
 LT_INIT
 
-dnl page
+
 #### basic system inspection
 
 MMUX_CHECK_TARGET_OS
+AX_IS_RELEASE([git-directory])
 
 AC_LANG([C])
 MMUX_LANG_C11
@@ -57,20 +58,21 @@ AC_CHECK_HEADERS([assert.h stdint.h])
 
 AC_CACHE_SAVE
 
-dnl page
+
 #### checks for library functions
 
 dnl AC_FUNC_MALLOC
 
 dnl AC_CACHE_SAVE
 
-dnl page
+
 #### external libraries
 
 MMUX_CHECK_PKG_CONFIG_MACROS
+PKG_INSTALLDIR
 PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.8.0])
 PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.2.0])
-#PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.2.0])
+PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.2.0])
 PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.3.0],,[AC_MSG_WARN([package CCTests not found])])
 
 AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
@@ -78,12 +80,12 @@ AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
 MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccexceptions],[ccexceptions.h])
 #MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccexceptions],[ccnames.h])
 MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccmemory],[ccmemory.h])
-#MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccstructs],[ccstructs.h])
+MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccstructs],[ccstructs.h])
 MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([cctests],[cctests.h])
 
 AC_CACHE_SAVE
 
-dnl page
+
 #### finish
 
 AC_CONFIG_HEADERS([config.h])
