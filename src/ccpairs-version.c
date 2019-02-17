@@ -29,7 +29,7 @@
 #include "ccpairs-internals.h"
 
 
-const char *
+char const *
 ccpairs_version_string (void)
 {
   return ccpairs_VERSION_INTERFACE_STRING;

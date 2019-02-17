@@ -5,23 +5,21 @@
 
   Abstract
 
-	This is the public header file for CCPairs.  It must be included
-	in all the source files using the library's facilities.
+	This is the public  header file for CCPairs.  It must be  included in all the
+	source files using the library's facilities.
 
-  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
-  This program is  free software: you can redistribute  it and/or modify
-  it  under the  terms  of  the GNU  Lesser  General  Public License  as
-  published by  the Free  Software Foundation, either  version 3  of the
-  License, or (at your option) any later version.
+  This program is free  software: you can redistribute it and/or  modify it under the
+  terms of the  GNU Lesser General Public  License as published by  the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later version.
 
-  This program  is distributed in the  hope that it will  be useful, but
-  WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
-  MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
-  General Public License for more details.
+  This program  is distributed in the  hope that it  will be useful, but  WITHOUT ANY
+  WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
+  PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  You  should have received  a copy  of the  GNU General  Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received  a copy of the GNU General Public  License along with this
+  program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef CCPAIRS_H
@@ -36,8 +34,8 @@
 extern "C" {
 #endif
 
-/* The macro CCPAIRS_UNUSED indicates that a function, function argument
-   or variable may potentially be unused. Usage examples:
+/* The macro CCPAIRS_UNUSED indicates that  a function, function argument or variable
+   may potentially be unused. Usage examples:
 
    static int unused_function (char arg) CCPAIRS_UNUSED;
    int foo (char unused_argument CCPAIRS_UNUSED);
@@ -72,8 +70,8 @@ extern "C" {
 #  define ccpairs_private_decl	extern
 #else
 #  if __GNUC__ >= 4
-#    define ccpairs_decl		__attribute__((visibility ("default"))) extern
-#    define ccpairs_private_decl	__attribute__((visibility ("hidden")))  extern
+#    define ccpairs_decl		__attribute__((__visibility__("default"))) extern
+#    define ccpairs_private_decl	__attribute__((__visibility__("hidden")))  extern
 #  else
 #    define ccpairs_decl		extern
 #    define ccpairs_private_decl	extern
@@ -87,6 +85,7 @@ extern "C" {
 
 #include <ccexceptions.h>
 #include <ccmemory.h>
+#include <ccstructs.h>
 #include <stdint.h>
 #include <stdbool.h>
 
