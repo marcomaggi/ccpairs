@@ -10,10 +10,11 @@
 This package installs a C11  language library implementing simply linked
 lists data structures, in the style of the Scheme language.
 
-The library targets POSIX systems.  The library depends on the packages:
-CCExceptions, at least version 0.8.0;  CCMemory, at least version 0.2.0.
-To run the test suite: the  package depends upon the package CCTests, at
-least version 0.3.0.
+The  library  targets  POSIX  systems.   This  package  depends  on  the
+packages:  CCExceptions,  at least  version  0.8.0;  CCMemory, at  least
+version  0.2.1; CCStructs,  at least  version  0.2.0.  To  run the  test
+suite: this package  depends upon the package CCTests,  at least version
+0.3.0.
 
 The package uses the GNU Autotools and it is tested, using Travis CI, on
 both Ubuntu GNU+Linux  systems and OS X systems.  The  package relies on
@@ -22,7 +23,7 @@ both Ubuntu GNU+Linux  systems and OS X systems.  The  package relies on
 
 ## License
 
-Copyright (c) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
+Copyright (c) 2017-2019 Marco Maggi <marco.maggi-ipsu@poste.it><br/>
 All rights reserved.
 
 This program is free software: you  can redistribute it and/or modify it
@@ -173,6 +174,10 @@ the package CCExceptions is available at:
 the package CCMemory is available at:
 
 [https://github.com/marcomaggi/ccmemory/](https://github.com/marcomaggi/ccmemory/)
+
+the package CCStructs is available at:
+
+[https://github.com/marcomaggi/ccstructs/](https://github.com/marcomaggi/ccstructs/)
 
 the package CCTests is available at:
 
