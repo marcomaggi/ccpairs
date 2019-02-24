@@ -38,7 +38,7 @@ lib_LTLIBRARIES		= libccpairs.la
 libccpairs_la_CPPFLAGS	= $(AM_CPPFLAGS)
 libccpairs_la_CFLAGS	= $(AM_CPPFLAGS) $(CCEXCEPTIONS_CFLAGS) $(CCMEMORY_CFLAGS)
 libccpairs_la_LDFLAGS	= -version-info $(ccpairs_CURRENT):$(ccpairs_REVISION):$(ccpairs_AGE) \
-			  $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCSTRUCTS_LIBS)
+			  $(AM_LDFLAGS) $(CCEXCEPTIONS_LIBS) $(CCMEMORY_LIBS) $(CCSTRUCTS_LIBS)
 libccpairs_la_SOURCES	= \
 	src/ccpairs.h				\
 	src/ccpairs-internals.h			\
@@ -69,7 +69,7 @@ endif
 
 ccpairs_tests_cppflags		= $(AM_CPPFLAGS)
 ccpairs_tests_cflags		= $(AM_CFLAGS) $(CCEXCEPTIONS_FLAGS) $(CCMEMORY_CFLAGS) $(CCSTRUCTS_CFLAGS) $(CCTESTS_CFLAGS)
-ccpairs_tests_ldadd		= libccpairs.la $(CCTESTS_LIBS)
+ccpairs_tests_ldadd		= $(AM_LDFLAGS) libccpairs.la $(CCTESTS_LIBS)
 
 ## --------------------------------------------------------------------
 
