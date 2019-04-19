@@ -71,15 +71,14 @@ dnl AC_CACHE_SAVE
 PKG_PREREQ([0.29])
 PKG_INSTALLDIR
 MMUX_CHECK_PKG_CONFIG_MACROS
-PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.8.0])
-PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.2.0])
-PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.2.0])
-PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.3.0],,[AC_MSG_WARN([package CCTests not found])])
+PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.9.0])
+PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.2.2])
+PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.3.0])
+PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.4.1],,[AC_MSG_WARN([package CCTests not found])])
 
 AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
 
 MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccexceptions],[ccexceptions.h])
-#MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccexceptions],[ccnames.h])
 MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccmemory],[ccmemory.h])
 MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([ccstructs],[ccstructs.h])
 MMUX_PKG_CONFIG_FIND_INCLUDE_FILE([cctests],[cctests.h])

@@ -10,11 +10,9 @@ Revision 0.1.0-devel.1
 
 * Changed library prefix from "ccpair_" to "ccpairs_".
 
-* Updated to CCExceptions v0.8.0-devel.3.
-
-* Updated to CCMemory 0.2.1.
-
-* Added dependency from CCStructs v0.2.0.
+* Updated to  CCExceptions, at least  version 0.9.0; CCMemory,  at least
+  version 0.2.2;  CCStructs, at least  version 0.3.0; CCTests,  at least
+  version 0.4.1.
 
 * Total review of exception handlers.
 
