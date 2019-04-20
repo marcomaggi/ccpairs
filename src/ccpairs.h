@@ -223,6 +223,7 @@ ccpairs_decl bool ccpairs_condition_is_circular_list (cce_condition_t const * C)
 
 typedef struct ccpairs_stru_t		ccpairs_stru_t;
 typedef ccpairs_stru_t *		ccpairs_t;
+typedef ccpairs_t			ccpair_t;
 
 struct ccpairs_stru_t {
   uintptr_t	A;

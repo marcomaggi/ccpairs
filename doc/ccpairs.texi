@@ -448,7 +448,8 @@ client code: @strong{pairs are immutable}.
 
 
 @deftp {Pointer Typedef} ccpairs_t
-Pointer type representing a pointer to @objtype{ccpairs_stru_t}.
+@deftpx {Pointer Typedef} ccpair_t
+Pointer types representing a pointer to @objtype{ccpairs_stru_t}.
 @end deftp
 
 
