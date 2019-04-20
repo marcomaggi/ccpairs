@@ -7,7 +7,7 @@
 
   Test file for inspection functions.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -59,7 +59,7 @@ make_list_len (cce_destination_t upper_L, size_t len)
 		  i, ccpairs_car(P[i]),
 		  i, (void *)ccpairs_cdr(P[i]) );
 	}
-	ccpairs_init_pair_error_handler(L, &(P_H[i]), P[i]);
+	ccpairs_init_and_register_pair_error_handler(L, &(P_H[i]), P[i]);
       }
       P[0] = ccpairs_cons(L, 1, P[1]);
       if (0) {
@@ -137,7 +137,7 @@ test_1_2 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = ccpairs_cons(L, 1, NULL);
-    ccpairs_init_pair_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_pair_clean_handler(L, P_H, P);
     cctests_assert(L, 1 == ccpairs_length(L, P));
     cce_run_body_handlers(L);
   }
@@ -154,7 +154,7 @@ test_1_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 5);
-    ccpairs_init_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
     if (0) { print_list(stderr, P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpairs_length(L, P)); }
     cctests_assert(L, 5 == ccpairs_length(L, P));
@@ -173,7 +173,7 @@ test_1_4 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 1024);
-    ccpairs_init_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
     if (0) { print_list(stderr, P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpairs_length(L, P)); }
     cctests_assert(L, 1024 == ccpairs_length(L, P));
@@ -403,7 +403,7 @@ test_5_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 5);
-    ccpairs_init_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
     if (0) { print_spine_len(stderr, P, 5); }
     if (0) { fprintf(stderr, "%s: length=%lu\n", __func__, ccpairs_length(L, P)); }
     if (0) { print_list_len(stderr, P, 5); }
@@ -424,7 +424,7 @@ test_5_4 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 1024);
-    ccpairs_init_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
     cctests_assert(L, false == ccpairs_is_circular(P));
     cce_run_body_handlers(L);
   }

@@ -12,9 +12,6 @@
 @c Local macros.
 @c ------------------------------------------------------------
 
-@macro ccmemoryref{NODE,TITLE}
-@ref{\NODE\,\TITLE\,\TITLE\,ccmemory}
-@end macro
 
 @c page
 @c ------------------------------------------------------------
@@ -1259,28 +1256,53 @@ if (cce_location(L)) @{
 We can handle pairs that must be released with the function @cfunc{ccpairs_free} as follows:
 
 @example
-cce_location_t  L[1];
-cce_handler_t   H[1];
+cce_location_t                L[1];
+ccpairs_pair_clean_handler_t  H[1];
 
 if (ccpairs_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
-  ccpairs_t P = ccpairs_cons(1, NULL);
-  ccpairs_clean_handler_pair_init(L, H, P);
+  ccpairs_t  P = ccpairs_cons(1, NULL);
+  ccpairs_init_and_register_pair_handler(L, H, P);
+
   /* Do something with P here. */
   cce_run_body_handlers(L);
 @}
 @end example
 
-The following symbols are defined in the header file @file{ccpair.h}.
+The following symbols are defined in the header file @file{ccpairs.h}.
 
 
-@deftypefun void ccpairs_clean_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
-@deftypefunx void ccpairs_error_handler_pair_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the memory allocated for the pair referenced by @var{P} using the function
-@cfunc{ccpairs_free}.
+@deftp {Struct Typedef} ccpairs_pair_clean_handler_t
+@deftpx {Struct Typedef} ccpairs_pair_error_handler_t
+Type of structures representing exception handlers for pairs without item destructor.
+@end deftp
+
+
+@deftypefun void ccpairs_init_and_register_pair_clean_handler (cce_destination_t @var{L}, ccpairs_pair_clean_handler_t * @var{H}, ccpairs_t @var{P})
+Initialise the exception handler referenced by @var{H} to delete the pair referenced by @var{P};
+register the handler in the context of the location @var{L}.
 @end deftypefun
+
+
+@deftypefun void ccpairs_init_and_register_pair_error_handler (cce_destination_t @var{L}, ccpairs_pair_error_handler_t * @var{H}, ccpairs_t @var{P})
+Initialise the exception handler referenced by @var{H} to delete the pair referenced by @var{P};
+register the handler in the context of the location @var{L}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} void ccpairs_init_and_register_pair_handler (cce_destination_t @var{L}, @var{H}, ccpairs_t @var{P})
+Initialise the exception handler referenced by @var{H} to delete the pair referenced by @var{P};
+register the handler in the context of the location @var{L}.  If the type of the pointer @var{H} is.
+
+@table @code
+@item ccpairs_pair_clean_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_pair_clean_handler}.
+
+@item ccpairs_pair_error_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_pair_error_handler}.
+@end table
+@end deftypefn
 
 @c page
 @node handlers lists
@@ -1290,44 +1312,64 @@ release the memory allocated for the pair referenced by @var{P} using the functi
 We can handle lists that must be released with the function @cfunc{ccpairs_free_list} as follows:
 
 @example
-cce_location_t  L[1];
-cce_handler_t   H[1];
+cce_location_t                L[1];
+ccpairs_list_clean_handler_t  H[1];
 
 if (ccpairs_location(L)) @{
   cce_run_catch_handlers_final(L);
 @} else @{
   ccpairs_t P = ccpairs_cons(1, ccpairs_cons(2, NULL));
-  ccpairs_clean_handler_list_init(L, H, P);
+  ccpairs_init_and_register_list_handler(L, H, P);
+
   /* Do something with P here. */
   cce_run_body_handlers(L);
 @}
 @end example
 
-The following symbols are defined in the header file @file{ccpair.h}.
+The following symbols are defined in the header file @file{ccpairs.h}.
 
 
-@deftypefun void ccpairs_clean_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
-@deftypefunx void ccpairs_error_handler_list_init (cce_location_t * @var{L}, cce_handler_t * @var{H}, ccpairs_t @var{P})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the memory allocated for the list referenced by @var{P} using the function
-@cfunc{ccpairs_free_list}.
+@deftp {Struct Typedef} ccpairs_list_clean_handler_t
+@deftpx {Struct Typedef} ccpairs_list_error_handler_t
+Type of structures representing exception handlers for lists without item destructor.
+@end deftp
+
+
+@deftypefun void ccpairs_init_and_register_list_clean_handler (cce_destination_t @var{L}, ccpairs_list_clean_handler_t * @var{H}, ccpairs_t @var{P})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P};
+register the handler in the context of the location @var{L}.
 @end deftypefun
+
+
+@deftypefun void ccpairs_init_and_register_list_error_handler (cce_destination_t @var{L}, ccpairs_list_error_handler_t * @var{H}, ccpairs_t @var{P})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P};
+register the handler in the context of the location @var{L}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} void ccpairs_init_and_register_list_handler (cce_destination_t @var{L}, @var{H}, ccpairs_t @var{P})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P};
+register the handler in the context of the location @var{L}.  If the type of the pointer @var{H} is.
+
+@table @code
+@item ccpairs_list_clean_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_list_clean_handler}.
+
+@item ccpairs_list_error_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_list_error_handler}.
+@end table
+@end deftypefn
 
 @c page
 @node handlers items
 @section Handler for item release
 
 
-It happens that we want to build an item object and then store it into a pair; if an error occurs we
+We might want to build an item object and then store it into a pair or list; if an error occurs we
 want to release such item; the handlers defined by @value{PACKAGE} allow us to do so using the
-exceptions mechanism.  We can define our item handler types using the CCExceptions @api{}; the
-handler defined by @value{PACKAGE} is used internally when building a list.
+location mechanism.  Here is an example of item and pair construction:
 
-Obviously, there is no predefined destructor for items, so we have to explicitly select one.
-
-Here is an example of item and pair construction:
-
-@example
+@smallexample
 uintptr_t
 item_constructor (cce_destination_t L)
 @{
@@ -1340,61 +1382,82 @@ item_destructor (uintptr_t item)
   /* Release an item. */
 @}
 
-void
+int
 main (void)
 @{
-  cce_location_t        L[1];
-  cce_handler_t         pair_H[1];
-  ccpairs_item_handler_t item_H[1];
+  cce_location_t                L[1];
+  ccpairs_pair_clean_handler_t  pair_H[1];
+  ccpairs_item_error_handler_t  item_H[1];
 
   if (ccpairs_location(L)) @{
     cce_run_catch_handlers_final(L);
-    exit(EXIT_FAILURE);
   @} else @{
-    uintptr_t   item;
-    ccpairs_t    P;
+    uintptr_t  item;
+    ccpairs_t  P;
 
     item = item_constructor(L);
-    ccpairs_clean_handler_item_init(L, item_H, item,
-       item_destructor);
+    ccpairs_init_and_register_item_handler(L, item_H, item, item_destructor);
+
+    /* Do something here, possibly raising an exception. */
 
     P = ccpairs_cons(item, NULL);
-    ccpairs_clean_handler_pair_init(L, pair_H, P);
+    ccpairs_init_and_register_pair_item_handler(L, pair_H, P, item_destructor);
 
     /* Do something with P here. */
     cce_run_body_handlers(L);
   @}
+
+  return 0;
 @}
-@end example
+@end smallexample
 
-The following symbols are defined in the header file @file{ccpair.h}.
+The following symbols are defined in the header file @file{ccpairs.h}.
 
 
-@deftp {Struct Typedef} ccpairs_item_handler_t
-Type of data structures used has exception handlers for items.
+@deftp {Struct Typedef} ccpairs_item_clean_handler_t
+@deftpx {Struct Typedef} ccpairs_item_error_handler_t
+Type of structures representing exception handlers for items.
 @end deftp
 
 
-@deftypefun void ccpairs_clean_handler_item_init (cce_location_t * @var{L}, ccpairs_item_handler_t * @var{H}, uintptr_t @var{item}, ccpairs_item_destructor_t * @var{D})
-@deftypefunx void ccpairs_error_handler_item_init (cce_location_t * @var{L}, ccpairs_item_handler_t * @var{H}, uintptr_t @var{item}, ccpairs_item_destructor_t * @var{D})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the resources associated to @var{item} using the supplied destructor function @var{D}.
+@deftypefun void ccpairs_init_and_register_item_clean_handler (cce_destination_t @var{L}, ccpairs_item_clean_handler_t * @var{H}, uintptr_t @var{ITEM}, ccpairs_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the item referenced by @var{ITEM},
+using the destructor referenced by @var{DESTRUCTOR}; register the handler in the context of the
+location @var{L}.
 @end deftypefun
+
+
+@deftypefun void ccpairs_init_and_register_item_error_handler (cce_destination_t @var{L}, ccpairs_item_error_handler_t * @var{H}, uintptr_t @var{ITEM}, ccpairs_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the item referenced by @var{ITEM},
+using the destructor referenced by @var{DESTRUCTOR}; register the handler in the context of the
+location @var{L}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} void ccpairs_init_and_register_item_handler (cce_destination_t @var{L}, @var{H}, uintptr_t @var{ITEM}, ccpairs_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the item referenced by @var{ITEM},
+using the destructor referenced by @var{DESTRUCTOR}; register the handler in the context of the
+location @var{L}.  If the type of the pointer @var{H} is.
+
+@table @code
+@item ccpairs_item_clean_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_item_clean_handler}.
+
+@item ccpairs_item_error_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_item_error_handler}.
+@end table
+@end deftypefn
 
 @c page
 @node handlers itpairs
 @section Handler for pair--and--item release
 
 
-It happens that we want to build an item object and then store it into a pair; if an error occurs we
-want to release such item; after the item has been put into a pair we may want to release the pair
-and the item together using a specialised item destructor; the handlers defined by @value{PACKAGE}
-allow us to do so using the exceptions mechanism.
-
-Obviously, there is no predefined destructor for items, so we have to explicitly select one.
-
-We must be careful in separating the two moments: item and pair construction; pair--and--item
-destruction.
+We might want to build an item object and then store it into a pair; if an error occurs we want to
+release such item; after the item has been put into a pair we may want to release the pair and the
+item together using a specialised item destructor; the handlers defined by @value{PACKAGE} allow us
+to do so using the exceptions mechanism.  We must be careful in separating the two moments: item
+construction then pair construction; pair--and--item destruction.
 
 Here is an example of item and pair construction:
 
@@ -1414,81 +1477,101 @@ item_destructor (uintptr_t item)
 void
 main (void)
 @{
-  ccpairs_t              P;
+  ccpairs_t  P;
 
-  /* Build the item and the pair.  Upon exiting this block: we
-     release the item only if an error has occurred. */
+  /* Build the item and the pair.  Upon exiting this block: we release
+     the item only if an error has occurred. */
   @{
-    cce_location_t              L[1];
-    cce_handler_t               pair_H[1];
-    ccpairs_item_handler_t       item_H[1];
+    cce_location_t                L[1];
+    ccpairs_pair_error_handler_t  pair_H[1];
+    ccpairs_item_error_handler_t  item_H[1];
 
     if (ccpairs_location(L)) @{
       cce_run_catch_handlers_final(L);
       exit(EXIT_FAILURE);
     @} else @{
-      uintptr_t   item;
+      uintptr_t  item;
+      ccpairs_t  P;
 
       item = item_constructor(L);
-      ccpairs_error_handler_item_init(L, item_H, item,
-         item_destructor);
+      ccpairs_init_and_register_item_handler(L, item_H, item, item_destructor);
 
       P = ccpairs_cons(item, NULL);
+      ccpairs_init_and_register_pair_item_handler(L, pair_H, P, item_destructor);
 
+      /* Maybe do something with P here, possibly raising and exception. */
       cce_run_body_handlers(L);
     @}
   @}
 
-  /* Now use the pair and finally release both the pair
-     and the item. */
+  /* Now use the pair and finally release both the pair and the item. */
   @{
-    cce_location_t              L[1];
-    ccpairs_pair_item_handler_t  pair_H[1];
+    cce_location_t                     L[1];
+    ccpairs_pair_item_clean_handler_t  pair_H[1];
 
     if (ccpairs_location(L)) @{
       cce_run_catch_handlers_final(L);
       exit(EXIT_FAILURE);
     @} else @{
-      ccpairs_clean_handler_pair_item_init(L, pair_H, P);
+      ccpairs_init_and_register_pair_item_handler(L, pair_H, P, item_destructor);
       /* Do something with P here. */
       cce_run_body_handlers(L);
     @}
   @}
+
+  exit(EXIT_SUCCESS);
 @}
 @end example
 
-The following symbols are defined in the header file @file{ccpair.h}.
+The following symbols are defined in the header file @file{ccpairs.h}.
 
 
-@deftp {Struct Typedef} ccpairs_pair_item_handler_t
-Type of data structures used has exception handlers for pairs with items.
+@deftp {Struct Typedef} ccpairs_pair_item_clean_handler_t
+@deftpx {Struct Typedef} ccpairs_pair_item_error_handler_t
+Type of structures representing exception handlers for pairs holding items with destructor.
 @end deftp
 
 
-@deftypefun void ccpairs_clean_handler_pair_item_init (cce_location_t * @var{L}, ccpairs_pair_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
-@deftypefunx void ccpairs_error_handler_pair_item_init (cce_location_t * @var{L}, ccpairs_pair_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release the pair @var{P} using @cfunc{ccpairs_free}; it will also release the resources associated to
-the item, in the pair's first word, using the supplied destructor function @var{D}.
+@deftypefun void ccpairs_init_and_register_pair_item_clean_handler (cce_destination_t @var{L}, ccpairs_pair_item_clean_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_pair_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P},
+using the destructor referenced by @var{DESTRUCTOR} to delete the item; register the handler in the
+context of the location @var{L}.
 @end deftypefun
+
+
+@deftypefun void ccpairs_init_and_register_pair_item_error_handler (cce_destination_t @var{L}, ccpairs_pair_item_error_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_pair_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P},
+using the destructor referenced by @var{DESTRUCTOR} to delete the item; register the handler in the
+context of the location @var{L}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} void ccpairs_init_and_register_pair_item_handler (cce_destination_t @var{L}, @var{H}, ccpairs_t @var{P}, ccpairs_pair_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P},
+using the destructor referenced by @var{DESTRUCTOR} to delete the item; register the handler in the
+context of the location @var{L}.  If the type of the pointer @var{H} is.
+
+@table @code
+@item ccpairs_pair_item_clean_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_pair_item_clean_handler}.
+
+@item ccpairs_pair_item_error_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_pair_item_error_handler}.
+@end table
+@end deftypefn
 
 @c page
 @node handlers itlists
 @section Handler for list--and--items release
 
 
-It happens that we want to build item objects and then store them into a list; if an error occurs we
-want to release such items; after the items have been put into a list we may want to release the
-list and the items together using a specialised item destructor; the handlers defined by
-@value{PACKAGE} allow us to do so using the exceptions mechanism.
+We might want to build an item object and then store it into a list; if an error occurs we want to
+release such item; after the item has been put into a list we may want to release the list and the
+item together using a specialised item destructor; the handlers defined by @value{PACKAGE} allow us
+to do so using the exceptions mechanism.  We must be careful in separating the two moments: item
+construction then list construction; list--and--item destruction.
 
-Obviously, there is no predefined destructor for items, so we have to explicitly select one.  A
-single destructor can be selected for all the items.
-
-We must be careful in separating the two moments: item and list construction; list--and--items
-destruction.
-
-Here is an example of items and list construction:
+Here is an example of item and list construction:
 
 @example
 uintptr_t
@@ -1503,146 +1586,98 @@ item_destructor (uintptr_t item)
   /* Release an item. */
 @}
 
-ccpairs_t
-make_list_with_items (cce_destination_t upper_L)
-/* Build the items and the list.  Upon exiting this block: we
-   release the items and the second pair only if an error has
-   occurred. */
-@{
-  cce_location_t        L[1];
-  cce_handler_t         P_H[1], Q_H[1];
-  ccpairs_item_handler_t item_P_H[1], item_Q_H[1];
-  ccpairs_t              head;
-
-  if (ccpairs_location(L)) @{
-    cce_run_catch_handlers_raise(L, upper_L);
-  @} else @{
-    ccpairs_t          P, Q;
-    uintptr_t         item_P, item_Q;
-
-    item_P = item_constructor(L);
-    ccpairs_error_handler_item_init(L, item_P_H, item_P,
-       item_destructor);
-
-    item_Q = item_constructor(L);
-    ccpairs_error_handler_item_init(L, item_Q_H, item_Q,
-       item_destructor);
-
-    Q = ccpairs_cons(item_Q, NULL);
-    ccpairs_error_handler_pair_init(L, Q_H, Q);
-
-    P = ccpairs_cons(item_P, Q);
-
-    /* The pair P is the head of the list. */
-    head = P;
-
-    cce_run_body_handlers(L);
-  @}
-
-  return head;
-@}
-
 void
 main (void)
 @{
-  cce_location_t              L[1];
-  ccpairs_list_item_handler_t  head_H[1];
+  ccpairs_t  P;
 
-  /* Now use the list and finally release both the list
-     and the items. */
-  if (ccpairs_location(L)) @{
-    cce_run_catch_handlers_final(L);
-    exit(EXIT_FAILURE);
-  @} else @{
-    ccpairs_t    head = make_list_with_items(L);
-    ccpairs_clean_handler_list_item_init(L, head_H, head,
-       item_destructor);
-    /* do something with HEAD here */
-    cce_run_body_handlers(L);
+  /* Build the item and the list.  Upon exiting this block: we release
+     the item only if an error has occurred. */
+  @{
+    cce_location_t                L[1];
+    ccpairs_pair_error_handler_t  pair_Q_H[1];
+    ccpairs_list_error_handler_t  list_P_H[1];
+    ccpairs_item_error_handler_t  item_P_H[1], item_Q_H[1];
+
+    if (ccpairs_location(L)) @{
+      cce_run_catch_handlers_final(L);
+      exit(EXIT_FAILURE);
+    @} else @{
+      uintptr_t  item_P, item_Q;
+      ccpairs_t  P, Q;
+
+      item_P = item_constructor(L);
+      ccpairs_init_and_register_item_handler(L, item_P_H, item_P, item_destructor);
+
+      item_Q = item_constructor(L);
+      ccpairs_init_and_register_item_handler(L, item_Q_H, item_Q, item_destructor);
+
+      Q = ccpairs_cons(item_Q, NULL);
+      ccpairs_init_and_register_list_item_handler(L, pair_Q_H, Q, item_destructor);
+
+      P = ccpairs_cons(item_P, Q);
+      ccpairs_init_and_register_list_item_handler(L, list_P_H, P, item_destructor);
+
+      /* Maybe do something with P here, possibly raising and exception. */
+      cce_run_body_handlers(L);
+    @}
   @}
+
+  /* Now use the list and finally release both the list and the item. */
+  @{
+    cce_location_t                     L[1];
+    ccpairs_list_item_clean_handler_t  list_H[1];
+
+    if (ccpairs_location(L)) @{
+      cce_run_catch_handlers_final(L);
+      exit(EXIT_FAILURE);
+    @} else @{
+      ccpairs_init_and_register_list_item_handler(L, list_H, P, item_destructor);
+      /* Do something with P here. */
+      cce_run_body_handlers(L);
+    @}
+  @}
+
+  exit(EXIT_SUCCESS);
 @}
 @end example
 
-Here is the same example written with constructors that know about handlers:
-
-@example
-uintptr_t
-item_constructor (cce_destination_t L, ccpairs_item_handler_t * H)
-@{
-  uintptr_t     item = make_item(L);
-  ccpairs_error_handler_item_init(L, H, item, item_destructor);
-  return item;
-@}
-
-void
-item_destructor (uintptr_t item)
-@{
-  /* Release an item. */
-@}
-
-ccpairs_t
-make_list_with_clean (cce_destination_t upper_L,
-                        ccpairs_list_item_handler_t * head_H)
-/* Build the items and the list.  Upon exiting this block: we
-   release the items and the second pair only if an error has
-   occurred. */
-@{
-  cce_location_t              L[1];
-  cce_handler_t               P_H[1], Q_H[1];
-  ccpairs_item_handler_t       item_P_H[1], item_Q_H[1];
-
-  if (ccpairs_location(L)) @{
-    cce_run_catch_handlers_raise(L, upper_L);
-  @} else @{
-    uintptr_t item_P = item_constructor(L, item_P_H);
-    uintptr_t item_Q = item_constructor(L, item_Q_H);
-    ccpairs_t  Q = ccpairs_cons_error_handler(item_Q, NULL, Q_H);
-    ccpairs_t  P = ccpairs_cons(item_P, Q);
-
-    /* The pair P is the head of the list. */
-    head = P;
-    cce_run_body_handlers(L);
-  @}
-
-  ccpairs_clean_handler_list_item_init(upper_L, head_H, head,
-     item_destructor);
-  return head;
-@}
-
-void
-main (void)
-@{
-  cce_location_t              L[1];
-  ccpairs_list_item_handler_t  head_H[1];
-
-  /* Now use the list and finally release both the list
-     and the items. */
-  if (ccpairs_location(L)) @{
-    cce_run_catch_handlers_final(L);
-    exit(EXIT_FAILURE);
-  @} else @{
-    ccpairs_t    head = make_list_with_clean(L, head_H);
-    /* do something with HEAD here */
-    cce_run_body_handlers(L);
-  @}
-@}
-@end example
-
-The following symbols are defined in the header file @file{ccpair.h}.
+The following symbols are defined in the header file @file{ccpairs.h}.
 
 
-@deftp {Struct Typedef} ccpairs_list_item_handler_t
-Type of data structures used has exception handlers for lists with items.
+@deftp {Struct Typedef} ccpairs_list_item_clean_handler_t
+@deftpx {Struct Typedef} ccpairs_list_item_error_handler_t
+Type of structures representing exception handlers for lists holding items with destructor.
 @end deftp
 
 
-@deftypefun void ccpairs_clean_handler_list_item_init (cce_location_t * @var{L}, ccpairs_list_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
-@deftypefunx void ccpairs_error_handler_list_item_init (cce_location_t * @var{L}, ccpairs_list_item_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_item_destructor_t * @var{D})
-Register @var{H} as cleanup or error handler in the context of @var{L}.  The handler function will
-release every pair in the list @var{P} using @cfunc{ccpairs_free}; it will also release the
-resources associated to the items, in the pairs' first words, using the supplied destructor function
-@var{D}.
+@deftypefun void ccpairs_init_and_register_list_item_clean_handler (cce_destination_t @var{L}, ccpairs_list_item_clean_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_list_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P},
+using the destructor referenced by @var{DESTRUCTOR} to delete the item; register the handler in the
+context of the location @var{L}.
 @end deftypefun
+
+
+@deftypefun void ccpairs_init_and_register_list_item_error_handler (cce_destination_t @var{L}, ccpairs_list_item_error_handler_t * @var{H}, ccpairs_t @var{P}, ccpairs_list_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P},
+using the destructor referenced by @var{DESTRUCTOR} to delete the item; register the handler in the
+context of the location @var{L}.
+@end deftypefun
+
+
+@deftypefn {Preprocessor Macro} void ccpairs_init_and_register_list_item_handler (cce_destination_t @var{L}, @var{H}, ccpairs_t @var{P}, ccpairs_list_item_destructor_t * @var{DESTRUCTOR})
+Initialise the exception handler referenced by @var{H} to delete the list referenced by @var{P},
+using the destructor referenced by @var{DESTRUCTOR} to delete the item; register the handler in the
+context of the location @var{L}.  If the type of the pointer @var{H} is.
+
+@table @code
+@item ccpairs_list_item_clean_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_list_item_clean_handler}.
+
+@item ccpairs_list_item_error_handler_t *
+The macro use expands into a call to @cfunc{ccpairs_init_and_register_list_item_error_handler}.
+@end table
+@end deftypefn
 
 @c page
 @node utils

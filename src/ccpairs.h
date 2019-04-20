@@ -18,8 +18,8 @@
   WARRANTY; without  even the implied  warranty of  MERCHANTABILITY or FITNESS  FOR A
   PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-  You should have received  a copy of the GNU General Public  License along with this
-  program.  If not, see <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU General Lesser Public License along with
+  this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef CCPAIRS_H
@@ -105,7 +105,7 @@ extern "C" {
 typedef size_t		ccpairs_idx_t;
 typedef size_t		ccpairs_len_t;
 
-typedef uintptr_t ccpairs_item_constructor_t (cce_location_t * L, ccpairs_idx_t idx);
+typedef uintptr_t ccpairs_item_constructor_t (cce_destination_t L, ccpairs_idx_t idx);
 typedef void      ccpairs_item_destructor_t  (uintptr_t item);
 
 
@@ -128,30 +128,8 @@ ccpairs_decl void ccpairs_library_init (void)
 
 
 /** --------------------------------------------------------------------
- ** Exceptional-condition object-types.
+ ** Exceptional-condition objects: not enough items.
  ** ----------------------------------------------------------------- */
-
-typedef struct ccpairs_descriptor_base_t	ccpairs_descriptor_base_t;
-typedef struct ccpairs_condition_base_t		ccpairs_condition_base_t;
-
-struct ccpairs_descriptor_base_t {
-  cce_descriptor_t	descriptor;
-};
-
-struct ccpairs_condition_base_t {
-  cce_condition_t	condition;
-};
-
-ccpairs_decl const ccpairs_descriptor_base_t * const ccpairs_descriptor_base;
-
-__attribute__((__pure__,__nonnull__(1),__always_inline__))
-static inline bool
-ccpairs_condition_is_base (cce_condition_t const * C)
-{
-  return cce_condition_is(C, &(ccpairs_descriptor_base->descriptor));
-}
-
-/* ------------------------------------------------------------------ */
 
 typedef struct ccpairs_descriptor_not_enough_items_t	ccpairs_descriptor_not_enough_items_t;
 typedef struct ccpairs_condition_not_enough_items_t	ccpairs_condition_not_enough_items_t;
@@ -161,47 +139,57 @@ struct ccpairs_descriptor_not_enough_items_t {
 };
 
 struct ccpairs_condition_not_enough_items_t {
-  ccpairs_condition_base_t	base;
+  cce_condition_logic_error_t	logic_error;
 };
 
-ccpairs_decl const ccpairs_descriptor_not_enough_items_t * const ccpairs_descriptor_not_enough_items;
-
-ccpairs_decl cce_condition_t const * ccpairs_condition_new_not_enough_items (void)
-  __attribute__((__leaf__,__pure__));
-
-__attribute__((__pure__,__nonnull__(1),__always_inline__))
-static inline bool
-ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
-{
-  return cce_condition_is(C, &(ccpairs_descriptor_not_enough_items->descriptor));
-}
+extern void cce_descriptor_set_parent_to(ccpairs_descriptor_not_enough_items_t) (cce_descriptor_t * D)
+  __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
 
-typedef struct ccpairs_descriptor_empty_list_t		ccpairs_descriptor_empty_list_t;
-typedef struct ccpairs_condition_empty_list_t		ccpairs_condition_empty_list_t;
+ccpairs_decl void ccpairs_condition_init_not_enough_items (cce_destination_t L, ccpairs_condition_not_enough_items_t * C)
+  __attribute__((__nonnull__(1)));
+
+ccpairs_decl cce_condition_t const * ccpairs_condition_new_not_enough_items (void)
+  __attribute__((__leaf__,__pure__,__returns_nonnull__));
+
+ccpairs_decl bool ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
+  __attribute__((__pure__,__nonnull__(1)));
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional-condition objects: empty list.
+ ** ----------------------------------------------------------------- */
+
+typedef struct ccpairs_descriptor_empty_list_t	ccpairs_descriptor_empty_list_t;
+typedef struct ccpairs_condition_empty_list_t	ccpairs_condition_empty_list_t;
 
 struct ccpairs_descriptor_empty_list_t {
   cce_descriptor_t	descriptor;
 };
 
 struct ccpairs_condition_empty_list_t {
-  ccpairs_condition_base_t	base;
+  ccpairs_condition_not_enough_items_t	not_enough_items;
 };
 
-ccpairs_decl const ccpairs_descriptor_empty_list_t * const ccpairs_descriptor_empty_list;
-
-ccpairs_decl cce_condition_t const * ccpairs_condition_new_empty_list (void)
-  __attribute__((__leaf__,__pure__));
-
-__attribute__((__pure__,__nonnull__(1),__always_inline__))
-static inline bool
-ccpairs_condition_is_empty_list (cce_condition_t const * C)
-{
-  return cce_condition_is(C, &(ccpairs_descriptor_empty_list->descriptor));
-}
+extern void cce_descriptor_set_parent_to(ccpairs_descriptor_empty_list_t) (cce_descriptor_t * D)
+  __attribute__((__nonnull__(1)));
 
 /* ------------------------------------------------------------------ */
+
+ccpairs_decl void ccpairs_condition_init_empty_list (cce_destination_t L, ccpairs_condition_empty_list_t * C)
+  __attribute__((__nonnull__(1)));
+
+ccpairs_decl cce_condition_t const * ccpairs_condition_new_empty_list (void)
+  __attribute__((__leaf__,__pure__,__returns_nonnull__));
+
+ccpairs_decl bool ccpairs_condition_is_empty_list (cce_condition_t const * C)
+  __attribute__((__pure__,__nonnull__(1)));
+
+
+/** --------------------------------------------------------------------
+ ** Exceptional-condition objects: circular list.
+ ** ----------------------------------------------------------------- */
 
 typedef struct ccpairs_descriptor_circular_list_t	ccpairs_descriptor_circular_list_t;
 typedef struct ccpairs_condition_circular_list_t	ccpairs_condition_circular_list_t;
@@ -211,20 +199,22 @@ struct ccpairs_descriptor_circular_list_t {
 };
 
 struct ccpairs_condition_circular_list_t {
-  ccpairs_condition_base_t	base;
+  cce_condition_logic_error_t	logic_error;
 };
 
-ccpairs_decl const ccpairs_descriptor_circular_list_t * const ccpairs_descriptor_circular_list;
+extern void cce_descriptor_set_parent_to(ccpairs_descriptor_circular_list_t) (cce_descriptor_t * D)
+  __attribute__((__nonnull__(1)));
+
+/* ------------------------------------------------------------------ */
+
+ccpairs_decl void ccpairs_condition_init_circular_list (cce_destination_t L, ccpairs_condition_circular_list_t * C)
+  __attribute__((__nonnull__(1)));
 
 ccpairs_decl cce_condition_t const * ccpairs_condition_new_circular_list (void)
-  __attribute__((__leaf__,__pure__));
+  __attribute__((__leaf__,__pure__,__returns_nonnull__));
 
-__attribute__((__pure__,__nonnull__(1),__always_inline__))
-static inline bool
-ccpairs_condition_is_circular_list (cce_condition_t const * C)
-{
-  return cce_condition_is(C, &(ccpairs_descriptor_circular_list->descriptor));
-}
+ccpairs_decl bool ccpairs_condition_is_circular_list (cce_condition_t const * C)
+  __attribute__((__pure__,__nonnull__(1)));
 
 
 /** --------------------------------------------------------------------
@@ -275,7 +265,7 @@ ccpairs_cdr_value (ccpairs_t P)
 ccpairs_decl ccmem_allocator_t const * ccpairs_register_allocator (ccmem_allocator_t const * allocator)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-ccpairs_decl ccpairs_t	ccpairs_alloc (cce_location_t * L)
+ccpairs_decl ccpairs_t	ccpairs_alloc (cce_destination_t L)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
 ccpairs_decl void	ccpairs_free   (ccpairs_t P);
@@ -289,7 +279,7 @@ ccpairs_decl void	ccpairs_free_list (ccpairs_t P);
 
 __attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
 static inline ccpairs_t
-ccpairs_cons (cce_location_t * L, uintptr_t A, ccpairs_t D)
+ccpairs_cons (cce_destination_t L, uintptr_t A, ccpairs_t D)
 {
   ccpairs_t	P = ccpairs_alloc(L);
   P->A = A;
@@ -299,21 +289,21 @@ ccpairs_cons (cce_location_t * L, uintptr_t A, ccpairs_t D)
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_cons_improper (cce_location_t * L, uintptr_t A, uintptr_t D)
+ccpairs_cons_improper (cce_destination_t L, uintptr_t A, uintptr_t D)
 {
   return ccpairs_cons(L, A, (ccpairs_t)D);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_cons_node (cce_location_t * L, ccpairs_t A, ccpairs_t D)
+ccpairs_cons_node (cce_destination_t L, ccpairs_t A, ccpairs_t D)
 {
   return ccpairs_cons(L, (uintptr_t)A, D);
 }
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_list (cce_location_t * L,
+ccpairs_decl ccpairs_t ccpairs_list (cce_destination_t L,
 				     ccpairs_item_constructor_t * item_constructor,
 				     ccpairs_item_destructor_t  * item_destructor)
   __attribute__((__nonnull__(1,2,3)));
@@ -337,7 +327,7 @@ ccpairs_is_null (ccpairs_t P)
   return (NULL == P);
 }
 
-ccpairs_decl ccpairs_len_t ccpairs_length (cce_location_t * L, ccpairs_t P)
+ccpairs_decl ccpairs_len_t ccpairs_length (cce_destination_t L, ccpairs_t P)
   __attribute__((__nonnull__(1)));
 
 __attribute__((__always_inline__,__pure__))
@@ -355,80 +345,80 @@ ccpairs_decl bool ccpairs_is_circular (ccpairs_t P)
  ** Pair accessors.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl ccpairs_t ccpairs_ref_pair (cce_location_t * L, ccpairs_t P, ccpairs_idx_t idx)
+ccpairs_decl ccpairs_t ccpairs_ref_pair (cce_destination_t L, ccpairs_t P, ccpairs_idx_t idx)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
-ccpairs_decl ccpairs_t ccpairs_last_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_decl ccpairs_t ccpairs_last_pair (cce_destination_t L, ccpairs_t P)
   __attribute__((__nonnull__(1),__returns_nonnull__));
 
 /* ------------------------------------------------------------------ */
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_first_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_first_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 0);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_second_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_second_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 1);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_third_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_third_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 2);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_fourth_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_fourth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 3);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_fifth_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_fifth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 4);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_sixth_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_sixth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 5);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_seventh_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_seventh_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 6);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_eighth_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_eighth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 7);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_nineth_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_nineth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 8);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_tenth_pair (cce_location_t * L, ccpairs_t P)
+ccpairs_tenth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 9);
 }
@@ -440,14 +430,14 @@ ccpairs_tenth_pair (cce_location_t * L, ccpairs_t P)
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_ref (cce_location_t * L, ccpairs_t P, ccpairs_idx_t const idx)
+ccpairs_ref (cce_destination_t L, ccpairs_t P, ccpairs_idx_t const idx)
 {
   return ccpairs_car(ccpairs_ref_pair(L, P, idx));
 }
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline uintptr_t
-ccpairs_last (cce_location_t * L, ccpairs_t P)
+ccpairs_last (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_car(ccpairs_last_pair(L, P));
 }
@@ -456,70 +446,70 @@ ccpairs_last (cce_location_t * L, ccpairs_t P)
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_first (cce_location_t * L, ccpairs_t P)
+ccpairs_first (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 0);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_second (cce_location_t * L, ccpairs_t P)
+ccpairs_second (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 1);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_third (cce_location_t * L, ccpairs_t P)
+ccpairs_third (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 2);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_fourth (cce_location_t * L, ccpairs_t P)
+ccpairs_fourth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 3);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_fifth (cce_location_t * L, ccpairs_t P)
+ccpairs_fifth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 4);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_sixth (cce_location_t * L, ccpairs_t P)
+ccpairs_sixth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 5);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_seventh (cce_location_t * L, ccpairs_t P)
+ccpairs_seventh (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 6);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_eighth (cce_location_t * L, ccpairs_t P)
+ccpairs_eighth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 7);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_nineth (cce_location_t * L, ccpairs_t P)
+ccpairs_nineth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 8);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline uintptr_t
-ccpairs_tenth (cce_location_t * L, ccpairs_t P)
+ccpairs_tenth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 9);
 }
@@ -538,23 +528,23 @@ typedef uintptr_t ccpairs_map_5_fun_t (uintptr_t item1, uintptr_t item2, uintptr
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_map_1_forward (cce_location_t * L, ccpairs_map_1_fun_t * fun,
+ccpairs_decl ccpairs_t ccpairs_map_1_forward (cce_destination_t L, ccpairs_map_1_fun_t * fun,
 					      ccpairs_t P1)
   __attribute__((__nonnull__(1,2)));
 
-ccpairs_decl ccpairs_t ccpairs_map_2_forward (cce_location_t * L, ccpairs_map_2_fun_t * fun,
+ccpairs_decl ccpairs_t ccpairs_map_2_forward (cce_destination_t L, ccpairs_map_2_fun_t * fun,
 					      ccpairs_t P1, ccpairs_t P2)
   __attribute__((__nonnull__(1,2)));
 
-ccpairs_decl ccpairs_t ccpairs_map_3_forward (cce_location_t * L, ccpairs_map_3_fun_t * fun,
+ccpairs_decl ccpairs_t ccpairs_map_3_forward (cce_destination_t L, ccpairs_map_3_fun_t * fun,
 					      ccpairs_t P1, ccpairs_t P2, ccpairs_t P3)
   __attribute__((__nonnull__(1,2)));
 
-ccpairs_decl ccpairs_t ccpairs_map_4_forward (cce_location_t * L, ccpairs_map_4_fun_t * fun,
+ccpairs_decl ccpairs_t ccpairs_map_4_forward (cce_destination_t L, ccpairs_map_4_fun_t * fun,
 					      ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4)
   __attribute__((__nonnull__(1,2)));
 
-ccpairs_decl ccpairs_t ccpairs_map_5_forward (cce_location_t * L, ccpairs_map_5_fun_t * fun,
+ccpairs_decl ccpairs_t ccpairs_map_5_forward (cce_destination_t L, ccpairs_map_5_fun_t * fun,
 					      ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4, ccpairs_t P5)
   __attribute__((__nonnull__(1,2)));
 
@@ -562,14 +552,14 @@ ccpairs_decl ccpairs_t ccpairs_map_5_forward (cce_location_t * L, ccpairs_map_5_
 
 __attribute__((__always_inline__,__nonnull__(1,2)))
 static inline ccpairs_t
-ccpairs_map (cce_location_t * L, ccpairs_map_fun_t * fun, ccpairs_t P)
+ccpairs_map (cce_destination_t L, ccpairs_map_fun_t * fun, ccpairs_t P)
 {
   return ccpairs_map_1_forward(L, fun, P);
 }
 
 __attribute__((__always_inline__,__nonnull__(1)))
 static inline ccpairs_t
-ccpairs_map_forward (cce_location_t * L, ccpairs_map_fun_t * fun, ccpairs_t P)
+ccpairs_map_forward (cce_destination_t L, ccpairs_map_fun_t * fun, ccpairs_t P)
 {
   return ccpairs_map_1_forward(L, fun, P);
 }
@@ -590,16 +580,16 @@ struct ccpairs_pair_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpairs_decl void ccpairs_init_pair_clean_handler (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_and_register_pair_clean_handler (cce_destination_t L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-ccpairs_decl void ccpairs_init_pair_error_handler (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_and_register_pair_error_handler (cce_destination_t L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-#define ccpairs_pair_handler_init(L,P_H,P)				\
+#define ccpairs_init_and_register_pair_handler(L,P_H,P)			\
   _Generic((P_H),							\
-	   ccpairs_pair_error_handler_t *: ccpairs_init_pair_error_handler, \
-	   ccpairs_pair_clean_handler_t *: ccpairs_init_pair_clean_handler)((L),(P_H),(P))
+	   ccpairs_pair_error_handler_t *: ccpairs_init_and_register_pair_clean_handler, \
+	   ccpairs_pair_clean_handler_t *: ccpairs_init_and_register_pair_error_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
@@ -617,16 +607,47 @@ struct ccpairs_list_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpairs_decl void ccpairs_init_list_clean_handler (cce_location_t * L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_and_register_list_clean_handler (cce_destination_t L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-ccpairs_decl void ccpairs_init_list_error_handler (cce_location_t * L, ccpairs_list_error_handler_t * H, ccpairs_t P)
+ccpairs_decl void ccpairs_init_and_register_list_error_handler (cce_destination_t L, ccpairs_list_error_handler_t * H, ccpairs_t P)
   __attribute__((__nonnull__(1,2,3)));
 
-#define ccpairs_list_handler_init(L,P_H,P)				\
+#define ccpairs_init_and_register_list_handler(L,P_H,P)			\
   _Generic((P_H),							\
-	   ccpairs_list_error_handler_t *: ccpairs_init_list_error_handler, \
-	   ccpairs_list_clean_handler_t *: ccpairs_init_list_clean_handler)((L),(P_H),(P))
+	   ccpairs_list_error_handler_t *: ccpairs_init_and_register_list_error_handler, \
+	   ccpairs_list_clean_handler_t *: ccpairs_init_and_register_list_clean_handler)((L),(P_H),(P))
+
+
+/** --------------------------------------------------------------------
+ ** Predefined exception handler: item destructor.
+ ** ----------------------------------------------------------------- */
+
+typedef struct ccpairs_item_clean_handler_t	ccpairs_item_clean_handler_t;
+typedef struct ccpairs_item_error_handler_t	ccpairs_item_error_handler_t;
+
+struct ccpairs_item_clean_handler_t {
+  cce_clean_handler_t		handler;
+  ccpairs_item_destructor_t	*item_destructor;
+};
+
+struct ccpairs_item_error_handler_t {
+  cce_error_handler_t		handler;
+  ccpairs_item_destructor_t	*item_destructor;
+};
+
+ccpairs_decl void ccpairs_init_and_register_item_clean_handler (cce_destination_t L, ccpairs_item_clean_handler_t * H,
+								uintptr_t item, ccpairs_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,4)));
+
+ccpairs_decl void ccpairs_init_and_register_item_error_handler (cce_destination_t L, ccpairs_item_error_handler_t * H,
+								uintptr_t item, ccpairs_item_destructor_t * D)
+  __attribute__((__nonnull__(1,2,4)));
+
+#define ccpairs_init_and_register_item_handler(L,P_H,ITEM,ITEM_DESTRUCTOR) \
+  _Generic((P_H),							\
+	   ccpairs_item_error_handler_t *: ccpairs_init_and_register_item_error_handler, \
+	   ccpairs_item_clean_handler_t *: ccpairs_init_and_register_item_clean_handler)((L),(P_H),(ITEM),(ITEM_DESTRUCTOR))
 
 
 /** --------------------------------------------------------------------
@@ -646,18 +667,18 @@ struct ccpairs_pair_item_error_handler_t {
   ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpairs_decl void ccpairs_init_pair_item_clean_handler (cce_location_t * L, ccpairs_pair_item_clean_handler_t * H,
-							ccpairs_t P, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_and_register_pair_item_clean_handler (cce_destination_t L, ccpairs_pair_item_clean_handler_t * H,
+								     ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-ccpairs_decl void ccpairs_init_pair_item_error_handler (cce_location_t * L, ccpairs_pair_item_error_handler_t * H,
-							ccpairs_t P, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_and_register_pair_item_error_handler (cce_destination_t L, ccpairs_pair_item_error_handler_t * H,
+								     ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-#define ccpairs_pair_item_handler_init(L,P_H,P)				\
+#define ccpairs_init_and_register_pair_item_handler(L,P_H,P,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
-	   ccpairs_pair_item_error_handler_t *: ccpairs_init_pair_item_error_handler, \
-	   ccpairs_pair_item_clean_handler_t *: ccpairs_inite_pair_item_clean_handler)((L),(P_H),(P))
+	   ccpairs_pair_item_error_handler_t *: ccpairs_init_and_register_pair_item_error_handler, \
+	   ccpairs_pair_item_clean_handler_t *: ccpairs_init_and_register_pair_item_clean_handler)((L),(P_H),(P),(ITEM_DESTRUCTOR))
 
 
 /** --------------------------------------------------------------------
@@ -677,59 +698,28 @@ struct ccpairs_list_item_error_handler_t {
   ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpairs_decl void ccpairs_init_list_item_clean_handler (cce_location_t * L, ccpairs_list_item_clean_handler_t * H,
-							ccpairs_t P, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_and_register_list_item_clean_handler (cce_destination_t L, ccpairs_list_item_clean_handler_t * H,
+								     ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-ccpairs_decl void ccpairs_init_list_item_error_handler (cce_location_t * L, ccpairs_list_item_error_handler_t * H,
-							ccpairs_t P, ccpairs_item_destructor_t * D)
+ccpairs_decl void ccpairs_init_and_register_list_item_error_handler (cce_destination_t L, ccpairs_list_item_error_handler_t * H,
+								     ccpairs_t P, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4)));
 
-#define ccpairs_list_item_handler_init(L,P_H,P)				\
+#define ccpairs_init_and_register_list_item_handler(L,P_H,P,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
-	   ccpairs_list_item_error_handler_t *: ccpairs_init_list_item_error_handler, \
-	   ccpairs_list_item_clean_handler_t *: ccpairs_init_list_item_clean_handler)((L),(P_H),(P))
-
-
-/** --------------------------------------------------------------------
- ** Predefined exception handler: item destructor.
- ** ----------------------------------------------------------------- */
-
-typedef struct ccpairs_item_clean_handler_t	ccpairs_item_clean_handler_t;
-typedef struct ccpairs_item_error_handler_t	ccpairs_item_error_handler_t;
-
-struct ccpairs_item_clean_handler_t {
-  cce_clean_handler_t		handler;
-  ccpairs_item_destructor_t *	item_destructor;
-};
-
-struct ccpairs_item_error_handler_t {
-  cce_error_handler_t		handler;
-  ccpairs_item_destructor_t *	item_destructor;
-};
-
-ccpairs_decl void ccpairs_init_item_clean_handler (cce_location_t * L, ccpairs_item_clean_handler_t * H,
-						   uintptr_t item, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,4)));
-
-ccpairs_decl void ccpairs_init_item_error_handler (cce_location_t * L, ccpairs_item_error_handler_t * H,
-						   uintptr_t item, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,4)));
-
-#define ccpairs_item_handler_init(L,P_H,P)				\
-  _Generic((P_H),							\
-	   ccpairs_item_error_handler_t *: ccpairs_init_item_error_handler, \
-	   ccpairs_item_clean_handler_t *: ccpairs_init_item_clean_handler)((L),(P_H),(P))
+	   ccpairs_list_item_error_handler_t *: ccpairs_init_and_register_list_item_error_handler, \
+	   ccpairs_list_item_clean_handler_t *: ccpairs_init_and_register_list_item_clean_handler)((L),(P_H),(P),(ITEM_DESTRUCTOR))
 
 
 /** --------------------------------------------------------------------
  ** Guarded constructors.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl ccpairs_t ccpairs_cons_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, uintptr_t A, ccpairs_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, uintptr_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-ccpairs_decl ccpairs_t ccpairs_cons_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, uintptr_t A, ccpairs_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, uintptr_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define ccpairs_cons_guarded(L,H,A,D)					\
@@ -739,10 +729,10 @@ ccpairs_decl ccpairs_t ccpairs_cons_guarded_clean (cce_location_t * L, ccpairs_p
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define ccpairs_cons_improper_guarded(L,H,A,D)				\
@@ -752,10 +742,10 @@ ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_clean (cce_location_t * L, 
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_error (cce_location_t * L, ccpairs_pair_error_handler_t * H, ccpairs_t A, ccpairs_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, ccpairs_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
-ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_clean (cce_location_t * L, ccpairs_pair_clean_handler_t * H, ccpairs_t A, ccpairs_t D)
+ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, ccpairs_t A, ccpairs_t D)
   __attribute__((__nonnull__(1,2),__returns_nonnull__));
 
 #define ccpairs_cons_node_guarded(L,H,A,D)				\
@@ -765,11 +755,11 @@ ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_clean (cce_location_t * L, ccpa
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_list_guarded_error (cce_location_t * L, ccpairs_list_item_error_handler_t * H,
+ccpairs_decl ccpairs_t ccpairs_list_guarded_error (cce_destination_t L, ccpairs_list_item_error_handler_t * H,
 						   ccpairs_item_constructor_t * C, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
 
-ccpairs_decl ccpairs_t ccpairs_list_guarded_clean (cce_location_t * L, ccpairs_list_item_clean_handler_t * H,
+ccpairs_decl ccpairs_t ccpairs_list_guarded_clean (cce_destination_t L, ccpairs_list_item_clean_handler_t * H,
 						   ccpairs_item_constructor_t * C, ccpairs_item_destructor_t * D)
   __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
 
