@@ -7,7 +7,7 @@ AC_INIT([CCPairs],[MMUX_PACKAGE_VERSION],
   [marco.maggi-ipsu@poste.it],
   [ccpairs],[http://marcomaggi.github.com/ccpairs])
 MMUX_INIT
-MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpairs],1,0,0)
+MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpairs],2,0,0)
 AC_REVISION([0.1])
 AC_COPYRIGHT([Copyright (c) 2017-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
 
