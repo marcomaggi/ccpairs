@@ -27,18 +27,18 @@
  ** Helpers.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1)))
-static void print_list (FILE * stream, ccpairs_t P);
+static void print_list (FILE * stream, ccpairs_t P)
+  __attribute__((__nonnull__(1)));
 
-__attribute__((__nonnull__(1)))
-static void print_list_len (FILE * stream, ccpairs_t P, ccpairs_idx_t idx);
+static void print_list_len (FILE * stream, ccpairs_t P, ccpairs_idx_t idx)
+  __attribute__((__nonnull__(1)));
 
 ccpairs_t
 make_list_len (cce_destination_t upper_L, size_t len)
 {
   if (len) {
-    cce_location_t		L[1];
-    ccpairs_t			P[1+len];
+    cce_location_t			L[1];
+    ccpairs_t				P[1+len];
     ccpairs_pair_error_handler_t	P_H[len];
 
     for (size_t i=0; i<1+len; ++i) {
@@ -59,7 +59,7 @@ make_list_len (cce_destination_t upper_L, size_t len)
 		  i, ccpairs_car(P[i]),
 		  i, (void *)ccpairs_cdr(P[i]) );
 	}
-	ccpairs_init_and_register_pair_error_handler(L, &(P_H[i]), P[i]);
+	ccpairs_init_and_register_pair_handler(L, &(P_H[i]), P[i]);
       }
       P[0] = ccpairs_cons(L, 1, P[1]);
       if (0) {
@@ -154,7 +154,7 @@ test_1_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 5);
-    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_handler(L, P_H, P);
     if (0) { print_list(stderr, P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpairs_length(L, P)); }
     cctests_assert(L, 5 == ccpairs_length(L, P));
@@ -173,7 +173,7 @@ test_1_4 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 1024);
-    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_handler(L, P_H, P);
     if (0) { print_list(stderr, P); }
     if (0) { fprintf(stderr, "%s: %lu\n", __func__, ccpairs_length(L, P)); }
     cctests_assert(L, 1024 == ccpairs_length(L, P));
@@ -403,7 +403,7 @@ test_5_3 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 5);
-    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_handler(L, P_H, P);
     if (0) { print_spine_len(stderr, P, 5); }
     if (0) { fprintf(stderr, "%s: length=%lu\n", __func__, ccpairs_length(L, P)); }
     if (0) { print_list_len(stderr, P, 5); }
@@ -424,7 +424,7 @@ test_5_4 (cce_destination_t upper_L)
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
     ccpairs_t	P = make_list_len(L, 1024);
-    ccpairs_init_and_register_list_clean_handler(L, P_H, P);
+    ccpairs_init_and_register_list_handler(L, P_H, P);
     cctests_assert(L, false == ccpairs_is_circular(P));
     cce_run_body_handlers(L);
   }
@@ -481,15 +481,15 @@ void
 test_5_7 (cce_destination_t upper_L)
 /* Circular list with 10 items, loop closing at the 6th item. */
 {
-  cce_location_t	L[1];
+  cce_location_t		L[1];
 
   if (cce_location(L)) {
     cce_run_catch_handlers_raise(L, upper_L);
   } else {
-    /* This is  a circular list,  so we do  not release its  memory: the
-       free  function is  incapable of  correctly releasing  it.  (Marco
-       Maggi; Nov 13, 2017) */
+    /* This is a circular list, so we do not release its memory: the free function is
+       incapable of correctly releasing it.  (Marco Maggi; Nov 13, 2017) */
     ccpairs_t	P = make_list_len(L, 10);
+
     /* Close a loop making the list circular. */
     {
       ccpairs_t	P_last		= ccpairs_last_pair(L, P);

@@ -589,8 +589,8 @@ ccpairs_decl void ccpairs_init_and_register_pair_error_handler (cce_destination_
 
 #define ccpairs_init_and_register_pair_handler(L,P_H,P)			\
   _Generic((P_H),							\
-	   ccpairs_pair_error_handler_t *: ccpairs_init_and_register_pair_clean_handler, \
-	   ccpairs_pair_clean_handler_t *: ccpairs_init_and_register_pair_error_handler)((L),(P_H),(P))
+	   ccpairs_pair_clean_handler_t *: ccpairs_init_and_register_pair_clean_handler, \
+	   ccpairs_pair_error_handler_t *: ccpairs_init_and_register_pair_error_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
@@ -616,8 +616,8 @@ ccpairs_decl void ccpairs_init_and_register_list_error_handler (cce_destination_
 
 #define ccpairs_init_and_register_list_handler(L,P_H,P)			\
   _Generic((P_H),							\
-	   ccpairs_list_error_handler_t *: ccpairs_init_and_register_list_error_handler, \
-	   ccpairs_list_clean_handler_t *: ccpairs_init_and_register_list_clean_handler)((L),(P_H),(P))
+	   ccpairs_list_clean_handler_t *: ccpairs_init_and_register_list_clean_handler, \
+	   ccpairs_list_error_handler_t *: ccpairs_init_and_register_list_error_handler)((L),(P_H),(P))
 
 
 /** --------------------------------------------------------------------
@@ -647,8 +647,8 @@ ccpairs_decl void ccpairs_init_and_register_item_error_handler (cce_destination_
 
 #define ccpairs_init_and_register_item_handler(L,P_H,ITEM,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
-	   ccpairs_item_error_handler_t *: ccpairs_init_and_register_item_error_handler, \
-	   ccpairs_item_clean_handler_t *: ccpairs_init_and_register_item_clean_handler)((L),(P_H),(ITEM),(ITEM_DESTRUCTOR))
+	   ccpairs_item_clean_handler_t *: ccpairs_init_and_register_item_clean_handler, \
+	   ccpairs_item_error_handler_t *: ccpairs_init_and_register_item_error_handler)((L),(P_H),(ITEM),(ITEM_DESTRUCTOR))
 
 
 /** --------------------------------------------------------------------
@@ -678,8 +678,8 @@ ccpairs_decl void ccpairs_init_and_register_pair_item_error_handler (cce_destina
 
 #define ccpairs_init_and_register_pair_item_handler(L,P_H,P,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
-	   ccpairs_pair_item_error_handler_t *: ccpairs_init_and_register_pair_item_error_handler, \
-	   ccpairs_pair_item_clean_handler_t *: ccpairs_init_and_register_pair_item_clean_handler)((L),(P_H),(P),(ITEM_DESTRUCTOR))
+	   ccpairs_pair_item_clean_handler_t *: ccpairs_init_and_register_pair_item_clean_handler, \
+	   ccpairs_pair_item_error_handler_t *: ccpairs_init_and_register_pair_item_error_handler)((L),(P_H),(P),(ITEM_DESTRUCTOR))
 
 
 /** --------------------------------------------------------------------
@@ -709,8 +709,8 @@ ccpairs_decl void ccpairs_init_and_register_list_item_error_handler (cce_destina
 
 #define ccpairs_init_and_register_list_item_handler(L,P_H,P,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
-	   ccpairs_list_item_error_handler_t *: ccpairs_init_and_register_list_item_error_handler, \
-	   ccpairs_list_item_clean_handler_t *: ccpairs_init_and_register_list_item_clean_handler)((L),(P_H),(P),(ITEM_DESTRUCTOR))
+	   ccpairs_list_item_clean_handler_t *: ccpairs_init_and_register_list_item_clean_handler, \
+	   ccpairs_list_item_error_handler_t *: ccpairs_init_and_register_list_item_error_handler)((L),(P_H),(P),(ITEM_DESTRUCTOR))
 
 
 /** --------------------------------------------------------------------
