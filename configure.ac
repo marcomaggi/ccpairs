@@ -9,7 +9,7 @@ AC_INIT([CCPairs],[MMUX_PACKAGE_VERSION],
 MMUX_INIT
 MMUX_LIBTOOL_LIBRARY_VERSIONS([ccpairs],2,0,0)
 AC_REVISION([0.1])
-AC_COPYRIGHT([Copyright (c) 2017-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+AC_COPYRIGHT([Copyright (c) 2017-2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
 This program is free software: you  can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as published by
@@ -56,6 +56,8 @@ AM_PROG_CC_C_O
 AC_HEADER_STDC
 AC_CHECK_HEADERS([assert.h stdint.h])
 
+CCLIB_CONFIG_SETUP
+
 AC_CACHE_SAVE
 
 
@@ -71,10 +73,10 @@ dnl AC_CACHE_SAVE
 PKG_PREREQ([0.29])
 PKG_INSTALLDIR
 MMUX_CHECK_PKG_CONFIG_MACROS
-PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.9.0])
-PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.2.2])
-PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.3.0])
-PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.4.1],,[AC_MSG_WARN([package CCTests not found])])
+PKG_CHECK_MODULES([CCEXCEPTIONS],[ccexceptions >= 0.10.0])
+PKG_CHECK_MODULES([CCMEMORY],[ccmemory >= 0.3.0])
+PKG_CHECK_MODULES([CCSTRUCTS],[ccstructs >= 0.4.0])
+PKG_CHECK_MODULES([CCTESTS],[cctests >= 0.5.0],,[AC_MSG_WARN([package CCTests not found])])
 
 AM_CONDITIONAL([MMUX_TESTING_ENABLED],[test -n "$CCTESTS_LIBS"])
 
