@@ -160,7 +160,6 @@ included in the section entitled ``@gnu{} Free Documentation License''.
 * accessors::                   Accessing items in lists.
 * conditions::                  Exceptional condition objects.
 * handlers::                    Exceptional condition handlers.
-* utils::                       Utility definitions.
 
 Appendices
 
@@ -1749,47 +1748,6 @@ The macro use expands into a call to @cfunc{ccpairs_init_and_register_list_item_
 The macro use expands into a call to @cfunc{ccpairs_init_and_register_list_item_error_handler}.
 @end table
 @end deftypefn
-
-@c page
-@node utils
-@chapter Utility definitions
-
-
-@defmac CCPAIRS_PC (@var{POINTER_TYPE}, @var{POINTER_NAME}, @var{EXPRESSION})
-Preprocessor macro used to define pointer variables initialised with a cast expression.  It expands
-to:
-
-@example
-POINTER_TYPE * POINTER_NAME = (POINTER_TYPE *) (EXPRESSION)
-@end example
-
-For example, the macro use:
-
-@example
-CCPAIRS_PC(ccpairs_descriptor_error_t, C, _C);
-@end example
-
-@noindent
-expands into:
-
-@example
-ccpairs_descriptor_error_t * C = \
-   (ccpairs_descriptor_error_t *) (_C);
-@end example
-@end defmac
-
-
-@defmac CCPAIRS_UNUSED
-Preprocessor macro that is meant to expand into an attribute declaration.  If the symbol
-@code{__GNUC__} is defined, the expansion is:
-
-@example
-__attribute__((__unused__))
-@end example
-
-@noindent
-otherwise the expansion is the empty string.
-@end defmac
 
 @c page
 @c ------------------------------------------------------------

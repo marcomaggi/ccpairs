@@ -7,7 +7,7 @@
 
 	Test file for version functions.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -17,7 +17,7 @@
 #include <stdlib.h>
 
 int
-main (int argc CCPAIRS_UNUSED, const char *const argv[] CCPAIRS_UNUSED)
+main (int argc CCLIB_UNUSED, const char *const argv[] CCLIB_UNUSED)
 {
   ccpairs_library_init();
 

@@ -7,7 +7,7 @@
 
 	Test file for constructor functions.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -27,10 +27,10 @@
  ** Helpers.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 void print_list (FILE * stream, ccpairs_t P);
 
-__attribute__((__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 void print_list_len (FILE * stream, ccpairs_t P, ccpairs_idx_t idx);
 
 ccpairs_t
@@ -179,7 +179,7 @@ simple_item_destructor__noop (uintptr_t item)
 /* ------------------------------------------------------------------ */
 
 uintptr_t
-simple_item_constructor__break_immediately (cce_destination_t L, ccpairs_idx_t idx CCPAIRS_UNUSED)
+simple_item_constructor__break_immediately (cce_destination_t L, ccpairs_idx_t idx CCLIB_UNUSED)
 {
   cce_raise(L, cce_condition_new_break());
 }
@@ -364,7 +364,7 @@ print_data_list (FILE * stream, ccpairs_t P)
 /* ------------------------------------------------------------------ */
 
 uintptr_t
-async_item_constructor__break_immediately (cce_destination_t L, ccpairs_idx_t idx CCPAIRS_UNUSED)
+async_item_constructor__break_immediately (cce_destination_t L, ccpairs_idx_t idx CCLIB_UNUSED)
 {
   cce_raise(L, cce_condition_new_break());
 }

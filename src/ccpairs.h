@@ -8,7 +8,7 @@
 	This is the public  header file for CCPairs.  It must be  included in all the
 	source files using the library's facilities.
 
-  Copyright (C) 2017-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017-2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
@@ -25,57 +25,8 @@
 #ifndef CCPAIRS_H
 #define CCPAIRS_H 1
 
-
-/** --------------------------------------------------------------------
- ** Preliminary definitions.
- ** ----------------------------------------------------------------- */
-
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-/* The macro CCPAIRS_UNUSED indicates that  a function, function argument or variable
-   may potentially be unused. Usage examples:
-
-   static int unused_function (char arg) CCPAIRS_UNUSED;
-   int foo (char unused_argument CCPAIRS_UNUSED);
-   int unused_variable CCPAIRS_UNUSED;
-*/
-#ifdef __GNUC__
-#  define CCPAIRS_UNUSED		__attribute__((__unused__))
-#else
-#  define CCPAIRS_UNUSED		/* empty */
-#endif
-
-#ifndef __GNUC__
-#  define __attribute__(...)	/* empty */
-#endif
-
-/* I found  the following chunk on  the Net.  (Marco Maggi;  Sun Feb 26,
-   2012) */
-#if defined _WIN32 || defined __CYGWIN__
-#  ifdef BUILDING_DLL
-#    ifdef __GNUC__
-#      define ccpairs_decl		__attribute__((__dllexport__)) extern
-#    else
-#      define ccpairs_decl		__declspec(dllexport) extern
-#    endif
-#  else
-#    ifdef __GNUC__
-#      define ccpairs_decl		__attribute__((__dllimport__)) extern
-#    else
-#      define ccpairs_decl		__declspec(dllimport) extern
-#    endif
-#  endif
-#  define ccpairs_private_decl	extern
-#else
-#  if __GNUC__ >= 4
-#    define ccpairs_decl		__attribute__((__visibility__("default"))) extern
-#    define ccpairs_private_decl	__attribute__((__visibility__("hidden")))  extern
-#  else
-#    define ccpairs_decl		extern
-#    define ccpairs_private_decl	extern
-#  endif
 #endif
 
 
@@ -94,9 +45,6 @@ extern "C" {
  ** Macros.
  ** ----------------------------------------------------------------- */
 
-/* Pointer cast macro helper. */
-#define CCPAIRS_PC(TYPE,X,Y)		TYPE * X = (TYPE *) (Y)
-
 
 /** --------------------------------------------------------------------
  ** Forward declarations.
@@ -113,18 +61,18 @@ typedef void      ccpairs_item_destructor_t  (uintptr_t item);
  ** Version functions.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl char const *ccpairs_version_string			(void);
-ccpairs_decl int	ccpairs_version_interface_current	(void);
-ccpairs_decl int	ccpairs_version_interface_revision	(void);
-ccpairs_decl int	ccpairs_version_interface_age		(void);
+cclib_decl char const *ccpairs_version_string		(void);
+cclib_decl int	ccpairs_version_interface_current	(void);
+cclib_decl int	ccpairs_version_interface_revision	(void);
+cclib_decl int	ccpairs_version_interface_age		(void);
 
 
 /** --------------------------------------------------------------------
  ** Initialisation functions.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl void ccpairs_library_init (void)
-  __attribute__((__constructor__));
+cclib_decl void ccpairs_library_init (void)
+  CCLIB_FUNC_ATTRIBUTE_CONSTRUCTOR;
 
 
 /** --------------------------------------------------------------------
@@ -143,18 +91,21 @@ struct ccpairs_condition_not_enough_items_t {
 };
 
 extern void cce_descriptor_set_parent_to(ccpairs_descriptor_not_enough_items_t) (cce_descriptor_t * D)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl void ccpairs_condition_init_not_enough_items (cce_destination_t L, ccpairs_condition_not_enough_items_t * C)
-  __attribute__((__nonnull__(1)));
+cclib_decl void ccpairs_condition_init_not_enough_items (cce_destination_t L, ccpairs_condition_not_enough_items_t * C)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
-ccpairs_decl cce_condition_t const * ccpairs_condition_new_not_enough_items (void)
-  __attribute__((__leaf__,__pure__,__returns_nonnull__));
+cclib_decl cce_condition_t const * ccpairs_condition_new_not_enough_items (void)
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl bool ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+cclib_decl bool ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -173,18 +124,21 @@ struct ccpairs_condition_empty_list_t {
 };
 
 extern void cce_descriptor_set_parent_to(ccpairs_descriptor_empty_list_t) (cce_descriptor_t * D)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl void ccpairs_condition_init_empty_list (cce_destination_t L, ccpairs_condition_empty_list_t * C)
-  __attribute__((__nonnull__(1)));
+cclib_decl void ccpairs_condition_init_empty_list (cce_destination_t L, ccpairs_condition_empty_list_t * C)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
-ccpairs_decl cce_condition_t const * ccpairs_condition_new_empty_list (void)
-  __attribute__((__leaf__,__pure__,__returns_nonnull__));
+cclib_decl cce_condition_t const * ccpairs_condition_new_empty_list (void)
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl bool ccpairs_condition_is_empty_list (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+cclib_decl bool ccpairs_condition_is_empty_list (cce_condition_t const * C)
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -203,18 +157,21 @@ struct ccpairs_condition_circular_list_t {
 };
 
 extern void cce_descriptor_set_parent_to(ccpairs_descriptor_circular_list_t) (cce_descriptor_t * D)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl void ccpairs_condition_init_circular_list (cce_destination_t L, ccpairs_condition_circular_list_t * C)
-  __attribute__((__nonnull__(1)));
+cclib_decl void ccpairs_condition_init_circular_list (cce_destination_t L, ccpairs_condition_circular_list_t * C)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
-ccpairs_decl cce_condition_t const * ccpairs_condition_new_circular_list (void)
-  __attribute__((__leaf__,__pure__,__returns_nonnull__));
+cclib_decl cce_condition_t const * ccpairs_condition_new_circular_list (void)
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl bool ccpairs_condition_is_circular_list (cce_condition_t const * C)
-  __attribute__((__pure__,__nonnull__(1)));
+cclib_decl bool ccpairs_condition_is_circular_list (cce_condition_t const * C)
+  CCLIB_FUNC_ATTRIBUTE_PURE
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 
 /** --------------------------------------------------------------------
@@ -230,28 +187,36 @@ struct ccpairs_stru_t {
   uintptr_t 	D;
 };
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_car (ccpairs_t P)
 {
   return P->A;
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_cdr (ccpairs_t P)
 {
   return (ccpairs_t)(P->D);
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_car_pair (ccpairs_t P)
 {
   return (ccpairs_t)(P->A);
 }
 
-__attribute__((__always_inline__,__pure__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_cdr_value (ccpairs_t P)
 {
@@ -263,22 +228,26 @@ ccpairs_cdr_value (ccpairs_t P)
  ** Memory allocation.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl ccmem_allocator_t const * ccpairs_register_allocator (ccmem_allocator_t const * allocator)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl ccmem_allocator_t const * ccpairs_register_allocator (ccmem_allocator_t const * allocator)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl ccpairs_t	ccpairs_alloc (cce_destination_t L)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl ccpairs_t	ccpairs_alloc (cce_destination_t L)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl void	ccpairs_free   (ccpairs_t P);
+cclib_decl void	ccpairs_free   (ccpairs_t P);
 
-ccpairs_decl void	ccpairs_free_list (ccpairs_t P);
+cclib_decl void	ccpairs_free_list (ccpairs_t P);
 
 
 /** --------------------------------------------------------------------
  ** Constructors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1),__returns_nonnull__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL
 static inline ccpairs_t
 ccpairs_cons (cce_destination_t L, uintptr_t A, ccpairs_t D)
 {
@@ -288,14 +257,16 @@ ccpairs_cons (cce_destination_t L, uintptr_t A, ccpairs_t D)
   return P;
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_cons_improper (cce_destination_t L, uintptr_t A, uintptr_t D)
 {
   return ccpairs_cons(L, A, (ccpairs_t)D);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_cons_node (cce_destination_t L, ccpairs_t A, ccpairs_t D)
 {
@@ -304,120 +275,136 @@ ccpairs_cons_node (cce_destination_t L, ccpairs_t A, ccpairs_t D)
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_list (cce_destination_t L,
+cclib_decl ccpairs_t ccpairs_list (cce_destination_t L,
 				     ccpairs_item_constructor_t * item_constructor,
 				     ccpairs_item_destructor_t  * item_destructor)
-  __attribute__((__nonnull__(1,2,3)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 
 /** --------------------------------------------------------------------
  ** Inspection.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__const__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_CONST
 static inline bool
 ccpairs_is_empty (ccpairs_t P)
 {
   return (NULL == P);
 }
 
-__attribute__((__always_inline__,__const__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_CONST
 static inline bool
 ccpairs_is_null (ccpairs_t P)
 {
   return (NULL == P);
 }
 
-ccpairs_decl ccpairs_len_t ccpairs_length (cce_destination_t L, ccpairs_t P)
-  __attribute__((__nonnull__(1)));
+cclib_decl ccpairs_len_t ccpairs_length (cce_destination_t L, ccpairs_t P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
-__attribute__((__always_inline__,__pure__))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_PURE
 static inline bool
 ccpairs_is_last (ccpairs_t P)
 {
   return (P && (NULL == ccpairs_cdr(P)));
 }
 
-ccpairs_decl bool ccpairs_is_circular (ccpairs_t P)
-  __attribute__((__leaf__,__pure__));
+cclib_decl bool ccpairs_is_circular (ccpairs_t P)
+  CCLIB_FUNC_ATTRIBUTE_LEAF
+  CCLIB_FUNC_ATTRIBUTE_PURE;
 
 
 /** --------------------------------------------------------------------
  ** Pair accessors.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl ccpairs_t ccpairs_ref_pair (cce_destination_t L, ccpairs_t P, ccpairs_idx_t idx)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_ref_pair (cce_destination_t L, ccpairs_t P, ccpairs_idx_t idx)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl ccpairs_t ccpairs_last_pair (cce_destination_t L, ccpairs_t P)
-  __attribute__((__nonnull__(1),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_last_pair (cce_destination_t L, ccpairs_t P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_first_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 0);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_second_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 1);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_third_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 2);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_fourth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 3);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_fifth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 4);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_sixth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 5);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_seventh_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 6);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_eighth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 7);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_nineth_pair (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref_pair(L, P, 8);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_tenth_pair (cce_destination_t L, ccpairs_t P)
 {
@@ -429,14 +416,16 @@ ccpairs_tenth_pair (cce_destination_t L, ccpairs_t P)
  ** Item accessors.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_ref (cce_destination_t L, ccpairs_t P, ccpairs_idx_t const idx)
 {
   return ccpairs_car(ccpairs_ref_pair(L, P, idx));
 }
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline uintptr_t
 ccpairs_last (cce_destination_t L, ccpairs_t P)
 {
@@ -445,70 +434,80 @@ ccpairs_last (cce_destination_t L, ccpairs_t P)
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_first (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 0);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_second (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 1);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_third (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 2);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_fourth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 3);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_fifth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 4);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_sixth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 5);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_seventh (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 6);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_eighth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 7);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_nineth (cce_destination_t L, ccpairs_t P)
 {
   return ccpairs_ref(L, P, 8);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline uintptr_t
 ccpairs_tenth (cce_destination_t L, ccpairs_t P)
 {
@@ -529,36 +528,35 @@ typedef uintptr_t ccpairs_map_5_fun_t (uintptr_t item1, uintptr_t item2, uintptr
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_map_1_forward (cce_destination_t L, ccpairs_map_1_fun_t * fun,
-					      ccpairs_t P1)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl ccpairs_t ccpairs_map_1_forward (cce_destination_t L, ccpairs_map_1_fun_t * fun, ccpairs_t P1)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccpairs_decl ccpairs_t ccpairs_map_2_forward (cce_destination_t L, ccpairs_map_2_fun_t * fun,
-					      ccpairs_t P1, ccpairs_t P2)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl ccpairs_t ccpairs_map_2_forward (cce_destination_t L, ccpairs_map_2_fun_t * fun, ccpairs_t P1, ccpairs_t P2)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccpairs_decl ccpairs_t ccpairs_map_3_forward (cce_destination_t L, ccpairs_map_3_fun_t * fun,
-					      ccpairs_t P1, ccpairs_t P2, ccpairs_t P3)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl ccpairs_t ccpairs_map_3_forward (cce_destination_t L, ccpairs_map_3_fun_t * fun, ccpairs_t P1, ccpairs_t P2, ccpairs_t P3)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccpairs_decl ccpairs_t ccpairs_map_4_forward (cce_destination_t L, ccpairs_map_4_fun_t * fun,
-					      ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl ccpairs_t ccpairs_map_4_forward (cce_destination_t L, ccpairs_map_4_fun_t * fun,
+					    ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
-ccpairs_decl ccpairs_t ccpairs_map_5_forward (cce_destination_t L, ccpairs_map_5_fun_t * fun,
-					      ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4, ccpairs_t P5)
-  __attribute__((__nonnull__(1,2)));
+cclib_decl ccpairs_t ccpairs_map_5_forward (cce_destination_t L, ccpairs_map_5_fun_t * fun,
+					    ccpairs_t P1, ccpairs_t P2, ccpairs_t P3, ccpairs_t P4, ccpairs_t P5)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2);
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__always_inline__,__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static inline ccpairs_t
 ccpairs_map (cce_destination_t L, ccpairs_map_fun_t * fun, ccpairs_t P)
 {
   return ccpairs_map_1_forward(L, fun, P);
 }
 
-__attribute__((__always_inline__,__nonnull__(1)))
+CCLIB_FUNC_ATTRIBUTE_ALWAYS_INLINE
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1)
 static inline ccpairs_t
 ccpairs_map_forward (cce_destination_t L, ccpairs_map_fun_t * fun, ccpairs_t P)
 {
@@ -581,11 +579,11 @@ struct ccpairs_pair_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpairs_decl void ccpairs_init_and_register_pair_clean_handler (cce_destination_t L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
-  __attribute__((__nonnull__(1,2,3)));
+cclib_decl void ccpairs_init_and_register_pair_clean_handler (cce_destination_t L, ccpairs_pair_clean_handler_t * H, ccpairs_t P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
-ccpairs_decl void ccpairs_init_and_register_pair_error_handler (cce_destination_t L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
-  __attribute__((__nonnull__(1,2,3)));
+cclib_decl void ccpairs_init_and_register_pair_error_handler (cce_destination_t L, ccpairs_pair_error_handler_t * H, ccpairs_t P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 #define ccpairs_init_and_register_pair_handler(L,P_H,P)			\
   _Generic((P_H),							\
@@ -608,11 +606,11 @@ struct ccpairs_list_error_handler_t {
   cce_error_handler_t	handler;
 };
 
-ccpairs_decl void ccpairs_init_and_register_list_clean_handler (cce_destination_t L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
-  __attribute__((__nonnull__(1,2,3)));
+cclib_decl void ccpairs_init_and_register_list_clean_handler (cce_destination_t L, ccpairs_list_clean_handler_t * H, ccpairs_t P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
-ccpairs_decl void ccpairs_init_and_register_list_error_handler (cce_destination_t L, ccpairs_list_error_handler_t * H, ccpairs_t P)
-  __attribute__((__nonnull__(1,2,3)));
+cclib_decl void ccpairs_init_and_register_list_error_handler (cce_destination_t L, ccpairs_list_error_handler_t * H, ccpairs_t P)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3);
 
 #define ccpairs_init_and_register_list_handler(L,P_H,P)			\
   _Generic((P_H),							\
@@ -637,13 +635,13 @@ struct ccpairs_item_error_handler_t {
   ccpairs_item_destructor_t	*item_destructor;
 };
 
-ccpairs_decl void ccpairs_init_and_register_item_clean_handler (cce_destination_t L, ccpairs_item_clean_handler_t * H,
+cclib_decl void ccpairs_init_and_register_item_clean_handler (cce_destination_t L, ccpairs_item_clean_handler_t * H,
 								uintptr_t item, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,4);
 
-ccpairs_decl void ccpairs_init_and_register_item_error_handler (cce_destination_t L, ccpairs_item_error_handler_t * H,
+cclib_decl void ccpairs_init_and_register_item_error_handler (cce_destination_t L, ccpairs_item_error_handler_t * H,
 								uintptr_t item, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,4);
 
 #define ccpairs_init_and_register_item_handler(L,P_H,ITEM,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
@@ -668,13 +666,13 @@ struct ccpairs_pair_item_error_handler_t {
   ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpairs_decl void ccpairs_init_and_register_pair_item_clean_handler (cce_destination_t L, ccpairs_pair_item_clean_handler_t * H,
+cclib_decl void ccpairs_init_and_register_pair_item_clean_handler (cce_destination_t L, ccpairs_pair_item_clean_handler_t * H,
 								     ccpairs_t P, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
-ccpairs_decl void ccpairs_init_and_register_pair_item_error_handler (cce_destination_t L, ccpairs_pair_item_error_handler_t * H,
+cclib_decl void ccpairs_init_and_register_pair_item_error_handler (cce_destination_t L, ccpairs_pair_item_error_handler_t * H,
 								     ccpairs_t P, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
 #define ccpairs_init_and_register_pair_item_handler(L,P_H,P,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
@@ -699,13 +697,13 @@ struct ccpairs_list_item_error_handler_t {
   ccpairs_item_destructor_t *	item_destructor;
 };
 
-ccpairs_decl void ccpairs_init_and_register_list_item_clean_handler (cce_destination_t L, ccpairs_list_item_clean_handler_t * H,
+cclib_decl void ccpairs_init_and_register_list_item_clean_handler (cce_destination_t L, ccpairs_list_item_clean_handler_t * H,
 								     ccpairs_t P, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
-ccpairs_decl void ccpairs_init_and_register_list_item_error_handler (cce_destination_t L, ccpairs_list_item_error_handler_t * H,
+cclib_decl void ccpairs_init_and_register_list_item_error_handler (cce_destination_t L, ccpairs_list_item_error_handler_t * H,
 								     ccpairs_t P, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4);
 
 #define ccpairs_init_and_register_list_item_handler(L,P_H,P,ITEM_DESTRUCTOR) \
   _Generic((P_H),							\
@@ -717,11 +715,13 @@ ccpairs_decl void ccpairs_init_and_register_list_item_error_handler (cce_destina
  ** Guarded constructors.
  ** ----------------------------------------------------------------- */
 
-ccpairs_decl ccpairs_t ccpairs_cons_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, uintptr_t A, ccpairs_t D)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_cons_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, uintptr_t A, ccpairs_t D)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl ccpairs_t ccpairs_cons_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, uintptr_t A, ccpairs_t D)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_cons_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, uintptr_t A, ccpairs_t D)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 #define ccpairs_cons_guarded(L,H,A,D)					\
   _Generic((H),								\
@@ -730,11 +730,13 @@ ccpairs_decl ccpairs_t ccpairs_cons_guarded_clean (cce_destination_t L, ccpairs_
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_cons_improper_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, uintptr_t A, uintptr_t D)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_cons_improper_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, uintptr_t A, uintptr_t D)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 #define ccpairs_cons_improper_guarded(L,H,A,D)				\
   _Generic((H),								\
@@ -743,11 +745,13 @@ ccpairs_decl ccpairs_t ccpairs_cons_improper_guarded_clean (cce_destination_t L,
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, ccpairs_t A, ccpairs_t D)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_cons_node_guarded_error (cce_destination_t L, ccpairs_pair_error_handler_t * H, ccpairs_t A, ccpairs_t D)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, ccpairs_t A, ccpairs_t D)
-  __attribute__((__nonnull__(1,2),__returns_nonnull__));
+cclib_decl ccpairs_t ccpairs_cons_node_guarded_clean (cce_destination_t L, ccpairs_pair_clean_handler_t * H, ccpairs_t A, ccpairs_t D)
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 #define ccpairs_cons_node_guarded(L,H,A,D)				\
   _Generic((H),								\
@@ -756,13 +760,15 @@ ccpairs_decl ccpairs_t ccpairs_cons_node_guarded_clean (cce_destination_t L, ccp
 
 /* ------------------------------------------------------------------ */
 
-ccpairs_decl ccpairs_t ccpairs_list_guarded_error (cce_destination_t L, ccpairs_list_item_error_handler_t * H,
+cclib_decl ccpairs_t ccpairs_list_guarded_error (cce_destination_t L, ccpairs_list_item_error_handler_t * H,
 						   ccpairs_item_constructor_t * C, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
-ccpairs_decl ccpairs_t ccpairs_list_guarded_clean (cce_destination_t L, ccpairs_list_item_clean_handler_t * H,
+cclib_decl ccpairs_t ccpairs_list_guarded_clean (cce_destination_t L, ccpairs_list_item_clean_handler_t * H,
 						   ccpairs_item_constructor_t * C, ccpairs_item_destructor_t * D)
-  __attribute__((__nonnull__(1,2,3,4),__returns_nonnull__));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2,3,4)
+  CCLIB_FUNC_ATTRIBUTE_RETURNS_NONNULL;
 
 #define ccpairs_list_guarded(L,H,item_constructor,item_destructor)	\
   _Generic((H),								\

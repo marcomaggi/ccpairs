@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017-2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017-2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This is free software; you can redistribute  it and/or modify it under the terms of
   the GNU Lesser General Public License as published by the Free Software Foundation;
@@ -36,7 +36,7 @@
  ** ----------------------------------------------------------------- */
 
 static char const *
-condition_not_enough_items_static_message (cce_condition_t const * C CCPAIRS_UNUSED)
+condition_not_enough_items_static_message (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "not enough items in list";
 }
@@ -64,7 +64,7 @@ cce_descriptor_set_parent_to(ccpairs_descriptor_not_enough_items_t) (cce_descrip
 /* ------------------------------------------------------------------ */
 
 void
-ccpairs_condition_init_not_enough_items (cce_destination_t L CCPAIRS_UNUSED, ccpairs_condition_not_enough_items_t * C)
+ccpairs_condition_init_not_enough_items (cce_destination_t L CCLIB_UNUSED, ccpairs_condition_not_enough_items_t * C)
 {
   cce_condition_init_logic_error(&(C->logic_error));
 }
@@ -87,7 +87,7 @@ ccpairs_condition_is_not_enough_items (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-condition_empty_list_static_message (cce_condition_t const * C CCPAIRS_UNUSED)
+condition_empty_list_static_message (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "invalid empty list as operand";
 }
@@ -138,7 +138,7 @@ ccpairs_condition_is_empty_list (cce_condition_t const * C)
  ** ----------------------------------------------------------------- */
 
 static char const *
-condition_circular_list_static_message (cce_condition_t const * C CCPAIRS_UNUSED)
+condition_circular_list_static_message (cce_condition_t const * C CCLIB_UNUSED)
 {
   return "invalid circular list as operand";
 }
@@ -166,7 +166,7 @@ cce_descriptor_set_parent_to(ccpairs_descriptor_circular_list_t) (cce_descriptor
 /* ------------------------------------------------------------------ */
 
 void
-ccpairs_condition_init_circular_list (cce_destination_t L CCPAIRS_UNUSED, ccpairs_condition_circular_list_t * C)
+ccpairs_condition_init_circular_list (cce_destination_t L CCLIB_UNUSED, ccpairs_condition_circular_list_t * C)
 {
   cce_condition_init_logic_error(&(C->logic_error));
 }

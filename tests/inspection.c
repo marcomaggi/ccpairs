@@ -7,7 +7,7 @@
 
   Test file for inspection functions.
 
-  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   See the COPYING file.
 */
@@ -28,10 +28,10 @@
  ** ----------------------------------------------------------------- */
 
 static void print_list (FILE * stream, ccpairs_t P)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 static void print_list_len (FILE * stream, ccpairs_t P, ccpairs_idx_t idx)
-  __attribute__((__nonnull__(1)));
+  CCLIB_FUNC_ATTRIBUTE_NONNULL(1);
 
 ccpairs_t
 make_list_len (cce_destination_t upper_L, size_t len)

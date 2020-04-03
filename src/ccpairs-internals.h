@@ -8,7 +8,7 @@
 	This  header  file is  for  internal  definitions.  It  must  be
 	included by all the source files in this package.
 
-  Copyright (C) 2017, 2018 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
@@ -57,23 +57,19 @@
  ** Type definitions.
  ** ----------------------------------------------------------------- */
 
-ccpairs_private_decl ccmem_allocator_t const * ccpairs_current_allocator;
+cclib_private_decl ccmem_allocator_t const * ccpairs_current_allocator;
 
 
 /** --------------------------------------------------------------------
  ** Function prototypes.
  ** ----------------------------------------------------------------- */
 
-ccpairs_private_decl void ccpairs_conditions_module_initialisation (void);
+cclib_private_decl void ccpairs_conditions_module_initialisation (void);
 
 
 /** --------------------------------------------------------------------
  ** Done.
  ** ----------------------------------------------------------------- */
-
-#ifdef __cplusplus
-} // extern "C"
-#endif
 
 #endif /* CCPAIRS_INTERNALS_H */
 

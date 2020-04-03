@@ -7,7 +7,7 @@
 
 
 
-  Copyright (C) 2017, 2018, 2019 Marco Maggi <marco.maggi-ipsu@poste.it>
+  Copyright (C) 2017, 2018, 2019, 2020 Marco Maggi <marco.maggi-ipsu@poste.it>
 
   This program is free  software: you can redistribute it and/or  modify it under the
   terms of the  GNU Lesser General Public  License as published by  the Free Software
@@ -71,11 +71,11 @@ ccpairs_init_and_register_list_error_handler (cce_destination_t L, ccpairs_list_
  ** Predefined exception handler: item destructor.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
-ccpairs_item_clean_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_clean_handler_t const * _H)
+ccpairs_item_clean_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * _H)
 {
-  CCPAIRS_PC(ccpairs_item_clean_handler_t const , H, _H);
+  CCLIB_PC(ccpairs_item_clean_handler_t const , H, _H);
   uintptr_t	item = (uintptr_t) cce_handler_resource_pointer(_H);
 
   if (0) { fprintf(stderr, "%s: releasing item %p\n", __func__, (void *)cce_handler_resource_pointer(_H)); }
@@ -92,11 +92,11 @@ ccpairs_init_and_register_item_clean_handler (cce_destination_t L, ccpairs_item_
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
-ccpairs_item_error_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_error_handler_t const * _H)
+ccpairs_item_error_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * _H)
 {
-  CCPAIRS_PC(ccpairs_item_error_handler_t const , H, _H);
+  CCLIB_PC(ccpairs_item_error_handler_t const , H, _H);
   uintptr_t	item = (uintptr_t) cce_handler_resource_pointer(_H);
 
   if (0) { fprintf(stderr, "%s: releasing item %p\n", __func__, (void *)cce_handler_resource_pointer(_H)); }
@@ -116,11 +116,11 @@ ccpairs_init_and_register_item_error_handler (cce_destination_t L, ccpairs_item_
  ** Predefined exception handler: pair memory release with item destructor.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
-ccpairs_pair_item_clean_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_clean_handler_t const * _H)
+ccpairs_pair_item_clean_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * _H)
 {
-  CCPAIRS_PC(ccpairs_pair_item_clean_handler_t const , H, _H);
+  CCLIB_PC(ccpairs_pair_item_clean_handler_t const , H, _H);
   ccpairs_t	P = (ccpairs_t) cce_handler_resource_pointer(_H);
 
   if (0) { fprintf(stderr, "%s: releasing pair %p\n", __func__, (void *)cce_handler_resource_pointer(_H)); }
@@ -138,11 +138,11 @@ ccpairs_init_and_register_pair_item_clean_handler (cce_destination_t L, ccpairs_
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
-ccpairs_pair_item_error_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_error_handler_t const * _H)
+ccpairs_pair_item_error_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * _H)
 {
-  CCPAIRS_PC(ccpairs_pair_item_error_handler_t const , H, _H);
+  CCLIB_PC(ccpairs_pair_item_error_handler_t const , H, _H);
   ccpairs_t	P = (ccpairs_t) cce_handler_resource_pointer(_H);
 
   if (0) { fprintf(stderr, "%s: releasing pair %p\n", __func__, (void *)cce_handler_resource_pointer(_H)); }
@@ -163,11 +163,11 @@ ccpairs_init_and_register_pair_item_error_handler (cce_destination_t L, ccpairs_
  ** Predefined exception handler: list memory release with item destructor.
  ** ----------------------------------------------------------------- */
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
-ccpairs_list_item_clean_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_clean_handler_t const * _H)
+ccpairs_list_item_clean_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_clean_handler_t const * _H)
 {
-  CCPAIRS_PC(ccpairs_list_item_clean_handler_t const , H, _H);
+  CCLIB_PC(ccpairs_list_item_clean_handler_t const , H, _H);
   ccpairs_t	P = (ccpairs_t) cce_handler_resource_pointer(_H);
 
   if (0) { fprintf(stderr, "%s: releasing list %p\n", __func__, (void *)cce_handler_resource_pointer(_H)); }
@@ -191,11 +191,11 @@ ccpairs_init_and_register_list_item_clean_handler (cce_destination_t L, ccpairs_
 
 /* ------------------------------------------------------------------ */
 
-__attribute__((__nonnull__(1,2)))
+CCLIB_FUNC_ATTRIBUTE_NONNULL(1,2)
 static void
-ccpairs_list_item_error_handler_function (cce_condition_t const * C CCPAIRS_UNUSED, cce_error_handler_t const * _H)
+ccpairs_list_item_error_handler_function (cce_condition_t const * C CCLIB_UNUSED, cce_error_handler_t const * _H)
 {
-  CCPAIRS_PC(ccpairs_list_item_error_handler_t const , H, _H);
+  CCLIB_PC(ccpairs_list_item_error_handler_t const , H, _H);
   ccpairs_t	P = (ccpairs_t) cce_handler_resource_pointer(_H);
 
   if (0) { fprintf(stderr, "%s: releasing list %p\n", __func__, (void *)cce_handler_resource_pointer(_H)); }
